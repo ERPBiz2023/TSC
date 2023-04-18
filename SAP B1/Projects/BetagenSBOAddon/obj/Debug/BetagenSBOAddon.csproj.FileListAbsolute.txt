@@ -1,0 +1,32 @@
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\BetagenSBOAddon.exe.config
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\BetagenSBOAddon.exe
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\BetagenSBOAddon.pdb
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\log4net.dll
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\SAPBusinessOneSDK.dll
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\log4net.xml
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.csproj.CoreCompileInputs.cache
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.csproj.CopyComplete
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.exe
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.pdb
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.csprojAssemblyReference.cache
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\GTCore.dll
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\GTCore.pdb
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\Sap.Data.Hana.v4.5.dll
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\Sap.Data.Hana.v4.5.xml
+C:\Data\SourcesWorking\SAP Addon Projects\Githubs\GTCode\BetagenSBOAddon\BetagenSBOAddon\bin\Debug\Sap.Data.Hana.v4.5.dll.config
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\BetagenSBOAddon.exe.config
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\BetagenSBOAddon.exe
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\BetagenSBOAddon.pdb
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\GTCore.dll
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\Sap.Data.Hana.v4.5.dll
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\SAPBusinessOneSDK.dll
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\GTCore.pdb
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\log4net.xml
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\Sap.Data.Hana.v4.5.xml
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\bin\Debug\Sap.Data.Hana.v4.5.dll.config
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.csproj.AssemblyReference.cache
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.csproj.SuggestedBindingRedirects.cache
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.csproj.CoreCompileInputs.cache
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.csproj.CopyComplete
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.exe
+C:\Data\SourcesWorking\Githubs\TSC\SAP B1\Projects\BetagenSBOAddon\obj\Debug\BetagenSBOAddon.pdb

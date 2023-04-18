@@ -1,0 +1,30 @@
+﻿Debug: run VS as administrator
+
+To Generate X64 Addon for X64 Client with B1DE 
+1- clean your project (delete all files or folder in Bin folder
+2- Add UIAPI and DIAPI to References of addon project 
+    from: C:\Program Files\SAP\SAP Business One\SAPbouiCOM.exe
+          C:\Program Files\SAP\SAP Business One DI API\DI API 90\SAPbobsCOM90.dll
+3- On Project proprieties > Builds : set Plateform and target plateform to "Any CPU" (=>64bt)
+4- Build you project
+
+5- Create your installer project with B1DE tools: new project> SAP B1 AddonInstaller .Net Wizard
+6- choose you generated Exec File on step 4
+7- Ctr+H (Search and replace) on All Solution : <<AddOnInstallAPI.dll>> by <<AddOnInstallAPI_x64.dll>>
+8- On Project proprieties > Compile >Advanced Compile Options > Target CPU:x64
+9- Build your project
+10- Go to your project folder and run AddOnRegDataGenFile\AddOnRegDataGen.bat
+11- Go to the Bin folder a new .ard file is generated
+12- Edit this file with notepad and replace :<<platform="N" >> by <<platform="X" >>
+
+
+HANA Crystal REport Connection String=DRIVER={B1CRHPROXY32};SERVERNODE=192.168.100.15:30015;DATABASE=CTSB_TEST
+HANA Crystal REport Connection String=DRIVER={B1CRHPROXY32};SERVERNODE=192.168.130.28:30015;DATABASE=SBOSDNBHD_LIVE
+
+Build installer:
+- Rebuild source code
+- Copy to  installer source folder (Addon files)
+- Rebuild installer source code
+10- Go to your project folder and run AddOnRegDataGenFile\AddOnRegDataGen.bat
+11- Go to the Bin folder a new .ard file is generated
+12- Edit this file with notepad and replace :<<platform="N" >> by <<platform="X" >>
