@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5778D164-D542-4C83-B8D2-62336E6A7FB6}</ProjectGuid>
+    <ProjectGuid>{3ED05DA6-6EA7-41FC-AAAF-D7B79B9700CB}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BetagenSBOAddon</RootNamespace>
@@ -69,7 +69,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\GT_Core\GTCore.csproj">
+    <ProjectReference Include="..\GT_Core\GTCore.csproj">
       <Project>{14870de4-1cbb-4a71-9b41-3429e7806b29}</Project>
       <Name>GTCore</Name>
     </ProjectReference>
