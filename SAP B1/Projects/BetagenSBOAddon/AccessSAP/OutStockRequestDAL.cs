@@ -13,12 +13,11 @@ namespace BetagenSBOAddon.AccessSAP
         public int CreateInventoryTrannsferRequest(string stockNo, ref string message)
         {
             int lRetCode = -1, lErrCode;
-            var query = string.Format(Querystring.BS_STOCKOUTREQUEST_LoadbyID, stockNo);
+            var query = string.Format(Querystring.sp_LoadOutStockRequestByID, stockNo);
             Hashtable data = null;
 
-            var queryDetail = string.Format(Querystring.BS_STOCKOUTREQUEST_DETAIL_LoadbyID, stockNo);
+            var queryDetail = string.Format(Querystring.sp_LoadOutStockRequestDetailByID, stockNo);
             Hashtable[] dataDetails = null;
-
             using (var connection = Globals.DataConnection)
             {
                 var errorstr = string.Empty;
@@ -32,19 +31,25 @@ namespace BetagenSBOAddon.AccessSAP
                 message = "Data is not loaded";
                 return -1;
             }
-            var ret = DIConnection.Instance.DIConnect(ref message);
-            if (ret)
+
+            try
             {
-                var oStockTransfer = (SAPbobsCOM.StockTransfer)DIConnection.Instance.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInventoryTransferRequest);
-                DateTime dtStockDate ;
-                var requestNo = data["StockNo"].ToString();
-                if (DateTime.TryParse(data["StockDate"].ToString(), out dtStockDate))
+
+                var ret = DIConnection.Instance.Connect(ref message);
+                if (ret)
                 {
-                    oStockTransfer.DocDate = dtStockDate;
-                    oStockTransfer.TaxDate = dtStockDate;
+                    var oStockTransfer = (SAPbobsCOM.StockTransfer)DIConnection.Instance.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInventoryTransferRequest);
+                    DateTime dtStockDate;
+                    var requestNo = data["StockNo"].ToString();
+                    if (DateTime.TryParse(data["StockDate"].ToString(), out dtStockDate))
+                    {
+                        oStockTransfer.DocDate =  dtStockDate;
+                        oStockTransfer.TaxDate = dtStockDate;
+                    }
+
                     oStockTransfer.Comments = string.Format("Yêu cầu chuyển kho nội bộ:{0}", requestNo);
                     oStockTransfer.UserFields.Fields.Item("U_DescEN").Value = string.Format("Internal transfer Req:{0}", requestNo);// "Internal transfer Req: " + ReqNo);
-                    //BS_STOCKOUTREQUEST_DETAIL_LoadbyID
+                                                                                                                                    //BS_STOCKOUTREQUEST_DETAIL_LoadbyID
                     oStockTransfer.FromWarehouse = data["FromWhsCode"].ToString();
                     oStockTransfer.ToWarehouse = data["ToWhsCode"].ToString();
                     oStockTransfer.UserFields.Fields.Item("U_SoPhieu").Value = requestNo;
@@ -58,8 +63,8 @@ namespace BetagenSBOAddon.AccessSAP
                     {
                         oStockTransfer.Lines.ItemCode = detail["ItemCode"].ToString();
                         oStockTransfer.Lines.Quantity = double.Parse(detail["Quantity"].ToString());
-                        oStockTransfer.Lines.FromWarehouseCode = detail["FromWhsCode"].ToString();
-                        oStockTransfer.Lines.WarehouseCode = detail["ToWhsCode"].ToString();
+                        oStockTransfer.Lines.FromWarehouseCode = data["FromWhsCode"].ToString();
+                        oStockTransfer.Lines.WarehouseCode = data["ToWhsCode"].ToString();
                         oStockTransfer.Lines.UserFields.Fields.Item("U_BatchNo").Value = detail["LotNo"].ToString();
 
                         if (index != dataDetails.Length - 1)
@@ -70,15 +75,28 @@ namespace BetagenSBOAddon.AccessSAP
                     if (lRetCode != 0)
                     {
                         DIConnection.Instance.Company.GetLastError(out lErrCode, out message);
+
+                        lErrCode = - 1;
                     }
+                    else
+                    {
+
+                        lErrCode = 1;
+                    }
+                    DIConnection.Instance.DIDisconnect();
+                    return lErrCode;
+
                 }
-                DIConnection.Instance.DIDisconnect();
+                else
+                {
+                    return -1;
+                }
             }
-            else
+            catch (Exception ex)
             {
+                message = string.Format("Error {0}", ex.Message);
                 return -1;
             }
-            return -1;
         }
     }
 }

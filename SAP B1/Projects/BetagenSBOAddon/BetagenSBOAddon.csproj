@@ -39,6 +39,7 @@
       <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Sap.Data.Hana.v4.5, Version=2.4.194.0, Culture=neutral, PublicKeyToken=0326b8ea63db4bc4, processorArchitecture=MSIL" />
+    <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -50,14 +51,14 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="SAPBusinessOneSDK" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessSAP\OutStockRequestDAL.cs" />
-    <Compile Include="Forms\UIHelper.cs" />
     <Compile Include="Querystring.cs" />
     <Compile Include="Settings\InitConfig.cs" />
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Forms\OutStockRequest.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>

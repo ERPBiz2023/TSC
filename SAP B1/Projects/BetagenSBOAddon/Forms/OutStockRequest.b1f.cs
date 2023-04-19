@@ -1,4 +1,5 @@
 ﻿using BetagenSBOAddon.AccessSAP;
+using GTCore;
 using GTCore.Forms;
 using GTCore.SAP.DIAPI;
 using SAPbouiCOM.Framework;
@@ -6,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace BetagenSBOAddon.Forms
 {
@@ -170,7 +172,7 @@ namespace BetagenSBOAddon.Forms
                 ListSelect.Clear();
                 this.grList.DataTable.Clear();
                 // throw new System.NotImplementedException();
-                var query = string.Format(Querystring.LoadOutStockRequest, "1",
+                var query = string.Format(Querystring.sp_LoadOutStockRequest, "1",
                     this.FromDate.ToString("yyyy-MM-dd"),
                     this.ToDate.ToString("yyyy-MM-dd"),
                     1);
@@ -258,13 +260,33 @@ namespace BetagenSBOAddon.Forms
                 this.grList.AutoResizeColumns();
 
                 UIHelper.LogMessage("Load data is successfully", UIHelper.MsgType.StatusBar, false);
+                this.btnDelete.Item.Enabled = false;
+                this.btnAppSapList.Item.Enabled = false;
+                this.btnConfirm.Item.Enabled = false;
             }
             catch (Exception ex)
             {
                 UIHelper.LogMessage(string.Format("Load data error {0}", ex.Message), UIHelper.MsgType.StatusBar, true);
             }
         }
+        
+        private void EnableButtonInList()
+        {
+            this.btnDelete.Item.Enabled = ListSelect.Count > 0;
+            this.btnConfirm.Item.Enabled = ListSelect.Count > 0;
 
+            if (ListSelect.Count > 0)
+            {
+                if (this.grList.DataTable.GetValue("ApplySAP", ListSelect.Min()).ToString() == "No")
+                {
+                    this.btnAppSapList.Item.Enabled = true;
+                }
+                else
+                {
+                    this.btnAppSapList.Item.Enabled = false;
+                }
+            }
+        }
 
         private bool DeleteApplySAP()
         {
@@ -293,12 +315,12 @@ namespace BetagenSBOAddon.Forms
                                 continue;
                             }
                         }
-                        query += "\n" + string.Format(Querystring.DeleteOutStockRequest, code);
+                        query += "\n" + string.Format(Querystring.sp_DeleteOutStockRequest, code);
                     }
                 }
                 if (!string.IsNullOrEmpty(query))
                 {
-                    query += "\n" + Querystring.NotificationUpdateStock;
+                    query += "\n" + Querystring.sp_NotificationUpdateStock;
                     using (var connection = Globals.DataConnection)
                     {
                         connection.ExecuteWithOpenClose(query);
@@ -322,22 +344,39 @@ namespace BetagenSBOAddon.Forms
 
         private int AddInventoryTransferRequest(string stockNo)
         {
+            var ret = -1;
             try
             {
                 var message = string.Empty;
-                var ret = DALAccess.CreateInventoryTrannsferRequest(stockNo, ref message);
-                    
-                UIHelper.LogMessage("Add Inventory Transfer Request is successfully", UIHelper.MsgType.StatusBar, false);
+                ret = DALAccess.CreateInventoryTrannsferRequest(stockNo, ref message);
+                if(ret > 0)
+                    UIHelper.LogMessage("Add Inventory Transfer Request is successfully", UIHelper.MsgType.StatusBar, false);
+                else
+                    UIHelper.LogMessage(string.Format("Add Inventory Transfer Request error {0}", message), UIHelper.MsgType.StatusBar, true);
             }
             catch (Exception ex)
             {
+                ret = -1;
                 UIHelper.LogMessage(string.Format("Add Inventory Transfer Request error {0}", ex.Message), UIHelper.MsgType.StatusBar, true);
             }
-            return 1;
+            return ret;
         }
         private bool ApplySAP(string stockNo)
         {
-            return false;
+            try
+            {
+                var query = string.Format(Querystring.sp_OutStockRequestApplySAP, stockNo, 1);
+                using (var connection = Globals.DataConnection)
+                {
+                    connection.ExecuteWithOpenClose(query);
+                    connection.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
         }
         private void Freeze(bool freeze)
         {
@@ -381,6 +420,7 @@ namespace BetagenSBOAddon.Forms
         private void Form_LoadAfter(SAPbouiCOM.SBOItemEventArg pVal)
         {
             // throw new System.NotImplementedException();
+           
 
         }
         private void btnSearch_PressedAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
@@ -496,6 +536,8 @@ namespace BetagenSBOAddon.Forms
                 }
 
             }
+            this.EnableButtonInList();
+            
         }
 
         private void btnAppSapList_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
@@ -509,10 +551,13 @@ namespace BetagenSBOAddon.Forms
             // handle only this case
             if(ListSelect.Count > 0)
             {
-                var index = ListSelect[0];
+                var index = ListSelect.Min();
                 var stockNo = this.grList.DataTable.GetValue("StockNo", index).ToString();
                 if (AddInventoryTransferRequest(stockNo) > 0 && ApplySAP(stockNo))
+                {
+                    UIHelper.LogMessage("Add Inventory Transfer Request is successfully", UIHelper.MsgType.StatusBar, false);
                     this.LoadMainGrid();
+                }
             }
             // case 2 LoggedIn_BySalesTool and G_UseWebSrv = 0
             //---- not handle
@@ -525,8 +570,33 @@ namespace BetagenSBOAddon.Forms
         private void btnConfirm_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            //throw new System.NotImplementedException();
+            this.Freeze(true);
+            if (ListSelect.Count > 0)
+            {
+                var index = ListSelect.Min();
+                var stockNo = this.grList.DataTable.GetValue("StockNo", index).ToString();
+                var reqNo = this.grList.DataTable.GetValue("TransferReqNo", index).ToString();
+                if(string.IsNullOrEmpty(stockNo) || string.IsNullOrEmpty(reqNo))
+                {
+                    UIHelper.LogMessage("Please apply SAP or select Document to confirm", UIHelper.MsgType.Msgbox);
+                }
+                try
+                {
+                    var query = string.Format(Querystring.sp_OutStockRequestConfirm, stockNo, reqNo);
+                    using (var connection = Globals.DataConnection)
+                    {
+                        connection.ExecuteWithOpenClose(query);
+                        connection.Dispose();
+                    }
+                    UIHelper.LogMessage("Comfirmation is successfully", UIHelper.MsgType.StatusBar, false);
+                }
+                catch (Exception ex)
+                {
+                    UIHelper.LogMessage(string.Format("Comfirmation is Error", ex.Message), UIHelper.MsgType.StatusBar, true);
+                }
+            }
 
+            this.Freeze(false);
         }
     }
 }

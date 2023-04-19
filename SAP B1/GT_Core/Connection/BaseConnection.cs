@@ -61,6 +61,7 @@ namespace GTCore.Connection
             }
             catch (Exception ex)
             {
+                result = null;
                 errorMessage = ex.Message;
             }
             finally

@@ -52,6 +52,7 @@
     <Compile Include="Form\AddonUserForm.cs" />
     <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Helper\StringUtils.cs" />
+    <Compile Include="Helper\UIHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SAP\DIAPI\DIConnection.cs" />
     <Compile Include="SAP\Query.cs" />
