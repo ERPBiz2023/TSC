@@ -93,5 +93,20 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("usp_BS_InventoryTransferReq_Confirm", "'{0}', {1}");
             }
         }
+
+        public static string sp_GetWarehouses
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_OWHS", "");
+            }
+        }
+        public static string sp_GetBins
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_OWHS", "");
+            }
+        }
     }
 }

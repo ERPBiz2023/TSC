@@ -12,7 +12,7 @@ using System.Linq;
 namespace BetagenSBOAddon.Forms
 {
     [FormAttribute("BetagenSBOAddon.Forms.OutStockRequest", "Forms/OutStockRequest.b1f")]
-    public class OutStockRequest : UserFormBase
+    public class OutStockRequest: UserFormBase
     {
         // field data 
         private DateTime fromDate;
@@ -85,7 +85,7 @@ namespace BetagenSBOAddon.Forms
                 instance = new OutStockRequest();
                 instance.Show();
                 IsFormOpen = true;
-            }
+            } 
         }
 
         private OutStockRequest()
@@ -106,6 +106,7 @@ namespace BetagenSBOAddon.Forms
         {
             this.tagPage1 = ((SAPbouiCOM.Folder)(this.GetItem("tagPage1").Specific));
             this.tagPage2 = ((SAPbouiCOM.Folder)(this.GetItem("tagPage2").Specific));
+            this.tagPage2.ClickAfter += new SAPbouiCOM._IFolderEvents_ClickAfterEventHandler(this.tagPage2_ClickAfter);
             this.StaticText0 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_3").Specific));
             this.edFromDateList = ((SAPbouiCOM.EditText)(this.GetItem("edFormDate").Specific));
             this.edFromDateList.ValidateBefore += new SAPbouiCOM._IEditTextEvents_ValidateBeforeEventHandler(this.edFromDateList_ValidateBefore);
@@ -126,13 +127,11 @@ namespace BetagenSBOAddon.Forms
             this.btnAppSapList = ((SAPbouiCOM.Button)(this.GetItem("btnAppLst").Specific));
             this.btnAppSapList.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAppSapList_ClickBefore);
             this.StaticText2 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_14").Specific));
-            this.edFromWH = ((SAPbouiCOM.EditText)(this.GetItem("edFromWH").Specific));
             this.StaticText5 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_20").Specific));
             this.edFromTeam = ((SAPbouiCOM.EditText)(this.GetItem("edFromTeam").Specific));
             this.StaticText7 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_24").Specific));
             this.edNo = ((SAPbouiCOM.EditText)(this.GetItem("edNo").Specific));
             this.StaticText9 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_28").Specific));
-            this.edToWH = ((SAPbouiCOM.EditText)(this.GetItem("edToWH").Specific));
             this.StaticText10 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_30").Specific));
             this.edToTeam = ((SAPbouiCOM.EditText)(this.GetItem("edToTeam").Specific));
             this.edDateAdd = ((SAPbouiCOM.EditText)(this.GetItem("edDateAdd").Specific));
@@ -145,6 +144,8 @@ namespace BetagenSBOAddon.Forms
             this.btnCancelAdd = ((SAPbouiCOM.Button)(this.GetItem("btnCancel").Specific));
             this.btnAddNew = ((SAPbouiCOM.Button)(this.GetItem("btnAddNew").Specific));
             this.btnAppSapAdd = ((SAPbouiCOM.Button)(this.GetItem("btnAppAdd").Specific));
+            //    this.UD_Warehouse = ((SAPbouiCOM.UserDataSource)(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_WH")));
+            //       UserDataSource udStatus { get { return this.Form.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Status"); } }
             this.OnCustomInitialize();
 
         }
@@ -219,8 +220,8 @@ namespace BetagenSBOAddon.Forms
                 this.grList.Columns.Item("ApplySAP").TitleObject.Caption = "Apply SAP";
                 this.grList.Columns.Item("ApplySAP").Editable = false;
 
-                this.grList.Columns.Item("Cofirm").TitleObject.Caption = "Cofirm Status";
-                this.grList.Columns.Item("Cofirm").Editable = false;
+                this.grList.Columns.Item("Confirm").TitleObject.Caption = "Cofirm Status";
+                this.grList.Columns.Item("Confirm").Editable = false;
 
                 this.grList.Columns.Item("Note").TitleObject.Caption = "Note";
                 this.grList.Columns.Item("Note").Editable = false;
@@ -397,13 +398,11 @@ namespace BetagenSBOAddon.Forms
         private SAPbouiCOM.Button btnConfirm;
         private SAPbouiCOM.Button btnAppSapList;
         private SAPbouiCOM.StaticText StaticText2;
-        private SAPbouiCOM.EditText edFromWH;
         private SAPbouiCOM.StaticText StaticText5;
         private SAPbouiCOM.EditText edFromTeam;
         private SAPbouiCOM.StaticText StaticText7;
         private SAPbouiCOM.EditText edNo;
         private SAPbouiCOM.StaticText StaticText9;
-        private SAPbouiCOM.EditText edToWH;
         private SAPbouiCOM.StaticText StaticText10;
         private SAPbouiCOM.EditText edToTeam;
         private SAPbouiCOM.EditText edDateAdd;
@@ -416,6 +415,7 @@ namespace BetagenSBOAddon.Forms
         private SAPbouiCOM.Button btnCancelAdd;
         private SAPbouiCOM.Button btnAddNew;
         private SAPbouiCOM.Button btnAppSapAdd;
+        private SAPbouiCOM.UserDataSource UD_Warehouse;
 
         private void Form_LoadAfter(SAPbouiCOM.SBOItemEventArg pVal)
         {
@@ -597,6 +597,32 @@ namespace BetagenSBOAddon.Forms
             }
 
             this.Freeze(false);
+        }
+
+        private void tagPage2_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            if(tagPage2.Selected)
+            {
+                
+                var query = Querystring.sp_GetWarehouses;
+                Hashtable[] whDatasource;
+                var errorstr = string.Empty;
+                using (var connection = Globals.DataConnection)
+                {
+                    whDatasource = connection.ExecQueryToArrayHashtable(query, out errorstr);
+                    connection.Dispose();
+                }
+                if (whDatasource.Length > 0)
+                {
+                    foreach (var item in whDatasource)
+                    {
+                        //cbbFromWh.ValidValues.Item.
+                        //cbbFromWh.ValidValues.Add(item["Code"].ToString(), item["Name"].ToString());
+                        //cbbFromWh.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+                    }
+                    //this.UD_Warehouse.
+                }
+            }
         }
     }
 }

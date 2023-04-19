@@ -1,7 +1,7 @@
 ﻿using GTCore.Config;
 using GTCore.Connection;
 using GTCore.Helper;
-using log4net;
+//using log4net;
 using SAPbouiCOM.Framework;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace BetagenSBOAddon
         //public static string System = "SAP_SQL"; // SAP_HANA
         // try read from config
         public static List<string> MenuList = new List<string>();
-        public static ILog LogInstance = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+       // public static ILog LogInstance = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public static Application MainApplication;
         public static SAPbouiCOM.Application Application;
 
