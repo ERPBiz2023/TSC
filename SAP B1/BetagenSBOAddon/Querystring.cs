@@ -16,7 +16,8 @@ namespace BetagenSBOAddon
         {
             if (CoreSetting.System == SystemType.SAP_HANA)
             {
-                return "CALL \"" + query + "\" (" + param +")";
+                var schema = ConfigurationManager.AppSettings["Schema"];
+                return "CALL \"" + schema + "\".\"" + query + "\" (" + param + ")";
             }
             else
             {

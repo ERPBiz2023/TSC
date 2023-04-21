@@ -37,7 +37,7 @@ namespace GTCore.SAP.DIAPI
        
         private int ConnectDI(ref string message)
         {
-            int ret;
+            int ret, lErrCode;
             try
             {
                 Company = new SAPbobsCOM.Company();
@@ -48,6 +48,8 @@ namespace GTCore.SAP.DIAPI
                     Company.Disconnect();
                 }
                 ret = Company.SetSboLoginContext(sConnectionContext);
+                if (ret != 0)
+                    Company.GetLastError(out lErrCode, out message);
             }
             catch (Exception ex)
             {
@@ -60,10 +62,12 @@ namespace GTCore.SAP.DIAPI
 
         private int ConnectToCompany(ref string message)
         {
-            int ret;
+            int ret, lErrCode;
             try
             {
                 ret = Company.Connect();
+                if(ret != 0)
+                    Company.GetLastError(out lErrCode, out message);
             }
             catch (Exception ex)
             {
@@ -97,7 +101,7 @@ namespace GTCore.SAP.DIAPI
                 sConnectionString = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
 
                 SboGuiApi.Connect(sConnectionString);
-                SBO_Application = SboGuiApi.GetApplication(-1);
+                SBO_Application = SboGuiApi.GetApplication();
                 //if(ConnectDI(ref message) == 0)
                 //{
 

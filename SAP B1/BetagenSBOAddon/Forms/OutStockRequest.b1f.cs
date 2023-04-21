@@ -41,7 +41,7 @@ namespace BetagenSBOAddon.Forms
         {
             get
             {
-                return this.cbbFromBin.Selected.Description ;
+                return this.cbbFromBin.Selected.Description;
             }
         }
 
@@ -368,7 +368,7 @@ namespace BetagenSBOAddon.Forms
                 //this.txtTruckNo.ReadOnly = false;
                 this.cbbFromBin.Item.Enabled = true;
                 this.cbbToBin.Item.Enabled = true;
-                
+
                 //foreach(SAPbouiCOM.Column col in this.grAdd.Columns)
                 //{
                 //    col.Editable = true;
@@ -435,7 +435,7 @@ namespace BetagenSBOAddon.Forms
                 {
                     var dynamicColumn = new Dictionary<string, string>();
                     var dynamicTotal = new Dictionary<string, int>();
-                    foreach (var item in datas.Select(x=>x["LotNo"].ToString()).Distinct())
+                    foreach (var item in datas.Select(x => x["LotNo"].ToString()).Distinct())
                     {
                         var dateFormat = string.Format("{0}/{1}/{2}",
                             item.Substring(0, 4),
@@ -443,7 +443,7 @@ namespace BetagenSBOAddon.Forms
                             item.Substring(6, 2));
                         var lot = string.Format("Lot {0}", dateFormat);
                         var instock = string.Format("InStock {0}", dateFormat);
-                        if(!dynamicColumn.ContainsKey("Lot" + item))
+                        if (!dynamicColumn.ContainsKey("Lot" + item))
                         {
                             dynamicColumn.Add("Lot" + item, lot);
                         }
@@ -454,7 +454,7 @@ namespace BetagenSBOAddon.Forms
                         }
                     }
 
-                    foreach(var data in dynamicColumn)
+                    foreach (var data in dynamicColumn)
                     {
                         this.grAdd.DataTable.Columns.Add(data.Key, SAPbouiCOM.BoFieldsType.ft_Text);
                         this.grAdd.Columns.Item(data.Key).TitleObject.Caption = data.Value;
@@ -470,10 +470,10 @@ namespace BetagenSBOAddon.Forms
                         var lotID = data["LotNo"].ToString();
                         if (int.TryParse(data["QuantityIn"].ToString(), out inQty))
                         {
-                            if(inQty > 0)
+                            if (inQty > 0)
                             {
                                 this.grAdd.DataTable.SetValue("InStock" + lotID, this.grAdd.Rows.Count - 1, inQty.ToString());
-                                if(dynamicTotal.ContainsKey("InStock" + lotID))
+                                if (dynamicTotal.ContainsKey("InStock" + lotID))
                                 {
                                     dynamicTotal["InStock" + lotID] += inQty;
                                 }
@@ -503,7 +503,7 @@ namespace BetagenSBOAddon.Forms
 
                     this.grAdd.DataTable.Rows.Add();
                     this.grAdd.DataTable.SetValue("DES", this.grAdd.Rows.Count - 1, "Total");
-                    foreach(var data in dynamicTotal)
+                    foreach (var data in dynamicTotal)
                     {
                         //this.grAdd.DataTable.Columns.Add(data.Key, SAPbouiCOM.BoFieldsType.ft_Text);
                         this.grAdd.DataTable.SetValue(data.Key, this.grAdd.Rows.Count - 1, data.Value.ToString());
@@ -567,17 +567,19 @@ namespace BetagenSBOAddon.Forms
                                 continue;
                             }
                         }
-                        query += "\n" + string.Format(Querystring.sp_DeleteOutStockRequest, code);
+                        using (var connection = Globals.DataConnection)
+                        {
+                            query = string.Format(Querystring.sp_DeleteOutStockRequest, code) + ";";
+                            connection.ExecuteWithOpenClose(query);
+                            connection.Dispose();
+                        }
                     }
                 }
-                if (!string.IsNullOrEmpty(query))
+                query = Querystring.sp_NotificationUpdateStock;
+                using (var connection = Globals.DataConnection)
                 {
-                    query += "\n" + Querystring.sp_NotificationUpdateStock;
-                    using (var connection = Globals.DataConnection)
-                    {
-                        connection.ExecuteWithOpenClose(query);
-                        connection.Dispose();
-                    }
+                    connection.ExecuteWithOpenClose(query);
+                    connection.Dispose();
                 }
                 UIHelper.LogMessage("Delete Successfully", UIHelper.MsgType.Msgbox);
 
@@ -1019,7 +1021,7 @@ namespace BetagenSBOAddon.Forms
 
         private void cbbFromBin_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
-            
+
 
         }
 
@@ -1063,7 +1065,7 @@ namespace BetagenSBOAddon.Forms
                 UIHelper.LogMessage("Please choose Stock date", UIHelper.MsgType.StatusBar, true);
                 return;
             }
-            if(string.IsNullOrEmpty(FromWarehouseCode) || string.IsNullOrEmpty(ToWarehouseCode)
+            if (string.IsNullOrEmpty(FromWarehouseCode) || string.IsNullOrEmpty(ToWarehouseCode)
                 || string.IsNullOrEmpty(this.cbbFromBin.Value) || this.cbbFromBin.Value == Globals.BinNull
                 || string.IsNullOrEmpty(this.cbbToBin.Value) || this.cbbToBin.Value == Globals.BinNull)
             {
@@ -1071,14 +1073,14 @@ namespace BetagenSBOAddon.Forms
                 return;
             }
 
-            if(this.cbbFromBin.Value == this.cbbToBin.Value)
+            if (this.cbbFromBin.Value == this.cbbToBin.Value)
             {
                 UIHelper.LogMessage("From team not duplicate  To team", UIHelper.MsgType.StatusBar, false);
                 this.cbbToBin.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);// = Globals.BinNull;
             }
             else
             {
-                if(this.Mode == FormMode.Add)
+                if (this.Mode == FormMode.Add)
                     CreateStockNo();
                 this.LoadListAddForm();
             }
@@ -1105,7 +1107,7 @@ namespace BetagenSBOAddon.Forms
                 this.StockDate = date;
             }
             //int selected = 0;
-           // this.cbbFmWh.Value.
+            // this.cbbFmWh.Value.
             this.cbbFmWh.Select(this.grList.DataTable.GetValue("FromWhsCode", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
             this.cbbToWh.Select(this.grList.DataTable.GetValue("ToWhsCode", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
             this.edNote.Value = this.grList.DataTable.GetValue("Note", index).ToString();
