@@ -1,4 +1,6 @@
 ﻿using GTCore.SAP.DIAPI;
+using GTCoreDI.DIAPI;
+using SAPbobsCOM;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,11 +36,12 @@ namespace BetagenSBOAddon.AccessSAP
 
             try
             {
+                var ret1 = Connection.SetApplication(ref message);
 
                 var ret = DIConnection.Instance.Connect(ref message);
                 if (ret)
                 {
-                    var oStockTransfer = (SAPbobsCOM.StockTransfer)DIConnection.Instance.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInventoryTransferRequest);
+                    var oStockTransfer = (StockTransfer)DIConnection.Instance.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oInventoryTransferRequest);
                     DateTime dtStockDate;
                     var requestNo = data["StockNo"].ToString();
                     if (DateTime.TryParse(data["StockDate"].ToString(), out dtStockDate))
