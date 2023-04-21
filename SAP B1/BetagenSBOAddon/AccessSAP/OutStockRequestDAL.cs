@@ -36,7 +36,7 @@ namespace BetagenSBOAddon.AccessSAP
 
             try
             {
-                var ret1 = Connection.SetApplication(ref message);
+                //var ret1 = Connection.SetApplication(ref message);
 
                 var ret = DIConnection.Instance.Connect(ref message);
                 if (ret)

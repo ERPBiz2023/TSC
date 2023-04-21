@@ -19,10 +19,8 @@ namespace GTCoreDI.DIAPI
             string sConnectionContext = null;
             SAPbouiCOM.SboGuiApi SboGuiApi;
             SboGuiApi = new SAPbouiCOM.SboGuiApi();
-            if (Environment.GetCommandLineArgs().Length > 1)
-                sConnectionString = Environment.GetCommandLineArgs()[1];
-            else
-                sConnectionString = Environment.GetCommandLineArgs()[0];
+            sConnectionString = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
+                               //0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056
             try
             {
                 SboGuiApi.Connect(sConnectionString);

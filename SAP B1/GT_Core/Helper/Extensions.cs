@@ -19,6 +19,19 @@ namespace GTCore.Helper
                 .SingleOrDefault() as DescriptionAttribute)?.Description ?? enumdata.ToString();
         }
 
+
+        public static T GetEnumValueByDescription<T>(this string description) where T : Enum
+        {
+            foreach (Enum enumItem in Enum.GetValues(typeof(T)))
+            {
+                if (enumItem.GetDescription() == description)
+                {
+                    return (T)enumItem;
+                }
+            }
+            throw new ArgumentException("Not found.", nameof(description));
+        }
+
         public static Hashtable ToHashtable(this DataRowView raw)
         {
             var hashtable = new Hashtable();

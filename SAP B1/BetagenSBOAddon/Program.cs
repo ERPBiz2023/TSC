@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BetagenSBOAddon.Forms;
+using GTCoreDI.DIAPI;
 using SAPbouiCOM.Framework;
 
 namespace BetagenSBOAddon
@@ -22,8 +23,8 @@ namespace BetagenSBOAddon
                 //SboGuiApi.Connect(sConnectionString);
 
                 //Globals.Application = SboGuiApi.GetApplication(-1);
-
-
+                
+               // var ret1 = Connection.SetApplication(ref message);
                 Application MainApplication = null;
                 if (args.Length < 1)
                 {

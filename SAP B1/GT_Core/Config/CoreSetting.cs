@@ -1,18 +1,21 @@
 ﻿using GTCore.Connection;
 using GTCore.Helper;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GTCore.Config
 {
     public class CoreSetting
     {
         public static string QueryPreFix = "GT_";
-        public static SystemType System = SystemType.SAP_SQL_2019;
+        public static SystemType System
+        {
+            get
+            {
+                var type = ConfigurationManager.AppSettings["SystemType"].ToString().GetEnumValueByDescription<SystemType>();
+                return type;// ConfigurationManager.AppSettings["SystemType"].ToString().GetEnumValueByDescription<SystemType>();
+            }
+        }
+        //SystemType.SAP_SQL_2019;
 
         public static BaseConnection DataConnection
         {
