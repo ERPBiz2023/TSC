@@ -9,6 +9,9 @@ namespace BetagenSBOAddon
 {
     public class Querystring
     {
+        // functions
+        // UF_BS_GETQUANTITYSTOCKOUTREQUEST
+        // UF_BS_SETCOLOR_ITEMCODE
         private static string CallStoreBySystem(string query, string param = "")
         {
             if (CoreSetting.System == SystemType.SAP_HANA)
@@ -105,7 +108,23 @@ namespace BetagenSBOAddon
         {
             get
             {
-                return CallStoreBySystem("USP_BS_OWHS", "");
+                return CallStoreBySystem("USP_BS_BINCODE", "'{0}'");
+            }
+        }
+
+        public static string sp_GetMaxStockNo
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_GETMAXT_STCKNO_DOUPLICATE", "'{0}'");
+            }
+        }
+
+        public static string sp_LoadLotItem
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_LOT_OINM", "'{0}', '{1}', {2}");
             }
         }
     }

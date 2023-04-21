@@ -26,6 +26,12 @@ namespace BetagenSBOAddon
         public static SAPbouiCOM.Application Application;
 
         public static DateTime NullDate = new DateTime(2099, 01, 01);
+        public static string DateShowFormat = "dd.MM.yyyy";
+        public static string DateQueryFormat = "yyyy-MM-dd";
+        public static string DateParseFormat = "dd'.'MM'.'yyyy";
+
+        public static string WarehouseNull = "Select warehouse";
+        public static string BinNull = "Select team code";
         public static BaseConnection DataConnection
         {
             get

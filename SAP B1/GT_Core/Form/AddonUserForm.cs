@@ -17,5 +17,11 @@ namespace GTCore.Forms
         public string MenuFolderName { get; set; } = string.Empty;
         
     }
+
+    public enum FormMode
+    {
+        Add,
+        View
+    }
 }
     
