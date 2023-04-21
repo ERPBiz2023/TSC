@@ -1,5 +1,4 @@
 ﻿using GTCore.SAP.DIAPI;
-using GTCoreDI.DIAPI;
 using SAPbobsCOM;
 using System;
 using System.Collections;

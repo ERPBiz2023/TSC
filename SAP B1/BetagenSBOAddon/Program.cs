@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using BetagenSBOAddon.Forms;
-using GTCoreDI.DIAPI;
 using SAPbouiCOM.Framework;
 
 namespace BetagenSBOAddon

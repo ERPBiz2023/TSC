@@ -78,10 +78,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GTCoreDI\GTCoreDI.csproj">
-      <Project>{38be8b22-a7fe-4ae5-a65f-70feecb8e05d}</Project>
-      <Name>GTCoreDI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GT_Core\GTCore.csproj">
       <Project>{14870de4-1cbb-4a71-9b41-3429e7806b29}</Project>
       <Name>GTCore</Name>
