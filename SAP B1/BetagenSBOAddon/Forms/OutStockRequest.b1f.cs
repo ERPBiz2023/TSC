@@ -59,20 +59,8 @@ namespace BetagenSBOAddon.Forms
                 return edNo.Value;
             }
         }
-        private string FromWarehouseCode
-        {
-            get
-            {
-                return cbbFmWh.Value;
-            }
-        }
-        private string ToWarehouseCode
-        {
-            get
-            {
-                return cbbToWh.Value;
-            }
-        }
+        private string FromWarehouseCode { get; set; }
+        private string ToWarehouseCode { get; set; }
         public DateTime FromDate
         {
             get => fromDate;
@@ -569,7 +557,7 @@ namespace BetagenSBOAddon.Forms
                 int status;
                 if(int.TryParse(data, out status))
                 {
-                    return status > 0;
+                    return status <= 0;
                 }
             }
             return false;
@@ -1074,7 +1062,7 @@ namespace BetagenSBOAddon.Forms
             if (value != this.FromWarehouseCode)
             {
                 LoadBinCodes(value, this.cbbFromBin);
-                //this.FromWarehouseCode = value;
+                this.FromWarehouseCode = value;
                 CreateStockNo();
             }
         }
@@ -1086,7 +1074,7 @@ namespace BetagenSBOAddon.Forms
             if (value != this.ToWarehouseCode)
             {
                 LoadBinCodes(value, this.cbbToBin);
-                //this.ToWarehouseCode = value;
+                this.ToWarehouseCode = value;
                 CreateStockNo();
             }
         }
@@ -1136,6 +1124,8 @@ namespace BetagenSBOAddon.Forms
             if (StockDate == Globals.NullDate)
             {
                 UIHelper.LogMessage("Please choose Stock date", UIHelper.MsgType.StatusBar, true);
+
+                this.Freeze(false);
                 return;
             }
             if (string.IsNullOrEmpty(FromWarehouseCode) || string.IsNullOrEmpty(ToWarehouseCode)
@@ -1143,6 +1133,8 @@ namespace BetagenSBOAddon.Forms
                 || string.IsNullOrEmpty(this.cbbToBin.Value) || this.cbbToBin.Value == Globals.BinNull)
             {
                 UIHelper.LogMessage("Please select all informations (From warehouse, To warehouse, From team, To team)", UIHelper.MsgType.StatusBar, true);
+
+                this.Freeze(false);
                 return;
             }
 
@@ -1189,6 +1181,7 @@ namespace BetagenSBOAddon.Forms
             EnabledControl();
             SetNullValues(false);
             this.btnLoadItem.Item.Enabled = true;
+            this.grAdd.DataTable.Clear();
             this.Freeze(false);
         }
 
