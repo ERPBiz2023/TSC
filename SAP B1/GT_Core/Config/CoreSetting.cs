@@ -7,6 +7,7 @@ namespace GTCore.Config
     public class CoreSetting
     {
         public static string QueryPreFix = "GT_";
+        public static string SAPDIConnectstring = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
         public static SystemType System
         {
             get

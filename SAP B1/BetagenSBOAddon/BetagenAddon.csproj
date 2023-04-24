@@ -60,8 +60,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessSAP\OutStockRequestDAL.cs" />
+    <Compile Include="Forms\POAllocationBatch.b1f.cs">
+      <DependentUpon>POAllocationBatch.b1f</DependentUpon>
+    </Compile>
     <Compile Include="Querystring.cs" />
     <Compile Include="Settings\InitConfig.cs" />
+    <Compile Include="SystemForm\PurchaseOrderExt.b1f.cs">
+      <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
+    </Compile>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -75,7 +81,16 @@
     <Compile Include="Program.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Forms\POAllocationBatch.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
     <None Include="packages.config" />
+    <None Include="SystemForm\PurchaseOrderExt.b1f">
+      <FormCategory>SystemForm</FormCategory>
+    </None>
+    <None Include="SystemForm\PurchaseOrderExt.b1f__orig_srf">
+      <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GT_Core\GTCore.csproj">
@@ -83,6 +98,7 @@
       <Name>GTCore</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

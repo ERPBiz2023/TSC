@@ -105,9 +105,6 @@ namespace BetagenSBOAddon
                     {
                         OutStockRequest.ShowForm();                     
                     }
-                    else
-                    { 
-                    }
                 }
             }
             catch (Exception ex)
