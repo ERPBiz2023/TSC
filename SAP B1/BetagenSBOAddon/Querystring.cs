@@ -129,5 +129,13 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("USP_BS_LOT_OINM", "'{0}', '{1}', {2}");
             }
         }
+
+        public static string sp_OutStockRequestGetApplySAP
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_STOCKOUTREQUEST_GETAPPLYSAP", "'{0}', {1}");
+            }
+        }
     }
 }

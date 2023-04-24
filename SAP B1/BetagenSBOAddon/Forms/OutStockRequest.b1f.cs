@@ -216,11 +216,13 @@ namespace BetagenSBOAddon.Forms
             this.grAdd = ((SAPbouiCOM.Grid)(this.GetItem("grAdd").Specific));
             this.btnSave = ((SAPbouiCOM.Button)(this.GetItem("btnSave").Specific));
             this.btnCancelAdd = ((SAPbouiCOM.Button)(this.GetItem("btnCancel").Specific));
+            this.btnCancelAdd.PressedAfter += new SAPbouiCOM._IButtonEvents_PressedAfterEventHandler(this.btnCancelAdd_PressedAfter);
             this.btnAddNew = ((SAPbouiCOM.Button)(this.GetItem("btnAddNew").Specific));
             this.btnAddNew.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAddNew_ClickBefore);
             this.btnAppSapAdd = ((SAPbouiCOM.Button)(this.GetItem("btnAppAdd").Specific));
-            //           this.UD_Warehouse = ((SAPbouiCOM.UserDataSource)(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_WH")));
-            //              UserDataSource udStatus { get { return this.Form.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Status"); } }
+            this.btnAppSapAdd.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAppSapAdd_ClickBefore);
+            //              this.UD_Warehouse = ((SAPbouiCOM.UserDataSource)(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_WH")));
+            //                 UserDataSource udStatus { get { return this.Form.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Status"); } }
             this.cbbFmWh = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbFmWh").Specific));
             this.cbbFmWh.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbFmWh_ComboSelectAfter);
             this.cbbToWh = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbToWh").Specific));
@@ -468,7 +470,12 @@ namespace BetagenSBOAddon.Forms
                         this.grAdd.DataTable.SetValue("DES", this.grAdd.Rows.Count - 1, data["ItemName"].ToString());
                         int inQty;
                         var lotID = data["LotNo"].ToString();
-                        if (int.TryParse(data["QuantityIn"].ToString(), out inQty))
+
+                        var inQtystr = data["QuantityIn"].ToString();
+                        if(inQtystr.Contains("."))
+                            inQtystr = inQtystr.Substring(0, inQtystr.IndexOf('.'));
+                   
+                        if (int.TryParse(inQtystr, out inQty))
                         {
                             if (inQty > 0)
                             {
@@ -483,8 +490,12 @@ namespace BetagenSBOAddon.Forms
                                 }
                             }
                         }
+
                         int outQty;
-                        if (int.TryParse(data["QuantityOut"].ToString(), out outQty))
+                        var outQtystr = data["QuantityOut"].ToString();
+                        if(outQtystr.Contains("."))
+                            outQtystr = outQtystr.Substring(0, outQtystr.IndexOf('.'));
+                        if (int.TryParse(outQtystr, out outQty))
                         {
                             if (outQty > 0)
                             {
@@ -538,6 +549,31 @@ namespace BetagenSBOAddon.Forms
                     this.btnAppSapList.Item.Enabled = false;
                 }
             }
+        }
+
+        // checl enable
+        private bool EnableApplySAP()
+        {
+            var query = string.Format(Querystring.sp_OutStockRequestGetApplySAP, this.StockNo, 1);
+            string message;
+            Hashtable hash;
+            using (var connection = Globals.DataConnection)
+            {
+              hash = connection.ExecQueryToHashtable(query, out message);
+                connection.Dispose();
+            }
+
+            if (hash != null)
+            {
+                var data = hash["StatusSAP"].ToString();
+                int status;
+                if(int.TryParse(data, out status))
+                {
+                    return status > 0;
+                }
+            }
+            return false;
+
         }
 
         private bool DeleteApplySAP()
@@ -615,6 +651,12 @@ namespace BetagenSBOAddon.Forms
             }
             return ret;
         }
+
+        /// <summary>
+        /// Foreach tag1
+        /// </summary>
+        /// <param name="stockNo"></param>
+        /// <returns></returns>
         private bool ApplySAP(string stockNo)
         {
             try
@@ -712,6 +754,37 @@ namespace BetagenSBOAddon.Forms
             this.Freeze(false);
         }
 
+
+        private void LoadDataMain(int index)
+        {
+            DateTime date;
+            if (DateTime.TryParse(this.grList.DataTable.GetValue("StockDate", index).ToString(), out date))
+            {
+                this.StockDate = date;
+            }
+            //int selected = 0;
+            // this.cbbFmWh.Value.
+            this.cbbFmWh.Select(this.grList.DataTable.GetValue("FromWhsCode", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
+            this.cbbToWh.Select(this.grList.DataTable.GetValue("ToWhsCode", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
+            this.edNote.Value = this.grList.DataTable.GetValue("Note", index).ToString();
+            this.cbbFromBin.Select(this.grList.DataTable.GetValue("AbsEntry", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
+            this.cbbToBin.Select(this.grList.DataTable.GetValue("AbsEntry1", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
+
+            //CreateStockNo();
+            this.edNo.Value = this.grList.DataTable.GetValue("StockNo", index).ToString();
+            LoadListAddForm();
+        }
+        private void SetNullValues(bool isBool)
+        {
+            this.btnAddNew.Item.Enabled = isBool;
+            this.btnAppSapAdd.Item.Enabled = isBool;
+            this.cbbFmWh.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
+            this.cbbToWh.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
+            //this.cbbFromBin.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
+            //this.cbbToBin.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
+            this.StockDate = DateTime.Today.AddDays(1);
+            this.edNote.Value = string.Empty;
+        }
         private void EnableButtonInAdd()
         {
             //this.btnSave.Item.Enabled = ListSelect.Count > 0;
@@ -1095,36 +1168,59 @@ namespace BetagenSBOAddon.Forms
             if (index >= 0)
             {
                 this.LoadDataMain(index);
+                var applySap = EnableApplySAP();
+                this.EnabledControl();
+                this.btnAppSapAdd.Item.Enabled = applySap;
+                this.btnLoadItem.Item.Enabled = applySap;
+                this.btnAddNew.Item.Enabled = true;
+                this.tagPage2.Select();
             }
             this.Freeze(false);
-        }
-
-        private void LoadDataMain(int index)
-        {
-            DateTime date;
-            if (DateTime.TryParse(this.grList.DataTable.GetValue("StockDate", index).ToString(), out date))
-            {
-                this.StockDate = date;
-            }
-            //int selected = 0;
-            // this.cbbFmWh.Value.
-            this.cbbFmWh.Select(this.grList.DataTable.GetValue("FromWhsCode", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
-            this.cbbToWh.Select(this.grList.DataTable.GetValue("ToWhsCode", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
-            this.edNote.Value = this.grList.DataTable.GetValue("Note", index).ToString();
-            this.cbbFromBin.Select(this.grList.DataTable.GetValue("AbsEntry", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
-            this.cbbToBin.Select(this.grList.DataTable.GetValue("AbsEntry1", index).ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
-
-            //CreateStockNo();
-            this.edNo.Value = this.grList.DataTable.GetValue("StockNo", index).ToString();
-            LoadListAddForm();
-            this.tagPage2.Select();
         }
 
         private void btnAddNew_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            this.Mode = FormMode.Add;
+            this.Freeze(true);
 
+            this.Mode = FormMode.Add;
+            this.StockDate = DateTime.Today.AddDays(1);
+            this.CreateStockNo();
+            EnabledControl();
+            SetNullValues(false);
+            this.btnLoadItem.Item.Enabled = true;
+            this.Freeze(false);
+        }
+
+        private void btnAppSapAdd_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+
+            this.Freeze(true);
+            // case 1  if ! LoggedIn_BySalesTool
+            // handle only this case
+            
+            if (AddInventoryTransferRequest(this.StockNo) > 0 && ApplySAP(this.StockNo))
+            {
+                UIHelper.LogMessage("Add Inventory Transfer Request is successfully", UIHelper.MsgType.StatusBar, false);
+                this.LoadMainGrid();
+                this.btnAppSapAdd.Item.Enabled = false;
+                this.btnLoadItem.Item.Enabled = false;
+                this.LoadMainGrid();
+                //this.loadDatagridMain(true); will code sau
+                this.EnabledControl();
+            }
+            // case 2 LoggedIn_BySalesTool and G_UseWebSrv = 0
+            //---- not handle
+
+            // case 3: call service 
+            //---= not handle
+            this.Freeze(false);
+        }
+        
+        private void btnCancelAdd_PressedAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            this.UIAPIRawForm.Close();
         }
     }
 }
