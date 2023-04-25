@@ -40,6 +40,7 @@ namespace BetagenSBOAddon.Forms
             this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCancel").Specific));
             this.btnCancel.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCancel_ClickBefore);
             this.mtData = ((SAPbouiCOM.Matrix)(this.GetItem("mtData").Specific));
+            this.grData = ((SAPbouiCOM.Grid)(this.GetItem("Item_0").Specific));
             this.OnCustomInitialize();
 
         }
@@ -132,16 +133,15 @@ namespace BetagenSBOAddon.Forms
             {
                 return;
             }
-
-            for (int i = this.mtData.Columns.Item("clItemCode").ValidValues.Count - 1; i >= 0; i--)
+            var combox = (SAPbouiCOM.ComboBox)this.grData.Columns.Item("ItemCode");
+            for (int i = combox.ValidValues.Count - 1; i >= 0; i--)
             {
-                this.mtData.Columns.Item("clItemCode").ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+                combox.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
             }
             foreach (var data in datas)
             {
-                this.mtData.Columns.Item("clItemCode").ValidValues.Add(data["ItemCode"].ToString(), data["ItemName"].ToString());
-                this.mtData.Columns.Item("clItemCode").ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
-              
+                combox.ValidValues.Add(data["ItemCode"].ToString(), data["ItemName"].ToString());
+                combox.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;              
             }
         }
         private void LoadDataToGrid()
@@ -149,28 +149,30 @@ namespace BetagenSBOAddon.Forms
             try
             {
                 LoadComboboxItem();
-
+                this.grData.DataTable.Clear();
                 var query = string.Format(Querystring.sp_LoadPOAllocate, this.POEntry);
-                Hashtable[] datas;
-                using (var connection = Globals.DataConnection)
-                {
-                    datas = connection.ExecQueryToArrayHashtable(query);
-                    connection.Dispose();
-                }
-                if (datas == null || datas.Count() <= 0)
-                {
-                    UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, false);
-                    return;
-                }
+                this.grData.DataTable.ExecuteQuery(query);
+                this.grData.AutoResizeColumns();
+                //Hashtable[] datas;
+                //using (var connection = Globals.DataConnection)
+                //{
+                //    datas = connection.ExecQueryToArrayHashtable(query);
+                //    connection.Dispose();
+                //}
+                //if (datas == null || datas.Count() <= 0)
+                //{
+                //    UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, false);
+                //    return;
+                //}
                 
-                foreach (var data in datas)
-                {
-                    this.mtData.AddRow();
-                    int lastRow = this.mtData.RowCount;
-                    var oEdit = (SAPbouiCOM.ComboBox)this.mtData.GetCellSpecific("clItemCode", lastRow);
-                    oEdit.Select(data["ItemCode"].ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);                 
+                //foreach (var data in datas)
+                //{
+                //    this.mtData.AddRow();
+                //    int lastRow = this.mtData.RowCount;
+                //    var oEdit = (SAPbouiCOM.ComboBox)this.mtData.GetCellSpecific("clItemCode", lastRow);
+                //   // oEdit.Select(data["ItemCode"].ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);                 
 
-                }
+                //}
 
             }
             catch (Exception ex)
@@ -244,5 +246,6 @@ namespace BetagenSBOAddon.Forms
         }
 
         private SAPbouiCOM.Matrix mtData;
+        private SAPbouiCOM.Grid grData;
     }
 }
