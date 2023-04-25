@@ -1143,6 +1143,7 @@ namespace BetagenSBOAddon.Forms
                 if (this.Mode == FormMode.Add)
                     CreateStockNo();
                 this.LoadListAddForm();
+                // test noe
             }
             this.Freeze(false);
         }
