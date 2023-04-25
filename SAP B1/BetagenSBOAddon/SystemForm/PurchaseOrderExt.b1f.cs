@@ -7,6 +7,7 @@ namespace BetagenSBOAddon.SystemForm
     [FormAttribute("142", "SystemForm/PurchaseOrderExt.b1f")]
     class PurchaseOrderExt : SystemFormBase
     {
+        private string PoNo;
         public PurchaseOrderExt()
         {
         }
@@ -19,6 +20,8 @@ namespace BetagenSBOAddon.SystemForm
             this.btnAllBa = ((SAPbouiCOM.Button)(this.GetItem("btnAllBa").Specific));
             this.btnAllBa.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAllBa_ClickBefore);
             this.btnAllFr = ((SAPbouiCOM.Button)(this.GetItem("btnAllFr").Specific));
+            //var no = ((SAPbouiCOM.EditText)(this.GetItem("8").Specific));
+            //PoNo = no.Value;
             this.OnCustomInitialize();
 
         }
@@ -28,6 +31,8 @@ namespace BetagenSBOAddon.SystemForm
         /// </summary>
         public override void OnInitializeFormEvents()
         {
+            this.DataLoadAfter += new DataLoadAfterHandler(this.Form_DataLoadAfter);
+
         }
 
         private SAPbouiCOM.Button btnAllBa;
@@ -45,13 +50,19 @@ namespace BetagenSBOAddon.SystemForm
             if (this.UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE ||
                 this.UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_UPDATE_MODE)
             {
-                POAllocationBatch.ShowForm();
+                POAllocationBatch.ShowForm(PoNo);
             }
             else
             {
                 UIHelper.LogMessage("Please select PO Entry and Confirm this PO", UIHelper.MsgType.Msgbox, false);
                 return;
             }
+        }
+
+        private void Form_DataLoadAfter(ref SAPbouiCOM.BusinessObjectInfo pVal)
+        {
+            var no = ((SAPbouiCOM.EditText)(this.GetItem("8").Specific));
+            PoNo = no.Value;
         }
     }
 }

@@ -71,7 +71,28 @@ namespace GTCore.Connection
 
             return result;
         }
+        public Hashtable ExecQueryToHashtable(string query, IDataParameter[] parameters = null)
+        {
+            Hashtable result = null;
+            try
+            {
+                OpenConnection();
+                DataSet dataSet = new DataSet();
+                FillDataSet(query, parameters, dataSet);
+                DataView defaultView = dataSet.Tables[0].DefaultView;
+                result = ((defaultView.Count > 0) ? defaultView[0].ToHashtable() : null);
+            }
+            catch (Exception ex)
+            {
+                result = null;
+            }
+            finally
+            {
+                Dispose();
+            }
 
+            return result;
+        }
         public Hashtable[] ExecQueryToArrayHashtable(string query, out string errorMessage, IDataParameter[] parameters = null)
         {
             Hashtable[] result = new Hashtable[0];
@@ -96,7 +117,27 @@ namespace GTCore.Connection
             return result;
         }
 
-      
+        public Hashtable[] ExecQueryToArrayHashtable(string query, IDataParameter[] parameters = null)
+        {
+            Hashtable[] result = new Hashtable[0];
+            try
+            {
+                OpenConnection();
+                DataSet dataSet = new DataSet();
+                FillDataSet(query, parameters, dataSet);
+
+                result = dataSet.Tables[0].DefaultView.ToHashtableArray();
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                Dispose();
+            }
+
+            return result;
+        }
         public int ExecuteWithOpenClose(string query)
         {
             string errorMessage;

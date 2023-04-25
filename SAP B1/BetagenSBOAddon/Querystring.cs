@@ -137,5 +137,37 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("USP_BS_STOCKOUTREQUEST_GETAPPLYSAP", "'{0}', {1}");
             }
         }
+
+        public static string sp_GetPOByDocEntry
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_PO_LoadbyEntry", "{0}");
+            }
+        }
+
+        public static string sp_GetAllItemToCombobox
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_PO_DateAllocate_LoadItem", "");
+            }
+        }
+
+        public static string sp_GetAllBinToCombobox
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_PO_DateAllocate_LoadBIN", "");
+            }
+        }
+
+        public static string sp_LoadPOAllocate
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_PO_DateAllocate_LoadPOLotNobyEntry", "'{0}'");
+            }
+        }
     }
 }

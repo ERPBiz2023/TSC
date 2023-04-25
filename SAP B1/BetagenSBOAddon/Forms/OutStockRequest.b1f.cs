@@ -836,29 +836,19 @@ namespace BetagenSBOAddon.Forms
         {
             this.Freeze(true);//Freeze
             this.LoadMainGrid();
-            //try
-            //{
-            //    this.LoadMainGrid();
-            //}
-            //catch (Exception ex)
-            //{
-            //    Application.SBO_Application.SetStatusBarMessage(string.Format("Search has error : {0} ", ex.Message), SAPbouiCOM.BoMessageTime.bmt_Short, true);
-            //}
             this.Freeze(false);//UnFreeze
         }
 
         private void btnSearch_PressedBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            //throw new System.NotImplementedException();
 
         }
 
         private void Form_CloseBefore(SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-
-            // Application.SBO_Application.Forms.Item(this).
+            
         }
 
         private void Form_CloseAfter(SAPbouiCOM.SBOItemEventArg pVal)
@@ -882,7 +872,7 @@ namespace BetagenSBOAddon.Forms
                 else
                 {
                     FromDate = DateTime.Now;
-                    Application.SBO_Application.SetStatusBarMessage("From Date Field must has format as (dd.MM.yyyy)", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                    UIHelper.LogMessage("From Date Field must has format as (dd.MM.yyyy)", UIHelper.MsgType.StatusBar, true);
                 }
             }
         }
@@ -900,7 +890,8 @@ namespace BetagenSBOAddon.Forms
                 else
                 {
                     toDate = DateTime.Now;
-                    Application.SBO_Application.SetStatusBarMessage("To Date Field must has format as (dd.MM.yyyy)", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                    UIHelper.LogMessage("To Date Field must has format as (dd.MM.yyyy)", UIHelper.MsgType.StatusBar, true);
+                   // Application.SBO_Application.SetStatusBarMessage("To Date Field must has format as (dd.MM.yyyy)", SAPbouiCOM.BoMessageTime.bmt_Short, true);
                 }
             }
         }
@@ -918,7 +909,9 @@ namespace BetagenSBOAddon.Forms
             }
             catch (Exception ex)
             {
-                Application.SBO_Application.SetStatusBarMessage(string.Format("Delete has error : {0} ", ex.Message), SAPbouiCOM.BoMessageTime.bmt_Short, true);
+
+                UIHelper.LogMessage(string.Format("Delete has error : {0} ", ex.Message), UIHelper.MsgType.StatusBar, true);
+               // Application.SBO_Application.SetStatusBarMessage(string.Format("Delete has error : {0} ", ex.Message), SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
             this.Freeze(false);//UnFreeze
         }
@@ -1111,7 +1104,9 @@ namespace BetagenSBOAddon.Forms
                 else
                 {
                     StockDate = DateTime.Today.AddDays(1);
-                    Application.SBO_Application.SetStatusBarMessage("Stock Date Field must has format as (dd.MM.yyyy)", SAPbouiCOM.BoMessageTime.bmt_Short, true);
+
+                    UIHelper.LogMessage("Stock Date Field must has format as (dd.MM.yyyy)", UIHelper.MsgType.StatusBar, true);
+                   // Application.SBO_Application.SetStatusBarMessage("Stock Date Field must has format as (dd.MM.yyyy)", SAPbouiCOM.BoMessageTime.bmt_Short, true);
                 }
                 CreateStockNo();
             }
