@@ -16,14 +16,6 @@ namespace BetagenSBOAddon
         {
             try
             {
-                //SAPbouiCOM.SboGuiApi SboGuiApi = null;
-                //SboGuiApi = new SAPbouiCOM.SboGuiApi();
-                //var sConnectionString = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
-                //SboGuiApi.Connect(sConnectionString);
-
-                //Globals.Application = SboGuiApi.GetApplication(-1);
-                
-               // var ret1 = Connection.SetApplication(ref message);
                 Application MainApplication = null;
                 if (args.Length < 1)
                 {
@@ -34,10 +26,8 @@ namespace BetagenSBOAddon
                     MainApplication = new Application(args[0]);
                 }
 
-                Menu MyMenu = new Menu(); // init menu in construction method                
-
-                //MyMenu.AddMenuItems();
-                //Globals.Application.MenuEvent += MyMenu.SBO_Application_MenuEvent;
+                Menu MyMenu = new Menu();              
+                
                 MainApplication.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
                 MainApplication.Run();
@@ -48,6 +38,11 @@ namespace BetagenSBOAddon
             }
         }
 
+
+        /// <summary>
+        /// Register Event for application 
+        /// </summary>
+        /// <param name="EventType"></param>
         static void SBO_Application_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)
         {
             switch (EventType)

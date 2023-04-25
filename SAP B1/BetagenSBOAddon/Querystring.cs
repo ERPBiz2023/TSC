@@ -13,6 +13,14 @@ namespace BetagenSBOAddon
         // functions
         // UF_BS_GETQUANTITYSTOCKOUTREQUEST
         // UF_BS_SETCOLOR_ITEMCODE
+
+        /// <summary>
+        /// Call Query by system SAP HANA or SQL
+        /// Syntax SQL : EXEC [query] param1, param1;
+        /// </summary>: CALL "[schema]"."[query]" (param1, param1);
+        /// <param name="query">Store name</param>
+        /// <param name="param">Parameter of store</param>
+        /// <returns></returns>
         private static string CallStoreBySystem(string query, string param = "")
         {
             if (CoreSetting.System == SystemType.SAP_HANA)
@@ -22,68 +30,69 @@ namespace BetagenSBOAddon
             }
             else
             {
-                return "EXEC " + query + " " + param;//, query, param);
+                return "EXEC " + query + " " + param;
             }
         }
+
+        /// <summary>
+        /// USP_BS_STOCKOUTREQUEST  "'{0}','{1}','{2}', {3}"
+        /// </summary>
         public static string sp_LoadOutStockRequest
         {
            
             get
             {
                 return CallStoreBySystem("USP_BS_STOCKOUTREQUEST", "'{0}','{1}','{2}', {3}");
-                //if (CoreSetting.System == SystemType.SAP_HANA)
-                //    return "CALL \"USP_BS_STOCKOUTREQUEST\" ('{0}','{1}','{2}', {3})";
-                //else
-                //    return "EXEC USP_BS_STOCKOUTREQUEST '{0}','{1}','{2}', {3}";
             }
         }
 
+        /// <summary>
+        /// USP_BS_STOCKOUTREQUEST2_DELETE "'{0}'"
+        /// </summary>
         public static string sp_DeleteOutStockRequest
         {
             get
             {
                 return CallStoreBySystem("USP_BS_STOCKOUTREQUEST2_DELETE", "'{0}'");
-                //if (CoreSetting.System == SystemType.SAP_HANA)
-                //    return "CALL \"USP_BS_STOCKOUTREQUEST2_DELETE\" ('{0}')";
-                //else
-                //    return "EXEC USP_BS_STOCKOUTREQUEST2_DELETE '{0}'";
             }
         }
+
+        /// <summary>
+        /// usp_Notification_UpdateStock
+        /// </summary>
         public static string sp_NotificationUpdateStock
         {
             get
             {
                 return CallStoreBySystem("usp_Notification_UpdateStock");
-                //if (CoreSetting.System == SystemType.SAP_HANA)
-                //    return "CALL \"usp_Notification_UpdateStock\" ()";
-                //else
-                //    return "EXEC usp_Notification_UpdateStock ";
             }
         }
 
+        /// <summary>
+        /// usp_BS_STOCKOUTREQUEST_LoadbyID "'{0}'"
+        /// </summary>
         public static string sp_LoadOutStockRequestByID
         {
             get
             {
                 return CallStoreBySystem("usp_BS_STOCKOUTREQUEST_LoadbyID", "'{0}'");
-                //if (CoreSetting.System == SystemType.SAP_HANA)
-                //    return "CALL \"usp_BS_STOCKOUTREQUEST_LoadbyID\" ('{0}')";
-                //else
-                //    return "EXEC usp_BS_STOCKOUTREQUEST_LoadbyID '{0}'";
             }
         }
+
+        /// <summary>
+        /// usp_BS_STOCKOUTREQUEST_DETAIL_LoadbyID "'{0}'"
+        /// </summary>
         public static string sp_LoadOutStockRequestDetailByID
         {
             get
             {
                 return CallStoreBySystem("usp_BS_STOCKOUTREQUEST_DETAIL_LoadbyID", "'{0}'");
-                //if (CoreSetting.System == SystemType.SAP_HANA)
-                //    return "CALL \"usp_BS_STOCKOUTREQUEST_DETAIL_LoadbyID\" ('{0}')";
-                //else
-                // return "EXEC usp_BS_STOCKOUTREQUEST_DETAIL_LoadbyID '{0}'";
             }
         }
 
+        /// <summary>
+        /// USP_BS_STOCKOUTREQUEST_APPLY_SAP "'{0}', {1}"
+        /// </summary>
         public static string sp_OutStockRequestApplySAP
         {
             get
@@ -91,6 +100,10 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("USP_BS_STOCKOUTREQUEST_APPLY_SAP", "'{0}', {1}");
             }
         }
+
+        /// <summary>
+        /// usp_BS_InventoryTransferReq_Confirm "'{0}', {1}"
+        /// </summary>
         public static string sp_OutStockRequestConfirm
         {
             get
@@ -99,6 +112,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// USP_BS_OWHS
+        /// </summary>
         public static string sp_GetWarehouses
         {
             get
@@ -106,6 +122,10 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("USP_BS_OWHS", "");
             }
         }
+
+        /// <summary>
+        /// USP_BS_BINCODE "'{0}'"
+        /// </summary>
         public static string sp_GetBins
         {
             get
@@ -114,6 +134,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// USP_BS_GETMAXT_STCKNO_DOUPLICATE "'{0}'"
+        /// </summary>
         public static string sp_GetMaxStockNo
         {
             get
@@ -122,6 +145,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// USP_BS_LOT_OINM "'{0}', '{1}', {2}"
+        /// </summary>
         public static string sp_LoadLotItem
         {
             get
@@ -130,6 +156,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// USP_BS_STOCKOUTREQUEST_GETAPPLYSAP "'{0}', {1}"
+        /// </summary>
         public static string sp_OutStockRequestGetApplySAP
         {
             get
@@ -138,6 +167,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// usp_BS_PO_LoadbyEntry "{0}"
+        /// </summary>
         public static string sp_GetPOByDocEntry
         {
             get
@@ -146,6 +178,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// USP_BS_PO_DateAllocate_LoadItem
+        /// </summary>
         public static string sp_GetAllItemToCombobox
         {
             get
@@ -154,6 +189,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// USP_BS_PO_DateAllocate_LoadBIN
+        /// </summary>
         public static string sp_GetAllBinToCombobox
         {
             get
@@ -162,6 +200,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// USP_BS_PO_DateAllocate_LoadPOLotNobyEntry "'{0}'"
+        /// </summary>
         public static string sp_LoadPOAllocate
         {
             get

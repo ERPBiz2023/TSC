@@ -16,7 +16,7 @@ namespace BetagenSBOAddon.Forms
         public string POEntry { get; set; }
         public string POStatus { get; set; }
         public string POConfirm { get; set; }
-        public POAllocationBatch()
+       public POAllocationBatch()
         {
         }
 
@@ -137,14 +137,12 @@ namespace BetagenSBOAddon.Forms
             {
                 this.mtData.Columns.Item("clItemCode").ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
             }
-            // this.mtData.Columns.Item("clItemCode").ValidValues.a
             foreach (var data in datas)
             {
                 this.mtData.Columns.Item("clItemCode").ValidValues.Add(data["ItemCode"].ToString(), data["ItemName"].ToString());
-                this.mtData.Columns.Item("clItemCode").ExpandType = SAPbouiCOM.BoExpandType.et_DescriptionOnly;
+                this.mtData.Columns.Item("clItemCode").ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+              
             }
-            this.mtData.Columns.Item("clItemCode").DisplayDesc = true;
-            //this.mtData.LoadFromDataSource();
         }
         private void LoadDataToGrid()
         {
@@ -164,23 +162,23 @@ namespace BetagenSBOAddon.Forms
                     UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, false);
                     return;
                 }
+                
                 foreach (var data in datas)
                 {
                     this.mtData.AddRow();
-                    int lastRow = this.mtData.VisualRowCount;
+                    int lastRow = this.mtData.RowCount;
                     var oEdit = (SAPbouiCOM.ComboBox)this.mtData.GetCellSpecific("clItemCode", lastRow);
-                    
-                    oEdit.Select(data["ItemCode"].ToString(), SAPbouiCOM.BoSearchKey.psk_ByDescription);
+                    oEdit.Select(data["ItemCode"].ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);                 
+
                 }
-                
-                this.mtData.SelectRow(this.mtData.RowCount, true, false);
+
             }
             catch (Exception ex)
             {
                 UIHelper.LogMessage(string.Format("Load data error {0}", ex.Message), UIHelper.MsgType.StatusBar, false);
             }
         }
-
+        
         private void Freeze(bool freeze)
         {
             this.UIAPIRawForm.Freeze(freeze);

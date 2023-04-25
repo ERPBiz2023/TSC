@@ -9,13 +9,20 @@ namespace BetagenSBOAddon
 {
     class Menu
     {
+        /// <summary>
+        /// Init Menu for system
+        /// </summary>
         public Menu()
         {
-            // add menu for OutStockRequest form
             var infor = OutStockRequest.Information;
             AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
         }
 
+        /// <summary>
+        /// Check Menu id Exist
+        /// </summary>
+        /// <param name="menuID">MenuId to check</param>
+        /// <returns></returns>
         public bool MenuExists(string menuID)
         {
             try
@@ -29,6 +36,12 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// Add Menu Item to Menus list
+        /// </summary>
+        /// <param name="menuID">MenuId</param>
+        /// <param name="menuName">Menu Description</param>
+        /// <param name="parentId">Parent menu ID to set</param>
         public void AddMenuItem(string menuID, string menuName, string parentId)
         {
             if (MenuExists(menuID))
@@ -45,8 +58,6 @@ namespace BetagenSBOAddon
                 item.Type = SAPbouiCOM.BoMenuType.mt_STRING;
                 item.UniqueID = menuID;
                 item.String = menuName;
-                // item.Enabled = true;
-                // item.Position = -1;
 
                 oMenus.AddEx(item);
             }
@@ -55,6 +66,13 @@ namespace BetagenSBOAddon
                 Application.SBO_Application.SetStatusBarMessage("Menu Already Exists", SAPbouiCOM.BoMessageTime.bmt_Short, true);
             }
         }
+
+        /// <summary>
+        /// Add Folder to Menu
+        /// </summary>
+        /// <param name="folderID">Folder ID</param>
+        /// <param name="foldelName">Folder Description</param>
+        /// <param name="parentId">Parent menu ID to set</param>
         public void AddMenuFolder(string folderID, string foldelName, string parentId = "")
         {
             if (MenuExists(folderID))
@@ -92,6 +110,11 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// Register event for Menus
+        /// </summary>
+        /// <param name="pVal"></param>
+        /// <param name="BubbleEvent"></param>
         public void SBO_Application_MenuEvent(ref SAPbouiCOM.MenuEvent pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
@@ -113,6 +136,11 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// Check form is openning
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
         private bool CheckFormOpen(string formId)
         {
             foreach (var item in Application.SBO_Application.Forms)
