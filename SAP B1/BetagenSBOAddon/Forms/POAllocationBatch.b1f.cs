@@ -70,11 +70,11 @@ namespace BetagenSBOAddon.Forms
             if (instance == null)
             {
                 instance = new POAllocationBatch();
+                instance.POEntry = poNo;
+                instance.LoadData();
+
                 instance.Show();
                 IsFormOpen = true;
-                instance.POEntry = poNo;
-                // 
-                instance.LoadData();
                 // instance.edPOEn.Value = poNo;
             }
         }
@@ -119,36 +119,61 @@ namespace BetagenSBOAddon.Forms
             this.Freeze(false);
         }
 
+        private void LoadComboboxItem()
+        {
+            var query = Querystring.sp_GetAllItemToCombobox;
+            Hashtable[] datas;
+            using (var connection = Globals.DataConnection)
+            {
+                datas = connection.ExecQueryToArrayHashtable(query);
+                connection.Dispose();
+            }
+            if (datas == null || datas.Count() <= 0)
+            {
+                return;
+            }
+
+            for (int i = this.mtData.Columns.Item("clItemCode").ValidValues.Count - 1; i >= 0; i--)
+            {
+                this.mtData.Columns.Item("clItemCode").ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+            }
+            // this.mtData.Columns.Item("clItemCode").ValidValues.a
+            foreach (var data in datas)
+            {
+                this.mtData.Columns.Item("clItemCode").ValidValues.Add(data["ItemCode"].ToString(), data["ItemName"].ToString());
+                this.mtData.Columns.Item("clItemCode").ExpandType = SAPbouiCOM.BoExpandType.et_DescriptionOnly;
+            }
+            this.mtData.Columns.Item("clItemCode").DisplayDesc = true;
+            //this.mtData.LoadFromDataSource();
+        }
         private void LoadDataToGrid()
         {
             try
             {
-                SAPbouiCOM.ColumnClass oCombo = (SAPbouiCOM.ColumnClass)this.mtData.Columns.Item("clItemCode");
+                LoadComboboxItem();
 
-                var query = Querystring.sp_GetAllItemToCombobox;
+                var query = string.Format(Querystring.sp_LoadPOAllocate, this.POEntry);
                 Hashtable[] datas;
                 using (var connection = Globals.DataConnection)
                 {
                     datas = connection.ExecQueryToArrayHashtable(query);
                     connection.Dispose();
                 }
-
-                if (datas == null || datas.Count() <= 0)                {
-
+                if (datas == null || datas.Count() <= 0)
+                {
+                    UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, false);
                     return;
                 }
-                for (int i = oCombo.ValidValues.Count - 1; i >= 0; i--)
-                {
-                    oCombo.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
-                   // oCombo.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
-                }
-                oCombo.ValidValues.Add("", "");
-               // oCombo.s.GetSelectedValue(0);
                 foreach (var data in datas)
                 {
-                    oCombo.ValidValues.Add(data["ItemCode"].ToString(), data["ItemName"].ToString());
-                    oCombo.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+                    this.mtData.AddRow();
+                    int lastRow = this.mtData.VisualRowCount;
+                    var oEdit = (SAPbouiCOM.ComboBox)this.mtData.GetCellSpecific("clItemCode", lastRow);
+                    
+                    oEdit.Select(data["ItemCode"].ToString(), SAPbouiCOM.BoSearchKey.psk_ByDescription);
                 }
+                
+                this.mtData.SelectRow(this.mtData.RowCount, true, false);
             }
             catch (Exception ex)
             {
