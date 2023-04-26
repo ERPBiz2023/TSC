@@ -185,7 +185,7 @@ namespace BetagenSBOAddon
         {
             get
             {
-                return CallStoreBySystem("USP_BS_PO_DateAllocate_LoadItem", "");
+                return CallStoreBySystem("USP_BS_PO_DateAllocate_LoadItem", "{0}");
             }
         }
 
@@ -208,6 +208,17 @@ namespace BetagenSBOAddon
             get
             {
                 return CallStoreBySystem("USP_BS_PO_DateAllocate_LoadPOLotNobyEntry", "'{0}'");
+            }
+        }
+
+        /// <summary>
+        /// usp_BS_PO_DateAllocate_ImportInfo_DeleteBefAdd "{0}"
+        /// </summary>
+        public static string sp_POAllocateImportInfo_DeleteBefAdd
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_PO_DateAllocate_ImportInfo_DeleteBefAdd", "{0}");
             }
         }
     }

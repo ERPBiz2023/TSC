@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using GTCore;
 using GTCore.Forms;
 using SAPbouiCOM.Framework;
@@ -16,7 +17,11 @@ namespace BetagenSBOAddon.Forms
         public string POEntry { get; set; }
         public string POStatus { get; set; }
         public string POConfirm { get; set; }
-       public POAllocationBatch()
+
+        private bool DataChange = false;
+        private string DataBefore = string.Empty;
+
+        public POAllocationBatch()
         {
         }
 
@@ -25,12 +30,7 @@ namespace BetagenSBOAddon.Forms
         /// </summary>
         public override void OnInitializeComponent()
         {
-            this.edFile = ((SAPbouiCOM.EditText)(this.GetItem("edFile").Specific));
-            this.StaticText0 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_1").Specific));
-            this.btnFile = ((SAPbouiCOM.Button)(this.GetItem("btnFile").Specific));
-            this.btnFile.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnFile_ClickBefore);
-            this.btnImport = ((SAPbouiCOM.Button)(this.GetItem("btnImport").Specific));
-            this.btnImport.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnImport_ClickBefore);
+            //    this.btnImport.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnImport_ClickBefore);
             this.StaticText1 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_4").Specific));
             this.edPOEn = ((SAPbouiCOM.EditText)(this.GetItem("edPOEn").Specific));
             this.StaticText2 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_6").Specific));
@@ -39,8 +39,13 @@ namespace BetagenSBOAddon.Forms
             this.btnSave.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSave_ClickBefore);
             this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCancel").Specific));
             this.btnCancel.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCancel_ClickBefore);
-            this.mtData = ((SAPbouiCOM.Matrix)(this.GetItem("mtData").Specific));
-            this.grData = ((SAPbouiCOM.Grid)(this.GetItem("Item_0").Specific));
+            this.grData = ((SAPbouiCOM.Grid)(this.GetItem("grMain").Specific));
+            this.grData.ClickBefore += this.GrData_ClickBefore;
+            this.grData.LostFocusAfter += this.GrData_LostFocusAfter;
+            this.btnAdd = ((SAPbouiCOM.Button)(this.GetItem("btnAdd").Specific));
+            this.btnAdd.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAdd_ClickBefore);
+            this.btnRemo = ((SAPbouiCOM.Button)(this.GetItem("btnRemo").Specific));
+            this.btnRemo.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnRemo_ClickBefore);
             this.OnCustomInitialize();
 
         }
@@ -76,6 +81,8 @@ namespace BetagenSBOAddon.Forms
 
                 instance.Show();
                 IsFormOpen = true;
+
+                instance.SetControl();
                 // instance.edPOEn.Value = poNo;
             }
         }
@@ -120,9 +127,9 @@ namespace BetagenSBOAddon.Forms
             this.Freeze(false);
         }
 
-        private void LoadComboboxItem()
+        private void LoadComboboxItem(SAPbouiCOM.ComboBoxColumn column)
         {
-            var query = Querystring.sp_GetAllItemToCombobox;
+            var query = string.Format(Querystring.sp_GetAllItemToCombobox, this.POEntry);
             Hashtable[] datas;
             using (var connection = Globals.DataConnection)
             {
@@ -133,46 +140,75 @@ namespace BetagenSBOAddon.Forms
             {
                 return;
             }
-            var combox = (SAPbouiCOM.ComboBox)this.grData.Columns.Item("ItemCode");
-            for (int i = combox.ValidValues.Count - 1; i >= 0; i--)
+            for (int i = column.ValidValues.Count - 1; i >= 0; i--)
             {
-                combox.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+                column.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
             }
             foreach (var data in datas)
             {
-                combox.ValidValues.Add(data["ItemCode"].ToString(), data["ItemName"].ToString());
-                combox.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;              
+                column.ValidValues.Add(data["ItemCode"].ToString(), data["ItemName"].ToString());
+                column.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+            }
+        }
+        private void LoadComboboxTeam(SAPbouiCOM.ComboBoxColumn column)
+        {
+            var query = string.Format(Querystring.sp_GetAllBinToCombobox);
+            Hashtable[] datas;
+            using (var connection = Globals.DataConnection)
+            {
+                datas = connection.ExecQueryToArrayHashtable(query);
+                connection.Dispose();
+            }
+            if (datas == null || datas.Count() <= 0)
+            {
+                return;
+            }
+            for (int i = column.ValidValues.Count - 1; i >= 0; i--)
+            {
+                column.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+            }
+            foreach (var data in datas)
+            {
+                column.ValidValues.Add(data["BinCode"].ToString(), data["BinName"].ToString());
+                column.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+            }
+        }
+        private void SetControl()
+        {
+            if (this.POStatus != "O")
+            {
+                this.btnSave.Item.Enabled = false;
+            }
+            else
+            {
+                this.btnSave.Item.Enabled = DataChange;
             }
         }
         private void LoadDataToGrid()
         {
             try
             {
-                LoadComboboxItem();
                 this.grData.DataTable.Clear();
                 var query = string.Format(Querystring.sp_LoadPOAllocate, this.POEntry);
                 this.grData.DataTable.ExecuteQuery(query);
-                this.grData.AutoResizeColumns();
-                //Hashtable[] datas;
-                //using (var connection = Globals.DataConnection)
-                //{
-                //    datas = connection.ExecQueryToArrayHashtable(query);
-                //    connection.Dispose();
-                //}
-                //if (datas == null || datas.Count() <= 0)
-                //{
-                //    UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, false);
-                //    return;
-                //}
-                
-                //foreach (var data in datas)
-                //{
-                //    this.mtData.AddRow();
-                //    int lastRow = this.mtData.RowCount;
-                //    var oEdit = (SAPbouiCOM.ComboBox)this.mtData.GetCellSpecific("clItemCode", lastRow);
-                //   // oEdit.Select(data["ItemCode"].ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);                 
 
-                //}
+                this.grData.Columns.Item("ItemCode").TitleObject.Caption = "Item Code";
+                this.grData.Columns.Item("ItemCode").Type = SAPbouiCOM.BoGridColumnType.gct_ComboBox;
+                LoadComboboxItem((SAPbouiCOM.ComboBoxColumn)this.grData.Columns.Item("ItemCode"));
+
+                this.grData.Columns.Item("ExpDate").TitleObject.Caption = "Exp. Date";
+                this.grData.Columns.Item("ExpDate").Editable = true;
+
+                this.grData.Columns.Item("Team").TitleObject.Caption = "Team";
+                this.grData.Columns.Item("Team").Type = SAPbouiCOM.BoGridColumnType.gct_ComboBox;
+                LoadComboboxTeam((SAPbouiCOM.ComboBoxColumn)this.grData.Columns.Item("Team"));
+
+                this.grData.Columns.Item("Quantity").Editable = true;
+
+                this.grData.Columns.Item("MyID").Visible = false;
+                this.grData.Columns.Item("PODocEntry").Visible = false;
+
+                this.grData.AutoResizeColumns();
 
             }
             catch (Exception ex)
@@ -180,13 +216,12 @@ namespace BetagenSBOAddon.Forms
                 UIHelper.LogMessage(string.Format("Load data error {0}", ex.Message), UIHelper.MsgType.StatusBar, false);
             }
         }
-        
+
         private void Freeze(bool freeze)
         {
             this.UIAPIRawForm.Freeze(freeze);
         }
         private static AddonUserForm information;
-        private SAPbouiCOM.EditText edFile;
 
         public static AddonUserForm Information
         {
@@ -208,35 +243,104 @@ namespace BetagenSBOAddon.Forms
         {
 
         }
-
-        private SAPbouiCOM.StaticText StaticText0;
-        private SAPbouiCOM.Button btnFile;
-        private SAPbouiCOM.Button btnImport;
         private SAPbouiCOM.StaticText StaticText1;
         private SAPbouiCOM.EditText edPOEn;
         private SAPbouiCOM.StaticText StaticText2;
         private SAPbouiCOM.EditText edPONo;
         private SAPbouiCOM.Button btnSave;
         private SAPbouiCOM.Button btnCancel;
+        private SAPbouiCOM.Grid grData;
+        private SAPbouiCOM.Button btnAdd;
+        private SAPbouiCOM.Button btnRemo;
 
-        private void btnFile_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
-        {
-            BubbleEvent = true;
-        }
+        //private void btnFile_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        //{
+        //    BubbleEvent = true;
+        //    this.edFile.Value = string.Empty;
+        //    try
+        //    {
+        //        OpenFileDialog openFileDialog = new OpenFileDialog();
+
+        //        openFileDialog.InitialDirectory = System.Windows.Forms.Application.StartupPath;
+        //        openFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm|All Files|*.*";
+        //        openFileDialog.FilterIndex = 0;
+
+        //        openFileDialog.Title = "Select a Excel file to open";
+
+
+        //        DialogResult ret = UIHelper.ShowGTDialog(openFileDialog);
+        //        if (ret == DialogResult.OK)
+        //        {
+        //            this.edFile.Value = openFileDialog.FileName;
+        //        }
+        //        SetControl();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        UIHelper.LogMessage(string.Format("Choose file error: {0}", ex.Message), UIHelper.MsgType.StatusBar, false);
+
+        //        this.UIAPIRawForm.Close();
+        //    }
+        //}
 
         private void btnImport_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
+            this.Freeze(true);
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(string.Format("Import Error: {0}", ex.Message), UIHelper.MsgType.StatusBar, false);
+
+                this.Freeze(false);
+            }
+
+            this.Freeze(false);
         }
 
         private void btnSave_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
+            this.Freeze(true);
+            try
+            {
+                if (this.grData.DataTable == null ||
+                    this.grData.DataTable.Rows.Count <= 0)
+                {
+                    UIHelper.LogMessage(string.Format("Do not data to save"), UIHelper.MsgType.StatusBar, false);
+
+                    this.Freeze(false);
+                    return;
+                }
+
+                if (this.DataChange)
+                {
+                    var query = string.Format(Querystring.sp_POAllocateImportInfo_DeleteBefAdd, this.POEntry);
+                    using (var connection = Globals.DataConnection)
+                    {
+                        connection.ExecuteWithOpenClose(query);
+                        connection.Dispose();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(string.Format("Save Error: {0}", ex.Message), UIHelper.MsgType.StatusBar, false);
+
+                this.Freeze(false);
+                return;
+            }
+            this.Freeze(false);
         }
 
         private void btnCancel_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
+            this.UIAPIRawForm.Close();
         }
 
         private void Form_CloseAfter(SAPbouiCOM.SBOItemEventArg pVal)
@@ -245,7 +349,47 @@ namespace BetagenSBOAddon.Forms
             IsFormOpen = false;
         }
 
-        private SAPbouiCOM.Matrix mtData;
-        private SAPbouiCOM.Grid grData;
+
+
+        private void GrData_LostFocusAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            if (!this.DataChange)
+            {
+                if (pVal.ColUID == "ExpDate")
+                {
+                    var data = this.grData.DataTable.GetValue("ExpDate", pVal.Row).ToString();
+                    if (this.DataBefore != data)
+                    {
+                        this.DataChange = true;
+                    }
+                }
+            }
+            SetControl();
+        }
+
+        private void GrData_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            if (!this.DataChange)
+            {
+                if (pVal.ColUID == "ExpDate")
+                {
+                    this.DataBefore = this.grData.DataTable.GetValue("ExpDate", pVal.Row).ToString();
+                }
+            }
+        }
+
+        private void btnAdd_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            this.grData.DataTable.Rows.Add();
+        }
+
+        private void btnRemo_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            var index = this.grData.Rows.SelectedRows.Item(0, SAPbouiCOM.BoOrderType.ot_RowOrder);
+            this.grData.DataTable.Rows.Remove(index);
+        }
     }
 }

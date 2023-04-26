@@ -4,9 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GTCore
 {
+    public class GTDialog
+    {
+        public DialogResult result;
+        public FileDialog dialog;
+
+        public void ShowDialog()
+        {
+            result = dialog.ShowDialog();
+        }
+    }
     public class UIHelper
     {
         public enum MsgType
@@ -38,5 +49,18 @@ namespace GTCore
                 return -1;
             }
         }
+        public static DialogResult ShowGTDialog(FileDialog dialog)
+        {
+            GTDialog state = new GTDialog();
+            state.dialog = dialog;
+
+            System.Threading.Thread thread = new System.Threading.Thread(state.ShowDialog);
+            thread.SetApartmentState(System.Threading.ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+
+            return state.result;
+        }
+
     }
 }
