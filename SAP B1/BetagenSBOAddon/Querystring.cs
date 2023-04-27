@@ -221,5 +221,16 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("usp_BS_PO_DateAllocate_ImportInfo_DeleteBefAdd", "{0}");
             }
         }
+
+        /// <summary>
+        /// usp_BS_PO_DateAllocate_ImportInfo_Add "{0}, '{1}', '{2}', '{3}', '{4}', {5}"
+        /// </summary>
+        public static string sp_POAllocateImportInfo_Add
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_PO_DateAllocate_ImportInfo_Add", "{0}, '{1}', '{2}', '{3}', '{4}', {5}");
+            }
+        }
     }
 }

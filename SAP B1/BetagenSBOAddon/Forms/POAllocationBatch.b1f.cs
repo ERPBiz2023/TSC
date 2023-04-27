@@ -181,7 +181,7 @@ namespace BetagenSBOAddon.Forms
             }
             else
             {
-                this.btnSave.Item.Enabled = DataChange;
+                this.btnSave.Item.Enabled = true;
             }
         }
         private void LoadDataToGrid()
@@ -252,37 +252,7 @@ namespace BetagenSBOAddon.Forms
         private SAPbouiCOM.Grid grData;
         private SAPbouiCOM.Button btnAdd;
         private SAPbouiCOM.Button btnRemo;
-
-        //private void btnFile_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
-        //{
-        //    BubbleEvent = true;
-        //    this.edFile.Value = string.Empty;
-        //    try
-        //    {
-        //        OpenFileDialog openFileDialog = new OpenFileDialog();
-
-        //        openFileDialog.InitialDirectory = System.Windows.Forms.Application.StartupPath;
-        //        openFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm|All Files|*.*";
-        //        openFileDialog.FilterIndex = 0;
-
-        //        openFileDialog.Title = "Select a Excel file to open";
-
-
-        //        DialogResult ret = UIHelper.ShowGTDialog(openFileDialog);
-        //        if (ret == DialogResult.OK)
-        //        {
-        //            this.edFile.Value = openFileDialog.FileName;
-        //        }
-        //        SetControl();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        UIHelper.LogMessage(string.Format("Choose file error: {0}", ex.Message), UIHelper.MsgType.StatusBar, false);
-
-        //        this.UIAPIRawForm.Close();
-        //    }
-        //}
-
+        
         private void btnImport_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
@@ -316,15 +286,34 @@ namespace BetagenSBOAddon.Forms
                     return;
                 }
 
-                if (this.DataChange)
+                var query = string.Format(Querystring.sp_POAllocateImportInfo_DeleteBefAdd, this.POEntry);
+                using (var connection = Globals.DataConnection)
                 {
-                    var query = string.Format(Querystring.sp_POAllocateImportInfo_DeleteBefAdd, this.POEntry);
+                    connection.ExecuteWithOpenClose(query);
+                    connection.Dispose();
+                }
+
+                for(var index = 0; index < this.grData.DataTable.Rows.Count; index ++)
+                {
+                    var itemcode = this.grData.DataTable.GetValue("ItemCode", index).ToString();
+                    var expDate = this.grData.DataTable.GetValue("ExpDate", index).ToString();
+                    var team = this.grData.DataTable.GetValue("Team", index).ToString();
+                    var qty = this.grData.DataTable.GetValue("Quantity", index).ToString();
+                    decimal Qty;
+                    if (!decimal.TryParse(qty, out Qty))
+                    {
+                        Qty = 0;
+                    }
+
+                    query = string.Format(Querystring.sp_POAllocateImportInfo_Add, this.POEntry, this.PONo, itemcode, expDate, team, Qty);
+
                     using (var connection = Globals.DataConnection)
                     {
-                        connection.ExecuteWithOpenClose(query);
+                        connection.ExecQueryToHashtable(query);
                         connection.Dispose();
                     }
                 }
+
 
             }
             catch (Exception ex)
