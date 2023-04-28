@@ -232,5 +232,16 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("usp_BS_PO_DateAllocate_ImportInfo_Add", "{0}, '{1}', '{2}', '{3}', '{4}', {5}");
             }
         }
+
+        /// <summary>
+        /// usp_BS_PO_DateAllocate_ImportInfo_POLotNo_Add "{0}, '{1}'
+        /// </summary>
+        public static string sp_POAllocateImportInfo_LotNoAdd
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_PO_DateAllocate_ImportInfo_POLotNo_Add", "{0}, '{1}'");
+            }
+        }
     }
 }
