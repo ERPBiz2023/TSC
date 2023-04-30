@@ -56,18 +56,23 @@ namespace BetagenSBOAddon.SystemForm
 
             SAPbouiCOM.ButtonCombo _1Button = ((SAPbouiCOM.ButtonCombo)(this.GetItem("1").Specific));
             _1Button.Item.Top = this.btnAllBa.Item.Top + 30;
+            _1Button.Item.Width = 90;
             this.btnAllFr.Item.Left = _1Button.Item.Left;
             this.btnAllFr.Item.Width = _1Button.Item.Width;
             this.btnAllFr.Item.Height = _1Button.Item.Height;
 
             SAPbouiCOM.ButtonCombo _2349990001Button = ((SAPbouiCOM.ButtonCombo)(this.GetItem("2349990001").Specific));
             _2349990001Button.Item.Top = this.btnAllBa.Item.Top + 30;
+            _2349990001Button.Item.Width = 90;
+            _2349990001Button.Item.Left = _1Button.Item.Left + 100;
             this.btnAllBa.Item.Left = _2349990001Button.Item.Left;
             this.btnAllBa.Item.Width = _2349990001Button.Item.Width;
             this.btnAllBa.Item.Height = _2349990001Button.Item.Height;
-
+           
             SAPbouiCOM.Button _2Button = ((SAPbouiCOM.Button)(this.GetItem("2").Specific));
             _2Button.Item.Top = this.btnAllBa.Item.Top + 30;
+            _2Button.Item.Left = _2349990001Button.Item.Left + 100;
+
         }
 
         private SAPbouiCOM.Button btnAllFr;
