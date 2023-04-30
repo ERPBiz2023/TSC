@@ -15,7 +15,7 @@ namespace BetagenSBOAddon.Forms
     {
         public string PONo { get; set; }
         public string POEntry { get; set; }
-        public string POStatus { get; set; }
+        public string POStatus { get; set; } = "";
         public string POConfirm { get; set; }
 
         private bool DataChange = false;
@@ -30,7 +30,7 @@ namespace BetagenSBOAddon.Forms
         /// </summary>
         public override void OnInitializeComponent()
         {
-            //    this.btnImport.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnImport_ClickBefore);
+            //     this.btnImport.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnImport_ClickBefore);
             this.StaticText1 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_4").Specific));
             this.edPOEn = ((SAPbouiCOM.EditText)(this.GetItem("edPOEn").Specific));
             this.StaticText2 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_6").Specific));
@@ -46,6 +46,7 @@ namespace BetagenSBOAddon.Forms
             this.btnAdd.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAdd_ClickBefore);
             this.btnRemo = ((SAPbouiCOM.Button)(this.GetItem("btnRemo").Specific));
             this.btnRemo.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnRemo_ClickBefore);
+            this.EditText0 = ((SAPbouiCOM.EditText)(this.GetItem("edFocus").Specific));
             this.OnCustomInitialize();
 
         }
@@ -175,13 +176,22 @@ namespace BetagenSBOAddon.Forms
         }
         private void SetControl()
         {
+          //  this.UIAPIRawForm.Items.Item("edFocus").Click();
+          ////  this.btnCancel.Item.
+          //  this.edPOEn.Item.Enabled = false;
+          //  this.edPONo.Item.Enabled = false;
+
             if (this.POStatus != "O")
             {
                 this.btnSave.Item.Enabled = false;
+                this.btnAdd.Item.Enabled = false;
+                this.btnRemo.Item.Enabled = false;
             }
             else
             {
                 this.btnSave.Item.Enabled = true;
+                this.btnAdd.Item.Enabled = true;
+                this.btnRemo.Item.Enabled = true;
             }
         }
         private void LoadDataToGrid()
@@ -195,20 +205,22 @@ namespace BetagenSBOAddon.Forms
                 this.grData.Columns.Item("ItemCode").TitleObject.Caption = "Item Code";
                 this.grData.Columns.Item("ItemCode").Type = SAPbouiCOM.BoGridColumnType.gct_ComboBox;
                 LoadComboboxItem((SAPbouiCOM.ComboBoxColumn)this.grData.Columns.Item("ItemCode"));
+                this.grData.Columns.Item("ItemCode").Editable = (this.POStatus == "O");
 
                 this.grData.Columns.Item("ExpDate").TitleObject.Caption = "Exp. Date";
-                this.grData.Columns.Item("ExpDate").Editable = true;
+                this.grData.Columns.Item("ExpDate").Editable = (this.POStatus == "O");
 
                 this.grData.Columns.Item("Team").TitleObject.Caption = "Team";
                 this.grData.Columns.Item("Team").Type = SAPbouiCOM.BoGridColumnType.gct_ComboBox;
                 LoadComboboxTeam((SAPbouiCOM.ComboBoxColumn)this.grData.Columns.Item("Team"));
+                this.grData.Columns.Item("Team").Editable = (this.POStatus == "O");
 
-                this.grData.Columns.Item("Quantity").Editable = true;
+                this.grData.Columns.Item("Quantity").Editable = (this.POStatus == "O");
 
                 this.grData.Columns.Item("MyID").Visible = false;
                 this.grData.Columns.Item("PODocEntry").Visible = false;
-
-                this.grData.AutoResizeColumns();
+               
+                    this.grData.AutoResizeColumns();
 
             }
             catch (Exception ex)
@@ -325,7 +337,7 @@ namespace BetagenSBOAddon.Forms
                     {
                         result = data["Result"].ToString();
                     }
-                    if(!string.IsNullOrEmpty(result))
+                    if(string.IsNullOrEmpty(result))
                     {
                         UIHelper.LogMessage(string.Format("Saved Successfully"), UIHelper.MsgType.StatusBar, false);
                     }
@@ -398,7 +410,10 @@ namespace BetagenSBOAddon.Forms
         {
             BubbleEvent = true;
             var index = this.grData.Rows.SelectedRows.Item(0, SAPbouiCOM.BoOrderType.ot_RowOrder);
-            this.grData.DataTable.Rows.Remove(index);
+            if(index >= 0)
+                this.grData.DataTable.Rows.Remove(index);
         }
+
+        private SAPbouiCOM.EditText EditText0;
     }
 }

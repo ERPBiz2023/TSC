@@ -15,7 +15,10 @@ namespace BetagenSBOAddon
         public Menu()
         {
             var infor = OutStockRequest.Information;
-            AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
+           
+
+            /// this form run in sales hub
+           // AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
         }
 
         /// <summary>
@@ -122,13 +125,13 @@ namespace BetagenSBOAddon
             try
             {
                 // check form OutStockRequestFrm
-                if (pVal.MenuUID == OutStockRequest.Information.MenuID)
-                {
-                    if (pVal.BeforeAction)
-                    {
-                        OutStockRequest.ShowForm();                     
-                    }
-                }
+                //if (pVal.MenuUID == OutStockRequest.Information.MenuID)
+                //{
+                //    if (pVal.BeforeAction)
+                //    {
+                //        OutStockRequest.ShowForm();                     
+                //    }
+                //}
             }
             catch (Exception ex)
             {
