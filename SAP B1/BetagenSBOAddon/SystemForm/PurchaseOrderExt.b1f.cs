@@ -73,10 +73,10 @@ namespace BetagenSBOAddon.SystemForm
             _2Button.Item.Top = this.btnAllBa.Item.Top + 30;
             _2Button.Item.Left = _2349990001Button.Item.Left + 110;
 
-            SAPbouiCOM.ButtonCombo _CopyFromButton = ((SAPbouiCOM.ButtonCombo)(this.GetItem("10000330").Specific));
+            SAPbouiCOM.ComboBox _CopyFromButton = ((SAPbouiCOM.ComboBox)(this.GetItem("10000330").Specific));
             _CopyFromButton.Item.Top = _1Button.Item.Top;
 
-            SAPbouiCOM.ButtonCombo _CopyFromTo = ((SAPbouiCOM.ButtonCombo)(this.GetItem("10000329").Specific));
+            SAPbouiCOM.ComboBox _CopyFromTo = ((SAPbouiCOM.ComboBox)(this.GetItem("10000329").Specific));
             _CopyFromTo.Item.Top = _1Button.Item.Top;
         }
 
