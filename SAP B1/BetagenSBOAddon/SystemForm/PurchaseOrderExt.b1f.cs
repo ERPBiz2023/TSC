@@ -152,13 +152,14 @@ namespace BetagenSBOAddon.SystemForm
 
                         //var lineTotalField = ((EditText)mtItems.GetCellSpecific("23", i)).Value.Replace("VND", "").Replace("USD", "");
                         double lineTotalNumber;
-                        totalOrg += lineTotalNumber;
                         if (!double.TryParse(lineTotal, out lineTotalNumber))
                         {
                             continue;
                             /// throw message or no acion in here?
                         }
-                        if(rate>0)
+
+                        totalOrg += lineTotalNumber;
+                        if (rate>0)
                         {
                             freight /= rate;
                             lineTotalNumber /= rate;
