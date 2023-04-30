@@ -160,6 +160,7 @@ namespace BetagenSBOAddon.SystemForm
                         if(rate>0)
                         {
                             freight /= rate;
+                            lineTotalNumber /= rate;
                         }
                         totalOrg += lineTotalNumber;
                         ((EditText)mtItems.GetCellSpecific("U_LineTotalAfterF", i)).Value = (lineTotalNumber + freight).ToString();
