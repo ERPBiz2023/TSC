@@ -152,6 +152,7 @@ namespace BetagenSBOAddon.SystemForm
 
                         //var lineTotalField = ((EditText)mtItems.GetCellSpecific("23", i)).Value.Replace("VND", "").Replace("USD", "");
                         double lineTotalNumber;
+                        totalOrg += lineTotalNumber;
                         if (!double.TryParse(lineTotal, out lineTotalNumber))
                         {
                             continue;
@@ -162,7 +163,6 @@ namespace BetagenSBOAddon.SystemForm
                             freight /= rate;
                             lineTotalNumber /= rate;
                         }
-                        totalOrg += lineTotalNumber;
                         ((EditText)mtItems.GetCellSpecific("U_LineTotalAfterF", i)).Value = (lineTotalNumber + freight).ToString();
                     }
 
