@@ -51,14 +51,17 @@ namespace BetagenSBOAddon.SystemForm
             SAPbouiCOM.EditText remartEdit = ((SAPbouiCOM.EditText)(this.GetItem("16").Specific));
             remartEdit.Item.Top = finalHeight + 30;
 
-            this.btnAllBa.Item.Top = remartEdit.Item.Top + 70;
             this.btnAllFr.Item.Top = remartEdit.Item.Top + 70;
+            this.btnAllBa.Item.Top = remartEdit.Item.Top + 70;
 
             SAPbouiCOM.ButtonCombo _1Button = ((SAPbouiCOM.ButtonCombo)(this.GetItem("1").Specific));
             _1Button.Item.Top = this.btnAllBa.Item.Top + 30;
+            this.btnAllFr.Item.Left = _1Button.Item.Left;
+            this.btnAllFr.Item.Width = _1Button.Item.Width;
 
             SAPbouiCOM.ButtonCombo _2349990001Button = ((SAPbouiCOM.ButtonCombo)(this.GetItem("2349990001").Specific));
             _2349990001Button.Item.Top = this.btnAllBa.Item.Top + 30;
+            this.btnAllBa.Item.Width = _2349990001Button.Item.Width;
 
             SAPbouiCOM.Button _2Button = ((SAPbouiCOM.Button)(this.GetItem("2").Specific));
             _2Button.Item.Top = this.btnAllBa.Item.Top + 30;
