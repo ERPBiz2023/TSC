@@ -32,6 +32,7 @@ namespace BetagenSBOAddon
 
         public static string WarehouseNull = "Select warehouse";
         public static string BinNull = "Select team code";
+        public static string UserName;
         public static BaseConnection DataConnection
         {
             get

@@ -25,7 +25,7 @@ namespace BetagenSBOAddon
                 {
                     MainApplication = new Application(args[0]);
                 }
-
+                
                 Menu MyMenu = new Menu();              
                 
                 MainApplication.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
