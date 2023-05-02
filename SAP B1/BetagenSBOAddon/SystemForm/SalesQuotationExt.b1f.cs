@@ -41,6 +41,7 @@ namespace BetagenSBOAddon.SystemForm
             //btnApplyDiscount..DisplayDesc = true;
             btnApplyDiscount.Item.DisplayDesc = false;
             btnApplyDiscount.Item.Top = _2Button.Item.Top;
+            btnApplyDiscount.Item.Height = _2Button.Item.Height;
             btnApplyDiscount.Item.Left = _2Button.Item.Left + 70;
             btnApplyDiscount.Item.Width = 80;
             btnApplyDiscount.Caption = "Apply Discount";
