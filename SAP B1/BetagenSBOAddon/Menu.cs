@@ -14,11 +14,11 @@ namespace BetagenSBOAddon
         /// </summary>
         public Menu()
         {
-            var infor = OutStockRequest.Information;
+            var infor = GLPosting.Information;
            
 
             /// this form run in sales hub
-           // AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
+            AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
         }
 
         /// <summary>
@@ -125,13 +125,13 @@ namespace BetagenSBOAddon
             try
             {
                 // check form OutStockRequestFrm
-                //if (pVal.MenuUID == OutStockRequest.Information.MenuID)
-                //{
-                //    if (pVal.BeforeAction)
-                //    {
-                //        OutStockRequest.ShowForm();                     
-                //    }
-                //}
+                if (pVal.MenuUID == GLPosting.Information.MenuID)
+                {
+                    if (pVal.BeforeAction)
+                    {
+                        GLPosting.ShowForm();
+                    }
+                }
             }
             catch (Exception ex)
             {
