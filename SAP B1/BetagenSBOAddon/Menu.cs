@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using BetagenSBOAddon.Forms;
 using BetagenSBOAddon.Settings;
+using GTCore.Forms;
 using SAPbouiCOM.Framework;
 
 namespace BetagenSBOAddon
@@ -14,11 +15,18 @@ namespace BetagenSBOAddon
         /// </summary>
         public Menu()
         {
-            var infor = GLPosting.Information;
-            
-            AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
+            //var infor = GLPosting.Information;
+
+            //AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
+            AddMenuItem(GlobalFormsInformations.GLPostingInformation);
+            AddMenuItem(GlobalFormsInformations.SalesTargetInformation);
+            AddMenuItem(GlobalFormsInformations.SalesTargetActualInformation);
         }
 
+        private void AddMenuItem(AddonUserForm infor)
+        {
+            AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
+        }
         /// <summary>
         /// Check Menu id Exist
         /// </summary>
@@ -123,11 +131,27 @@ namespace BetagenSBOAddon
             try
             {
                 // check form OutStockRequestFrm
-                if (pVal.MenuUID == GLPosting.Information.MenuID)
+                if (pVal.MenuUID == GlobalFormsInformations.GLPostingMenuID)
                 {
                     if (pVal.BeforeAction)
                     {
                         GLPosting.ShowForm();
+                    }
+                }
+
+                if (pVal.MenuUID == GlobalFormsInformations.SalesTargetMenuID)
+                {
+                    if (pVal.BeforeAction)
+                    {
+                        SalesTarget.ShowForm();
+                    }
+                }
+
+                if (pVal.MenuUID == GlobalFormsInformations.SalesTargetActualMenuID)
+                {
+                    if (pVal.BeforeAction)
+                    {
+                        SalesTargetActual.ShowForm();
                     }
                 }
             }

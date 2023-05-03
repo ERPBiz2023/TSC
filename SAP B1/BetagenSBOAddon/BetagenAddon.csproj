@@ -78,11 +78,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessSAP\OutStockRequestDAL.cs" />
+    <Compile Include="Forms\GlobalFormsInformations.cs" />
     <Compile Include="Forms\GLPosting.b1f.cs">
       <DependentUpon>GLPosting.b1f</DependentUpon>
     </Compile>
     <Compile Include="Forms\POAllocationBatch.b1f.cs">
       <DependentUpon>POAllocationBatch.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SalesTarget.b1f.cs">
+      <DependentUpon>SalesTarget.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SalesTargetActual.b1f.cs">
+      <DependentUpon>SalesTargetActual.b1f</DependentUpon>
     </Compile>
     <Compile Include="Querystring.cs" />
     <Compile Include="Settings\InitConfig.cs" />
@@ -109,6 +116,12 @@
     <Compile Include="Menu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Forms\POAllocationBatch.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\SalesTarget.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\SalesTargetActual.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="packages.config" />
