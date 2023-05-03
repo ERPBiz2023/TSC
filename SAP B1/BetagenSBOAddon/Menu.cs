@@ -15,9 +15,7 @@ namespace BetagenSBOAddon
         public Menu()
         {
             var infor = GLPosting.Information;
-           
-
-            /// this form run in sales hub
+            
             AddMenuItem(infor.MenuID, infor.MenuName, infor.ParentID);
         }
 
