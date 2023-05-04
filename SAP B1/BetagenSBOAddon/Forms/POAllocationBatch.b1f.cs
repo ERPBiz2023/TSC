@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -56,7 +57,8 @@ namespace BetagenSBOAddon.Forms
         /// </summary>
         public override void OnInitializeFormEvents()
         {
-            this.CloseAfter += new CloseAfterHandler(this.Form_CloseAfter);
+            this.CloseAfter += new SAPbouiCOM.Framework.FormBase.CloseAfterHandler(this.Form_CloseAfter);
+            this.ResizeAfter += new ResizeAfterHandler(this.Form_ResizeAfter);
 
         }
 
@@ -164,22 +166,22 @@ namespace BetagenSBOAddon.Forms
             {
                 return;
             }
-                for (int i = column.ValidValues.Count - 1; i >= 0; i--)
-                {
-                    column.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
-                }
-                foreach (var data in datas)
-                {
-                    column.ValidValues.Add(data["BinCode"].ToString(), data["BinName"].ToString());
-                    column.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
-                }
+            for (int i = column.ValidValues.Count - 1; i >= 0; i--)
+            {
+                column.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+            }
+            foreach (var data in datas)
+            {
+                column.ValidValues.Add(data["BinCode"].ToString(), data["BinName"].ToString());
+                column.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+            }
         }
         private void SetControl()
         {
-          //  this.UIAPIRawForm.Items.Item("edFocus").Click();
-          ////  this.btnCancel.Item.
-          //  this.edPOEn.Item.Enabled = false;
-          //  this.edPONo.Item.Enabled = false;
+            //  this.UIAPIRawForm.Items.Item("edFocus").Click();
+            ////  this.btnCancel.Item.
+            //  this.edPOEn.Item.Enabled = false;
+            //  this.edPONo.Item.Enabled = false;
 
             if (this.POStatus != "O")
             {
@@ -219,9 +221,9 @@ namespace BetagenSBOAddon.Forms
 
                 this.grData.Columns.Item("MyID").Visible = false;
                 this.grData.Columns.Item("PODocEntry").Visible = false;
-                
+
                 this.grData.AutoResizeColumns();
-              
+
 
             }
             catch (Exception ex)
@@ -265,7 +267,7 @@ namespace BetagenSBOAddon.Forms
         private SAPbouiCOM.Grid grData;
         private SAPbouiCOM.Button btnAdd;
         private SAPbouiCOM.Button btnRemo;
-        
+
         private void btnImport_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
@@ -306,7 +308,15 @@ namespace BetagenSBOAddon.Forms
                     connection.Dispose();
                 }
 
-                for(var index = 0; index < this.grData.DataTable.Rows.Count; index ++)
+                if (string.IsNullOrEmpty(this.PONo))
+                {
+                    UIHelper.LogMessage(string.Format("PO No is not empty"), UIHelper.MsgType.StatusBar, false);
+
+                    this.Freeze(false);
+                    return;
+                }
+
+                for (var index = 0; index < this.grData.DataTable.Rows.Count; index++)
                 {
                     var itemcode = this.grData.DataTable.GetValue("ItemCode", index).ToString();
                     var expDate = this.grData.DataTable.GetValue("ExpDate", index).ToString();
@@ -334,11 +344,11 @@ namespace BetagenSBOAddon.Forms
                         connection.Dispose();
                     }
                     var result = string.Empty;
-                    if (data!= null)
+                    if (data != null)
                     {
                         result = data["Result"].ToString();
                     }
-                    if(string.IsNullOrEmpty(result))
+                    if (string.IsNullOrEmpty(result))
                     {
                         UIHelper.LogMessage(string.Format("Saved Successfully"), UIHelper.MsgType.StatusBar, false);
                     }
@@ -375,18 +385,19 @@ namespace BetagenSBOAddon.Forms
 
         private void GrData_LostFocusAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
-            if (!this.DataChange)
+            if (pVal.ColUID == "ExpDate")
             {
-                if (pVal.ColUID == "ExpDate")
+                var data = this.grData.DataTable.GetValue("ExpDate", pVal.Row).ToString();
+
+                DateTime outdate;
+                if (!string.IsNullOrEmpty(data) && !DateTime.TryParseExact(data, "yyyyMMdd", CultureInfo.CurrentCulture, DateTimeStyles.None, out outdate))
                 {
-                    var data = this.grData.DataTable.GetValue("ExpDate", pVal.Row).ToString();
-                    if (this.DataBefore != data)
-                    {
-                        this.DataChange = true;
-                    }
+                    UIHelper.LogMessage(string.Format("LotNo must format (yyyyMMdd)"), UIHelper.MsgType.Msgbox, true);
+                    this.grData.DataTable.SetValue("ExpDate", pVal.Row, string.Empty);
+                    return;
                 }
             }
-            SetControl();
+
         }
 
         private void GrData_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
@@ -411,10 +422,18 @@ namespace BetagenSBOAddon.Forms
         {
             BubbleEvent = true;
             var index = this.grData.Rows.SelectedRows.Item(0, SAPbouiCOM.BoOrderType.ot_RowOrder);
-            if(index >= 0)
+            if (index >= 0)
                 this.grData.DataTable.Rows.Remove(index);
         }
 
         private SAPbouiCOM.EditText EditText0;
+
+        private void Form_ResizeAfter(SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            this.btnSave.Item.Top = this.UIAPIRawForm.Height - 90;
+            this.btnCancel.Item.Top = this.UIAPIRawForm.Height - 90;
+
+            this.grData.Item.Height = this.btnSave.Item.Top - this.grData.Item.Top - 10;
+        }
     }
 }

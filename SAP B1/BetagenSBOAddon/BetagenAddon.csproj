@@ -96,7 +96,7 @@
     <Compile Include="SystemForm\PurchaseOrderExt.b1f.cs">
       <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
     </Compile>
-    <Compile Include="SystemForm\SalesQuotationExt.b1f.cs">
+    <Compile Include="SalesQuotationExt.b1f.cs">
       <DependentUpon>SalesQuotationExt.b1f</DependentUpon>
     </Compile>
     <None Include="app.config">
@@ -131,10 +131,10 @@
     <None Include="SystemForm\PurchaseOrderExt.b1f__orig_srf">
       <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
     </None>
-    <None Include="SystemForm\SalesQuotationExt.b1f">
+    <None Include="SalesQuotationExt.b1f">
       <FormCategory>SystemForm</FormCategory>
     </None>
-    <None Include="SystemForm\SalesQuotationExt.b1f__orig_srf">
+    <None Include="SalesQuotationExt.b1f__orig_srf">
       <DependentUpon>SalesQuotationExt.b1f</DependentUpon>
     </None>
   </ItemGroup>
