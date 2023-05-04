@@ -83,6 +83,7 @@ namespace BetagenSBOAddon.Forms
                 cbbSalesManager.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
             }
         }
+
         /// <summary>
         /// Initialize components. Called by framework after form created.
         /// </summary>

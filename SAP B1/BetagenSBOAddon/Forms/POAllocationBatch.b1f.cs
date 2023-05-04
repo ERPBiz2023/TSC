@@ -164,15 +164,15 @@ namespace BetagenSBOAddon.Forms
             {
                 return;
             }
-            for (int i = column.ValidValues.Count - 1; i >= 0; i--)
-            {
-                column.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
-            }
-            foreach (var data in datas)
-            {
-                column.ValidValues.Add(data["BinCode"].ToString(), data["BinName"].ToString());
-                column.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
-            }
+                for (int i = column.ValidValues.Count - 1; i >= 0; i--)
+                {
+                    column.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+                }
+                foreach (var data in datas)
+                {
+                    column.ValidValues.Add(data["BinCode"].ToString(), data["BinName"].ToString());
+                    column.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+                }
         }
         private void SetControl()
         {
@@ -219,8 +219,9 @@ namespace BetagenSBOAddon.Forms
 
                 this.grData.Columns.Item("MyID").Visible = false;
                 this.grData.Columns.Item("PODocEntry").Visible = false;
-               
-                    this.grData.AutoResizeColumns();
+                
+                this.grData.AutoResizeColumns();
+              
 
             }
             catch (Exception ex)

@@ -266,6 +266,9 @@ namespace BetagenSBOAddon
             }
         }
 
+        /// <summary>
+        /// USP_BS_SalesManager_LoadbyUserId "'{0}'"
+        /// </summary>
         public static string sp_GetSaleManagerByUser
         {
             get
@@ -273,6 +276,18 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("USP_BS_SalesManager_LoadbyUserId", "'{0}'");
             }
         }
+
+        /// <summary>
+        /// "USP_BS_KAASM_LoadbyUserId "'{0}'"
+        /// </summary>
+        public static string sp_GetKA_ASMByUser
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_KAASM_LoadbyUserId", "'{0}', '{1}'");
+            }
+        }
+
 
         /// <summary>
         /// usp_BS_GL_Allocate_ApplySAP "{0}, {1}, {2}"

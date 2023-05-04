@@ -202,6 +202,7 @@ namespace BetagenSBOAddon.Forms
             this.btnLoadItem = ((SAPbouiCOM.Button)(this.GetItem("btnLoad").Specific));
             this.btnLoadItem.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnLoadItem_ClickBefore);
             this.grAdd = ((SAPbouiCOM.Grid)(this.GetItem("grAdd").Specific));
+            //this.grAdd.LostFocusAfter += new SAPbouiCOM._IGridEvents_LostFocusAfterEventHandler(this.grAdd_LostFocusAfter);
             this.btnSave = ((SAPbouiCOM.Button)(this.GetItem("btnSave").Specific));
             this.btnCancelAdd = ((SAPbouiCOM.Button)(this.GetItem("btnCancel").Specific));
             this.btnCancelAdd.PressedAfter += new SAPbouiCOM._IButtonEvents_PressedAfterEventHandler(this.btnCancelAdd_PressedAfter);
@@ -209,8 +210,8 @@ namespace BetagenSBOAddon.Forms
             this.btnAddNew.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAddNew_ClickBefore);
             this.btnAppSapAdd = ((SAPbouiCOM.Button)(this.GetItem("btnAppAdd").Specific));
             this.btnAppSapAdd.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAppSapAdd_ClickBefore);
-            //              this.UD_Warehouse = ((SAPbouiCOM.UserDataSource)(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_WH")));
-            //                 UserDataSource udStatus { get { return this.Form.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Status"); } }
+            //               this.UD_Warehouse = ((SAPbouiCOM.UserDataSource)(this.UIAPIRawForm.DataSources.UserDataSources.Item("UD_WH")));
+            //                  UserDataSource udStatus { get { return this.Form.UIAPIRawForm.DataSources.UserDataSources.Item("UD_Status"); } }
             this.cbbFmWh = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbFmWh").Specific));
             this.cbbFmWh.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbFmWh_ComboSelectAfter);
             this.cbbToWh = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbToWh").Specific));
@@ -450,7 +451,7 @@ namespace BetagenSBOAddon.Forms
                         this.grAdd.Columns.Item(data.Key).TitleObject.Caption = data.Value;
                         this.grAdd.Columns.Item(data.Key).Editable = false;
                     }
-
+                    this.grAdd.DataTable.Rows.Add();
                     foreach (var data in datas)
                     {
                         this.grAdd.DataTable.Rows.Add();
@@ -500,7 +501,7 @@ namespace BetagenSBOAddon.Forms
                         }
                     }
 
-                    this.grAdd.DataTable.Rows.Add();
+                  //  this.grAdd.DataTable.Rows.Add();
                     this.grAdd.DataTable.SetValue("DES", this.grAdd.Rows.Count - 1, "Total");
                     foreach (var data in dynamicTotal)
                     {
@@ -1210,5 +1211,6 @@ namespace BetagenSBOAddon.Forms
         {
             this.UIAPIRawForm.Close();
         }
+        
     }
 }
