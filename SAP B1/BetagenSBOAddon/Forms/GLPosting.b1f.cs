@@ -15,22 +15,22 @@ namespace BetagenSBOAddon.Forms
         public GLPosting()
         {
         }
-        private static AddonUserForm information;
-        public static AddonUserForm Information
-        {
-            get
-            {
-                if (information == null)
-                {
-                    information = new AddonUserForm();
-                    information.FormID = "GLAllPosting_F";
-                    information.MenuID = "GLAlPosting_M";
-                    information.MenuName = "Postting/Re-Allocate GL";
-                    information.ParentID = "1536"; // Inventory Transactions
-                }
-                return information;
-            }
-        }
+        //private static AddonUserForm information;
+        //public static AddonUserForm Information
+        //{
+        //    get
+        //    {
+        //        if (information == null)
+        //        {
+        //            information = new AddonUserForm();
+        //            information.FormID = "GLAllPosting_F";
+        //            information.MenuID = "GLAlPosting_M";
+        //            information.MenuName = "Postting/Re-Allocate GL";
+        //            information.ParentID = "1536"; // Inventory Transactions
+        //        }
+        //        return information;
+        //    }
+        //}
         private static GLPosting instance;
 
         public static bool IsFormOpen = false;

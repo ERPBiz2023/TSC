@@ -13,22 +13,22 @@ namespace BetagenSBOAddon.Forms
         private SalesTargetActual()
         {
         }
-        private static AddonUserForm information;
-        public static AddonUserForm Information
-        {
-            get
-            {
-                if (information == null)
-                {
-                    information = new AddonUserForm();
-                    information.FormID = "SalesTargetActual_F";
-                    information.MenuID = "SalesTargetActual_M";
-                    information.MenuName = "Sales Target Actual";
-                    information.ParentID = "2048"; 
-                }
-                return information;
-            }
-        }
+        //private static AddonUserForm information;
+        //public static AddonUserForm Information
+        //{
+        //    get
+        //    {
+        //        if (information == null)
+        //        {
+        //            information = new AddonUserForm();
+        //            information.FormID = "SalesTargetActual_F";
+        //            information.MenuID = "SalesTargetActual_M";
+        //            information.MenuName = "Sales Target Actual";
+        //            information.ParentID = "2048"; 
+        //        }
+        //        return information;
+        //    }
+        //}
         private static SalesTargetActual instance;
 
         public static bool IsFormOpen = false;

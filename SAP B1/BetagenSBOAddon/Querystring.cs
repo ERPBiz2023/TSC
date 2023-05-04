@@ -266,6 +266,14 @@ namespace BetagenSBOAddon
             }
         }
 
+        public static string sp_GetSaleManagerByUser
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_SalesManager_LoadbyUserId", "'{0}'");
+            }
+        }
+
         /// <summary>
         /// usp_BS_GL_Allocate_ApplySAP "{0}, {1}, {2}"
         /// </summary>
