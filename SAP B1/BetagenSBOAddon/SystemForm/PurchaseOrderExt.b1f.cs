@@ -169,17 +169,24 @@ namespace BetagenSBOAddon.SystemForm
                             decimal.TryParse(numinByText, out num);
 
 
-                            //var weightField = ((EditText)mtItems.GetCellSpecific("58", i)).Value;
-                            double volNumber = (double)( num * vol);
+                            var qtyField = ((EditText)mtItems.GetCellSpecific("11", i)).Value;
+                            decimal qty;
+                            decimal.TryParse(qtyField, out qty);
+
+                            double volNumber = (double)( num * vol * qty);
                             volumns.Add(i, volNumber);
                             totalVol += volNumber;
                         }
                     }
                     var totalOrg = 0.0;
+
+                    var rateField = docHeaderDS.GetValue("DocRate", 0);
+                    var docRate = double.Parse(rateField);
+
                     for (int i = 1; i < mtItems.RowCount; i++)
                     {
                         var freight = 0.0;
-                        freight = volumns[i] / totalVol * freightcostNumber;
+                        freight = volumns[i] / totalVol * (double)(freightcostNumber * docRate);
                         var lineTotal = linesDS.GetValue("LineTotal", i-1);
                         var rate = double.Parse(linesDS.GetValue("Rate", i - 1));
 
@@ -197,15 +204,15 @@ namespace BetagenSBOAddon.SystemForm
                             freight /= rate;
                             lineTotalNumber /= rate;
                         }
-                        ((EditText)mtItems.GetCellSpecific("U_LineTotalAfterF", i)).Value = (lineTotalNumber + freight).ToString();
+                        ((EditText)mtItems.GetCellSpecific("23", i)).Value = Math.Round((lineTotalNumber + freight), 2).ToString();
+                        ((EditText)mtItems.GetCellSpecific("U_LineTotalAfterF", i)).Value = Math.Round((lineTotalNumber + freight), 2).ToString();
                     }
 
-                    var rateField = docHeaderDS.GetValue("DocRate", 0);
-                    var docRate = double.Parse(rateField);
                     
                     var totalField = ((totalOrg + freightcostNumber) / docRate).ToString();
 
                     ((EditText)this.GetItem("29").Specific).Value = totalField;
+                    ((EditText)this.GetItem("24").Specific).Value = "0";
                     this.UIAPIRawForm.Refresh();
                 }
                 catch (Exception ex)
