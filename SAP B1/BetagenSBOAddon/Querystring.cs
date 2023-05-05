@@ -14,6 +14,8 @@ namespace BetagenSBOAddon
         // UF_BS_GETQUANTITYSTOCKOUTREQUEST
         // UF_BS_SETCOLOR_ITEMCODE
 
+        // UDF Item U_Volumn decimal
+
         /// <summary>
         /// Call Query by system SAP HANA or SQL
         /// Syntax SQL : EXEC [query] param1, param1;
@@ -39,7 +41,7 @@ namespace BetagenSBOAddon
         /// </summary>
         public static string sp_LoadOutStockRequest
         {
-           
+
             get
             {
                 return CallStoreBySystem("USP_BS_STOCKOUTREQUEST", "'{0}','{1}','{2}', {3}");
@@ -278,7 +280,7 @@ namespace BetagenSBOAddon
         }
 
         /// <summary>
-        /// "USP_BS_KAASM_LoadbyUserId "'{0}'"
+        /// "USP_BS_KAASM_LoadbyUserId "'{0}', '{1}'"
         /// </summary>
         public static string sp_GetKA_ASMByUser
         {
@@ -288,7 +290,23 @@ namespace BetagenSBOAddon
             }
         }
 
-
+        /// <summary>
+        /// USP_BS_SalesSup_LoadbyUserId "'{0}', '{1}', '{2}'"
+        /// </summary>
+        public static string sp_GetSalesSupByUser
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_SalesSup_LoadbyUserId", "'{0}', '{1}', '{2}'");
+            }
+        }
+        public static string sp_GetTeamLeaderByUser
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_TeamLead_LoadbyUserId", "'{0}', '{1}', '{2}', '{3}'");
+            }
+        }
         /// <summary>
         /// usp_BS_GL_Allocate_ApplySAP "{0}, {1}, {2}"
         /// </summary>

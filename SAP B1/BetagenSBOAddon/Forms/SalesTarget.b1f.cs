@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GTCore;
 using GTCore.Forms;
 using SAPbouiCOM.Framework;
 
@@ -16,22 +17,37 @@ namespace BetagenSBOAddon.Forms
         {
             UserName = Application.SBO_Application.Company.UserName;
         }
-        //private static AddonUserForm information;
-        //public static AddonUserForm Information
-        //{
-        //    get
-        //    {
-        //        if (information == null)
-        //        {
-        //            information = new AddonUserForm();
-        //            information.FormID = "SalesTarget_F";
-        //            information.MenuID = "SalesTarget_M";
-        //            information.MenuName = "Sales Target";
-        //            information.ParentID = "2048"; // Inventory Transactions
-        //        }
-        //        return information;
-        //    }
-        //}
+        private string SalesManagerSelected
+        {
+            get
+            {
+                return cbbSalesManager.Selected?.Value;
+            }
+        }
+        private string KASelected
+        {
+            get
+            {
+                return cbbKA_ASM.Selected?.Value;
+            }
+        }
+
+        private string SalesSupSelected
+        {
+            get
+            {
+                return cbbSalesSup.Selected?.Value;
+            }
+        }
+
+        private string TeamleaderSelected
+        {
+            get
+            {
+                return cbbTeamLeader.Selected?.Value;
+            }
+        }
+
         private static SalesTarget instance;
 
         public static bool IsFormOpen = false;
@@ -56,7 +72,23 @@ namespace BetagenSBOAddon.Forms
 
             this.cbbWeek.Select("1", SAPbouiCOM.BoSearchKey.psk_ByValue);
             this.cbbWeek.ExpandType = SAPbouiCOM.BoExpandType.et_ValueOnly;
-           // this.cbbWeek.Item.DisplayDesc = true;
+            // this.cbbWeek.Item.DisplayDesc = true;
+
+            this.LoadComboboxSalesManagers();
+            this.cbbSalesManager.Item.DisplayDesc = true;
+           // this.cbbSalesManager.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
+
+            this.LoadComboboxKAASM();
+            this.cbbKA_ASM.Item.DisplayDesc = true;
+            //this.cbbKA_ASM.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
+
+            this.LoadComboboxSalesSups();
+            this.cbbSalesSup.Item.DisplayDesc = true;
+            //this.cbbSalesSup.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
+
+            this.LoadComboboxTeamLeaders();
+            this.cbbTeamLeader.Item.DisplayDesc = true;
+           // this.cbbTeamLeader.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
         }
 
         public void LoadComboboxSalesManagers()
@@ -82,6 +114,83 @@ namespace BetagenSBOAddon.Forms
                 cbbSalesManager.ValidValues.Add(data["ExtEmpNo"].ToString(), data["FullName"].ToString());
                 cbbSalesManager.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
             }
+            cbbSalesManager.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
+        }
+        public void LoadComboboxKAASM()
+        {
+            var query = string.Format(Querystring.sp_GetKA_ASMByUser, UserName, this.SalesManagerSelected);
+            Hashtable[] datas;
+            using (var connection = Globals.DataConnection)
+            {
+                datas = connection.ExecQueryToArrayHashtable(query);
+                connection.Dispose();
+            }
+            if (datas == null || datas.Count() <= 0)
+            {
+                return;
+            }
+
+            for (int i = cbbKA_ASM.ValidValues.Count - 1; i >= 0; i--)
+            {
+                cbbKA_ASM.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+            }
+            foreach (var data in datas)
+            {
+                cbbKA_ASM.ValidValues.Add(data["ExtEmpNo"].ToString(), data["FullName"].ToString());
+                cbbKA_ASM.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+            }
+            cbbKA_ASM.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
+        }
+
+        public void LoadComboboxSalesSups()
+        {
+            var query = string.Format(Querystring.sp_GetSalesSupByUser, UserName, this.SalesManagerSelected, this.KASelected);
+            Hashtable[] datas;
+            using (var connection = Globals.DataConnection)
+            {
+                datas = connection.ExecQueryToArrayHashtable(query);
+                connection.Dispose();
+            }
+            if (datas == null || datas.Count() <= 0)
+            {
+                return;
+            }
+
+            for (int i = cbbSalesSup.ValidValues.Count - 1; i >= 0; i--)
+            {
+                cbbSalesSup.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+            }
+            foreach (var data in datas)
+            {
+                cbbSalesSup.ValidValues.Add(data["ExtEmpNo"].ToString(), data["FullName"].ToString());
+                cbbSalesSup.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+            }
+            cbbSalesSup.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
+        }
+        public void LoadComboboxTeamLeaders()
+        {
+            var query = string.Format(Querystring.sp_GetTeamLeaderByUser, UserName, this.SalesManagerSelected, this.KASelected, this.SalesSupSelected);
+            Hashtable[] datas;
+            using (var connection = Globals.DataConnection)
+            {
+                datas = connection.ExecQueryToArrayHashtable(query);
+                connection.Dispose();
+            }
+            if (datas == null || datas.Count() <= 0)
+            {
+                return;
+            }
+
+            for (int i = cbbTeamLeader.ValidValues.Count - 1; i >= 0; i--)
+            {
+                cbbTeamLeader.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
+            }
+            foreach (var data in datas)
+            {
+                cbbTeamLeader.ValidValues.Add(data["ExtEmpNo"].ToString(), data["FullName"].ToString());
+                cbbTeamLeader.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
+            }
+            cbbTeamLeader.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
         }
 
         /// <summary>
@@ -97,13 +206,17 @@ namespace BetagenSBOAddon.Forms
             this.cbbWeek = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbWee").Specific));
             this.StaticText4 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_8").Specific));
             this.cbbSalesManager = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbSMa").Specific));
+            this.cbbSalesManager.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbSalesManager_ComboSelectAfter);
             this.StaticText5 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_10").Specific));
             this.cbbKA_ASM = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbKA").Specific));
+            this.cbbKA_ASM.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbKA_ASM_ComboSelectAfter);
             this.StaticText8 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_16").Specific));
-            this.cbbSaesSup = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbSSu").Specific));
+            this.cbbSalesSup = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbSSu").Specific));
+            this.cbbSalesSup.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbSalesSup_ComboSelectAfter);
             this.StaticText9 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_18").Specific));
             this.cbbTeamLeader = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbTLe").Specific));
             this.btnSearch = ((SAPbouiCOM.Button)(this.GetItem("btnSear").Specific));
+            this.btnSearch.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSearch_ClickBefore);
             this.grData = ((SAPbouiCOM.Grid)(this.GetItem("grData").Specific));
             this.btnSave = ((SAPbouiCOM.Button)(this.GetItem("btnSave").Specific));
             this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCan").Specific));
@@ -146,7 +259,7 @@ namespace BetagenSBOAddon.Forms
         private SAPbouiCOM.StaticText StaticText5;
         private SAPbouiCOM.ComboBox cbbKA_ASM;
         private SAPbouiCOM.StaticText StaticText8;
-        private SAPbouiCOM.ComboBox cbbSaesSup;
+        private SAPbouiCOM.ComboBox cbbSalesSup;
         private SAPbouiCOM.StaticText StaticText9;
         private SAPbouiCOM.ComboBox cbbTeamLeader;
         private SAPbouiCOM.Button btnSearch;
@@ -173,6 +286,67 @@ namespace BetagenSBOAddon.Forms
         private void Freeze(bool freeze)
         {
             this.UIAPIRawForm.Freeze(freeze);
+        }
+
+        private void cbbSalesManager_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            this.Freeze(true);
+            this.LoadComboboxKAASM();
+            this.Freeze(false);
+        }
+
+        private void cbbKA_ASM_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            this.Freeze(true);
+            this.LoadComboboxSalesSups();
+            this.Freeze(false);
+        }
+
+        private void cbbSalesSup_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            this.Freeze(true);
+            this.LoadComboboxTeamLeaders();
+            this.Freeze(false);
+        }
+
+        private void btnSearch_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            this.Freeze(true);
+            try
+            {
+                if(string.IsNullOrEmpty(this.SalesManagerSelected) || this.SalesManagerSelected == "All")
+                {
+                    UIHelper.LogMessage(string.Format("Please select sale manager."), UIHelper.MsgType.StatusBar, true);
+                    this.Freeze(false);
+                    return;
+                }
+                int week;
+
+                if(string.IsNullOrEmpty(cbbWeek.Selected.Value ) 
+                    || cbbWeek.Selected.Value == "All"
+                    || !int.TryParse(cbbWeek.Selected.Value, out week))
+                {
+                    week = -1;
+                }
+
+                int month;
+                if(!int.TryParse(cbbMon.Selected.Value, out month))
+                {
+                    month = DateTime.Now.Month;
+                }
+
+                int year;
+                if (!int.TryParse(cbbYear.Selected.Value, out year))
+                {
+                    year = DateTime.Now.Year;
+                }
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(string.Format("Load data error {0}", ex.Message), UIHelper.MsgType.StatusBar, true);
+            }
+            this.Freeze(false);
         }
     }
 }

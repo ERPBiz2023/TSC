@@ -58,9 +58,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sap.Data.Hana.v4.5, Version=2.7.26.0, Culture=neutral, PublicKeyToken=0326b8ea63db4bc4, processorArchitecture=MSIL">
+    <Reference Include="Sap.Data.Hana.v4.5, Version=2.4.194.0, Culture=neutral, PublicKeyToken=0326b8ea63db4bc4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Program Files\sap\hdbclient\ado.net\v4.5\Sap.Data.Hana.v4.5.dll</HintPath>
+      <HintPath>..\Libs\Sap.Data.Hana.v4.5.dll</HintPath>
     </Reference>
     <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -96,9 +96,7 @@
     <Compile Include="SystemForm\PurchaseOrderExt.b1f.cs">
       <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
     </Compile>
-    <Compile Include="SalesQuotationExt.b1f.cs">
-      <DependentUpon>SalesQuotationExt.b1f</DependentUpon>
-    </Compile>
+    <Compile Include="SystemForm\SalesQuotationExt.b1f.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
@@ -131,12 +129,10 @@
     <None Include="SystemForm\PurchaseOrderExt.b1f__orig_srf">
       <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
     </None>
-    <None Include="SalesQuotationExt.b1f">
+    <None Include="SystemForm\SalesQuotationExt.b1f">
       <FormCategory>SystemForm</FormCategory>
     </None>
-    <None Include="SalesQuotationExt.b1f__orig_srf">
-      <DependentUpon>SalesQuotationExt.b1f</DependentUpon>
-    </None>
+    <None Include="SystemForm\SalesQuotationExt.b1f__orig_srf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GTLibraries\GT_Core\GTCore.csproj">
