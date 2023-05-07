@@ -33,7 +33,7 @@ namespace GTCore.Config
             get
             {
                 var connectionString = ConfigurationManager.ConnectionStrings["SAPConnection"].ConnectionString;
-                var pass = StringUtils.DecryptString(ConfigurationManager.AppSettings["HASH"]);
+                var pass = StringUtils.DecryptString(ConfigurationManager.AppSettings["HASHSql"]);
 
                 return string.Format(connectionString, pass);
             }
@@ -43,7 +43,7 @@ namespace GTCore.Config
             get
             {
                 var connectionString = ConfigurationManager.ConnectionStrings["SAPHanaConnection"].ConnectionString;
-                var pass = StringUtils.DecryptString(ConfigurationManager.AppSettings["HASH"]);
+                var pass = StringUtils.DecryptString(ConfigurationManager.AppSettings["HASHHana"]);
 
                 return string.Format(connectionString, pass);
             }

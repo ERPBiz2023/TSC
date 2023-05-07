@@ -1,4 +1,5 @@
-﻿using BetagenSBOAddon.Forms;
+﻿using BetagenSBOAddon.AccessSAP;
+using BetagenSBOAddon.Forms;
 using GTCore;
 using GTCore.Config;
 using SAPbobsCOM;
@@ -8,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 
 namespace BetagenSBOAddon.SystemForm
 {
@@ -15,8 +17,10 @@ namespace BetagenSBOAddon.SystemForm
     class PurchaseOrderExt : SystemFormBase
     {
         private string PoNo;
+        private PODAL POAccess;
         public PurchaseOrderExt()
         {
+            POAccess = new PODAL();
         }
 
         /// <summary>
@@ -28,8 +32,10 @@ namespace BetagenSBOAddon.SystemForm
             this.btnAllBa.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAllBa_ClickBefore);
             this.btnAllFr = ((SAPbouiCOM.Button)(this.GetItem("btnAllFr").Specific));
             this.btnAllFr.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAllFr_ClickBefore);
-            // var no = ((SAPbouiCOM.EditText)(this.GetItem("8").Specific));
-            // PoNo = no.Value;
+            //   var no = ((SAPbouiCOM.EditText)(this.GetItem("8").Specific));
+            //   PoNo = no.Value;
+            this.btnCopyGRPO = ((SAPbouiCOM.Button)(this.GetItem("btnCTo").Specific));
+            this.btnCopyGRPO.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCopyGRPO_ClickBefore);
             this.OnCustomInitialize();
 
         }
@@ -74,7 +80,11 @@ namespace BetagenSBOAddon.SystemForm
            
             SAPbouiCOM.Button _2Button = ((SAPbouiCOM.Button)(this.GetItem("2").Specific));
             _2Button.Item.Top = this.btnAllBa.Item.Top + 30;
+            _2Button.Item.Width = 110;
             _2Button.Item.Left = _2349990001Button.Item.Left + 110;
+            this.btnCopyGRPO.Item.Left = _2Button.Item.Left;
+            this.btnCopyGRPO.Item.Width = _2Button.Item.Width;
+            this.btnCopyGRPO.Item.Height = _2Button.Item.Height;
 
             SAPbouiCOM.ComboBox _CopyFromButton = ((SAPbouiCOM.ComboBox)(this.GetItem("10000330").Specific));
             _CopyFromButton.Item.Top = _1Button.Item.Top;
@@ -225,6 +235,53 @@ namespace BetagenSBOAddon.SystemForm
             else
             {
                 UIHelper.LogMessage("Please select PO Entry and Confirm this PO", UIHelper.MsgType.Msgbox);
+
+                this.Freeze(false);
+                return;
+            }
+            this.Freeze(false);
+        }
+
+        private Button btnCopyGRPO;
+
+        private void btnCopyGRPO_ClickBefore(object sboObject, SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            if (this.UIAPIRawForm.Mode != SAPbouiCOM.BoFormMode.fm_OK_MODE )
+            {
+                UIHelper.LogMessage(string.Format("Please select 1 document or update/add document completed"), UIHelper.MsgType.StatusBar, true);
+                
+                return;
+            }
+
+            this.Freeze(true);
+            try
+            {
+                var dateText = ((SAPbouiCOM.EditText)(this.GetItem("12").Specific)).Value;
+                DateTime date;
+                //DateTime.TryParse(dateText, out date);
+                DateTime.TryParseExact(dateText, "yyyyMMdd", CultureInfo.CurrentCulture, DateTimeStyles.None, out date);
+
+                var yes = UIHelper.LogMessage(string.Format("Do you want to Create Goods Receipt PO Documemnt with Receipt Date: {0}", dateText),
+                                                      UIHelper.MsgType.Msgbox, false, 1, "Yes", "No");
+                if (yes == 1)
+                {
+                    var message = string.Empty;
+                    var docentry = POAccess.CreateGRPOBaseonPO(PoNo, date, ref message);
+                    if(docentry > 0)
+                    {
+                        UIHelper.LogMessage(string.Format("Create Good Receipt PO {0} successfully", docentry), UIHelper.MsgType.StatusBar, false);
+                    }
+                    else
+                    {
+                        UIHelper.LogMessage(string.Format("Create Good Receipt PO error {0}", message), UIHelper.MsgType.StatusBar, true);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(string.Format("Copy to Good Receipt PO failed {0}", ex.Message), UIHelper.MsgType.StatusBar, true);
 
                 this.Freeze(false);
                 return;

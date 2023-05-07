@@ -328,5 +328,38 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("usp_BS_GL_Allocate_GroupBY_AccSKUChanBra", "{0}, {1}");
             }
         }
+
+        /// <summary>
+        /// USP_BS_PurchaseOrder_LoadbyEntry "{0}"
+        /// </summary>
+        public static string sp_PurchaseOrder_LoadbyEntry
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_PurchaseOrder_LoadbyEntry", "{0}");
+            }
+        }
+
+        /// <summary>
+        /// USP_BS_PurchaseOrderDetail_LoadbyEntry "{0}"
+        /// </summary>
+        public static string sp_PurchaseOrderDetail_LoadbyEntry
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_PurchaseOrderDetail_LoadbyEntry", "{0}");
+            }
+        }
+
+        /// <summary>
+        /// USP_BS_PO_LotNo_LoadbyEntry "{0}, '{1}'
+        /// </summary>
+        public static string sp_PurchaseOrderDetail_LoadLotNo
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_PO_LotNo_LoadbyEntry", "{0}, '{1}'");
+            }
+        }
     }
 }
