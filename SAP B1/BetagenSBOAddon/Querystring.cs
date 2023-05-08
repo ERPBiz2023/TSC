@@ -15,6 +15,7 @@ namespace BetagenSBOAddon
         // UF_BS_SETCOLOR_ITEMCODE
 
         // UDF Item U_Volumn decimal
+        // UDF Line U_OrgTotal
 
         /// <summary>
         /// Call Query by system SAP HANA or SQL
@@ -328,7 +329,16 @@ namespace BetagenSBOAddon
                 return CallStoreBySystem("usp_BS_GL_Allocate_GroupBY_AccSKUChanBra", "{0}, {1}");
             }
         }
-
+        /// <summary>
+        ///  usp_BS_SalaryActual_Account  "{0}, {1}, '{2}'"
+        /// </summary>
+        public static string sp_GetAllocateSalaryActual_Account
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_SalaryActual_Account", "{0}, {1}, '{2}'");
+            }
+        }
         /// <summary>
         /// USP_BS_PurchaseOrder_LoadbyEntry "{0}"
         /// </summary>
