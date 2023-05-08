@@ -17,6 +17,7 @@ namespace BetagenSBOAddon.SystemForm
     class PurchaseOrderExt : SystemFormBase
     {
         private string PoNo;
+        private string PoStatus;
         private PODAL POAccess;
         public PurchaseOrderExt()
         {
@@ -34,8 +35,8 @@ namespace BetagenSBOAddon.SystemForm
             this.btnAllFr.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAllFr_ClickBefore);
             //   var no = ((SAPbouiCOM.EditText)(this.GetItem("8").Specific));
             //   PoNo = no.Value;
-            this.btnCopyGRPO = ((SAPbouiCOM.Button)(this.GetItem("btnCTo").Specific));
-            this.btnCopyGRPO.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCopyGRPO_ClickBefore);
+           // this.btnCopyGRPO = ((SAPbouiCOM.Button)(this.GetItem("btnCTo").Specific));
+            //this.btnCopyGRPO.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCopyGRPO_ClickBefore);
             this.OnCustomInitialize();
 
         }
@@ -82,9 +83,9 @@ namespace BetagenSBOAddon.SystemForm
             _2Button.Item.Top = this.btnAllBa.Item.Top + 30;
             _2Button.Item.Width = 110;
             _2Button.Item.Left = _2349990001Button.Item.Left + 110;
-            this.btnCopyGRPO.Item.Left = _2Button.Item.Left;
-            this.btnCopyGRPO.Item.Width = _2Button.Item.Width;
-            this.btnCopyGRPO.Item.Height = _2Button.Item.Height;
+            //this.btnCopyGRPO.Item.Left = _2Button.Item.Left;
+            //this.btnCopyGRPO.Item.Width = _2Button.Item.Width;
+            //this.btnCopyGRPO.Item.Height = _2Button.Item.Height;
 
             SAPbouiCOM.ComboBox _CopyFromButton = ((SAPbouiCOM.ComboBox)(this.GetItem("10000330").Specific));
             _CopyFromButton.Item.Top = _1Button.Item.Top;
@@ -104,7 +105,7 @@ namespace BetagenSBOAddon.SystemForm
             if (this.UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_OK_MODE ||
                 this.UIAPIRawForm.Mode == SAPbouiCOM.BoFormMode.fm_UPDATE_MODE)
             {
-                POAllocationBatch.ShowForm(PoNo);
+                POAllocationBatch.ShowForm(PoNo, PoStatus);
             }
             else
             {
@@ -117,6 +118,11 @@ namespace BetagenSBOAddon.SystemForm
         {
             var no = ((SAPbouiCOM.EditText)(this.GetItem("8").Specific));
             PoNo = no.Value;
+
+            var docHeaderDS = this.UIAPIRawForm.DataSources.DBDataSources.Item("OPOR");
+
+            var status = docHeaderDS.GetValue("DocStatus", 0);// ((SAPbouiCOM.EditText)(this.GetItem("81").Specific));
+            PoStatus = status;
         }
 
         private void btnAllFr_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
@@ -143,6 +149,8 @@ namespace BetagenSBOAddon.SystemForm
                     var totalVol = 0.0;
                     var linesDS = this.UIAPIRawForm.DataSources.DBDataSources.Item("POR1");
                     Dictionary<int, double> volumns = new Dictionary<int, double>();
+                    var isSetVol = true;
+
                     for (int i = 1; i <mtItems.RowCount; i++)
                     {
                         var query = string.Empty;
@@ -166,15 +174,19 @@ namespace BetagenSBOAddon.SystemForm
                             data = connection.ExecQueryToHashtable(query);
                             connection.Dispose();
                         }
-
+                        
                         if (data != null)
                         {
                             var volText = data["U_Volume"].ToString();
                             var numinByText = data["NumInBuy"].ToString();
 
                             decimal vol;
-                            decimal.TryParse(volText, out vol);
-
+                            if(!decimal.TryParse(volText, out vol) || vol == 0)
+                            {
+                                isSetVol = false;
+                                break;
+                            }
+                           
                             decimal num;
                             decimal.TryParse(numinByText, out num);
 
@@ -187,6 +199,14 @@ namespace BetagenSBOAddon.SystemForm
                             volumns.Add(i, volNumber);
                             totalVol += volNumber;
                         }
+
+                    }
+
+                    if(!isSetVol)
+                    {
+                        UIHelper.LogMessage(string.Format("There is Item not have Volume (ml), please re-check!"), UIHelper.MsgType.StatusBar, true);
+                        this.Freeze(false);
+                        return;
                     }
                     var totalOrg = 0.0;
 
@@ -226,7 +246,7 @@ namespace BetagenSBOAddon.SystemForm
                     this.UIAPIRawForm.Refresh();
                 }
                 catch (Exception ex)
-                    {
+                {
                     UIHelper.LogMessage(string.Format("Allocate Freight error {0}", ex.Message), UIHelper.MsgType.StatusBar, true);
                     this.Freeze(false);
                     return;

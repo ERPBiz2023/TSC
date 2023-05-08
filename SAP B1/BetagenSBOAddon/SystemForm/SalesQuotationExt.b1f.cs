@@ -86,31 +86,56 @@ namespace BetagenSBOAddon.SystemForm
                     for (int i = 1; i < mtItems.RowCount; i++)
                     {
                         var itemCode = ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("1", i)).Value;
-                        if(string.IsNullOrEmpty(warehouse))
+                        if (string.IsNullOrEmpty(warehouse))
                         {
                             warehouse = ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("24", i)).Value;
                         }
                         Hashtable dataFilter = datas.Where(x => x["ItemCode"].ToString() == itemCode && x["LineNum"].ToString() == (i - 1).ToString()).FirstOrDefault();
-                        if(dataFilter != null)
+                        if (dataFilter != null)
                         {
-                            ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("15", i)).Value = dataFilter["DiscountPercent"].ToString();
+                            if (dataFilter["QType"].ToString() == "0")
+                            {
+                                ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("15", i)).Value = dataFilter["DiscountPercent"].ToString();
+                            }
+                            else
+                            {
+                                mtItems.DeleteRow(i);
+                                //((SAPbouiCOM.EditText)mtItems.GetCellSpecific("14", i)).Value = dataFilter["PriceAfterDiscount"].ToString();
+                                //if (dataFilter["QType"].ToString() == "1")
+                                //{
+                                //    ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("U_BaseItem", i)).Value = string.Format("Chiết khấu {0}% trên hóa đơn", dataFilter["LineTotalAfterDiscount"].ToString());
+                                //}
+                                //else
+                                //{
+                                //    ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("U_BaseItem", i)).Value = string.Format("Chiết khấu {0}% cho hóa đơn đầu tiên", dataFilter["LineTotalAfterDiscount"].ToString()); ;
+                                //}
+                            }
                         }
                     }
 
                     var dataLenght = datas.Count();
-                    for(var i = 0; i < dataLenght; i ++)
+                    for (var i = 0; i < dataLenght; i++)
                     {
-                        if(datas[i]["QType"].ToString() != "0")
+                        if (datas[i]["QType"].ToString() != "0")
                         {
                             int rowCount = mtItems.RowCount;
                             mtItems.GetLineData(rowCount);
 
                             ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("1", rowCount)).Value = datas[i]["ItemCode"].ToString();
-                            ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("U_BaseItem", rowCount)).Value = datas[i]["ItemName"].ToString();
-                            ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("11", rowCount)).Value ="-1";
+                            double lineDiscount;
+                            double.TryParse(datas[i]["LineTotalAfterDiscount"].ToString(), out lineDiscount);
+                            if (datas[i]["QType"].ToString() == "1")
+                            {
+                                ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("U_BaseItem", rowCount)).Value = string.Format("Chiết khấu {0} trên hóa đơn", string.Format("{0:N2}%", lineDiscount)) ;
+                            }
+                            else
+                            {
+                                ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("U_BaseItem", rowCount)).Value = string.Format("Chiết khấu {0} cho hóa đơn đầu tiên", string.Format("{0:N2}%", lineDiscount)); ;
+                            }
+                            ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("11", rowCount)).Value = "-1";
                             ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("24", rowCount)).Value = warehouse;
                             ((SAPbouiCOM.EditText)mtItems.GetCellSpecific("14", rowCount)).Value = datas[i]["PriceAfterDiscount"].ToString();
-                            
+
                         }
                     }
                     UIHelper.LogMessage(string.Format("Applied discount successfully."), UIHelper.MsgType.StatusBar, false);

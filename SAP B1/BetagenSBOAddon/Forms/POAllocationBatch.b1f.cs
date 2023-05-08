@@ -31,7 +31,7 @@ namespace BetagenSBOAddon.Forms
         /// </summary>
         public override void OnInitializeComponent()
         {
-            //     this.btnImport.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnImport_ClickBefore);
+            //      this.btnImport.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnImport_ClickBefore);
             this.StaticText1 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_4").Specific));
             this.edPOEn = ((SAPbouiCOM.EditText)(this.GetItem("edPOEn").Specific));
             this.StaticText2 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_6").Specific));
@@ -41,6 +41,7 @@ namespace BetagenSBOAddon.Forms
             this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCancel").Specific));
             this.btnCancel.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCancel_ClickBefore);
             this.grData = ((SAPbouiCOM.Grid)(this.GetItem("grMain").Specific));
+            this.grData.ClickAfter += new SAPbouiCOM._IGridEvents_ClickAfterEventHandler(this.grData_ClickAfter);
             this.grData.ClickBefore += this.GrData_ClickBefore;
             this.grData.LostFocusAfter += this.GrData_LostFocusAfter;
             this.btnAdd = ((SAPbouiCOM.Button)(this.GetItem("btnAdd").Specific));
@@ -74,12 +75,13 @@ namespace BetagenSBOAddon.Forms
                 IsFormOpen = true;
             }
         }
-        public static void ShowForm(string poNo)
+        public static void ShowForm(string poNo, string status)
         {
             if (instance == null)
             {
                 instance = new POAllocationBatch();
                 instance.POEntry = poNo;
+                instance.POStatus = status;
                 instance.LoadData();
 
                 instance.Show();
@@ -100,6 +102,8 @@ namespace BetagenSBOAddon.Forms
                 return;
             }
 
+            this.edPOEn.Value = this.POEntry;
+       
             int po;
             if (!int.TryParse(this.POEntry, out po))
             {
@@ -115,16 +119,14 @@ namespace BetagenSBOAddon.Forms
                 connection.Dispose();
             }
 
-            if (data == null)
+            if (data != null)
             {
-                this.Freeze(false);
-
-                return;
+                this.PONo = data["PONo"].ToString();
+                this.POStatus = data["DocStatus"].ToString();
+                this.edPOEn.Value = this.POEntry;
+                this.edPONo.Value = this.PONo;
             }
-            this.PONo = data["PONo"].ToString();
-            this.POStatus = data["DocStatus"].ToString();
-            this.edPOEn.Value = this.POEntry;
-            this.edPONo.Value = this.PONo;
+            
 
             LoadDataToGrid();
             this.Freeze(false);
@@ -421,9 +423,16 @@ namespace BetagenSBOAddon.Forms
         private void btnRemo_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            var index = this.grData.Rows.SelectedRows.Item(0, SAPbouiCOM.BoOrderType.ot_RowOrder);
-            if (index >= 0)
-                this.grData.DataTable.Rows.Remove(index);
+            if (this.grData.Rows.SelectedRows.Count > 0)
+            {
+                var index = this.grData.Rows.SelectedRows.Item(0, SAPbouiCOM.BoOrderType.ot_RowOrder);
+                if (index >= 0)
+                    this.grData.DataTable.Rows.Remove(index);
+            }
+            else
+            {
+                UIHelper.LogMessage(string.Format("No line is selected!"), UIHelper.MsgType.Msgbox, true);
+            }
         }
 
         private SAPbouiCOM.EditText EditText0;
@@ -434,6 +443,18 @@ namespace BetagenSBOAddon.Forms
             this.btnCancel.Item.Top = this.UIAPIRawForm.Height - 90;
 
             this.grData.Item.Height = this.btnSave.Item.Top - this.grData.Item.Top - 10;
+        }
+
+        private void grData_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            if(pVal.Row >= 0 && pVal.Row < this.grData.Rows.Count)
+            {
+                btnRemo.Item.Enabled = true;
+            }
+            else
+            {
+                btnRemo.Item.Enabled = false;
+            }
         }
     }
 }
