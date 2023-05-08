@@ -218,24 +218,31 @@ namespace BetagenSBOAddon.SystemForm
                         var freight = 0.0;
                         freight = volumns[i] / totalVol * (double)(freightcostNumber * docRate);
                         var lineTotal = linesDS.GetValue("LineTotal", i-1);
+                        var lineorgTotal = linesDS.GetValue("U_OrgTotal", i - 1);
                         var rate = double.Parse(linesDS.GetValue("Rate", i - 1));
 
                         //var lineTotalField = ((EditText)mtItems.GetCellSpecific("23", i)).Value.Replace("VND", "").Replace("USD", "");
-                        double lineTotalNumber;
-                        if (!double.TryParse(lineTotal, out lineTotalNumber))
+                        double lineorgTotalNumber;
+                        if (string.IsNullOrEmpty(lineorgTotal) || !double.TryParse(lineorgTotal, out lineorgTotalNumber))
                         {
-                            continue;
-                            /// throw message or no acion in here?
+                            //double lineTotalNumber;
+                            if (!double.TryParse(lineTotal, out lineorgTotalNumber))
+                            {
+                                continue;
+                                /// throw message or no acion in here?
+                            }
+                            ((EditText)mtItems.GetCellSpecific("U_OrgTotal", i)).Value = lineorgTotalNumber.ToString();
                         }
-
-                        totalOrg += lineTotalNumber;
+                        
+                        
+                        totalOrg += lineorgTotalNumber;
                         if (rate>0)
                         {
                             freight /= rate;
-                            lineTotalNumber /= rate;
+                            lineorgTotalNumber /= rate;
                         }
-                        ((EditText)mtItems.GetCellSpecific("23", i)).Value = Math.Round((lineTotalNumber + freight), 2).ToString();
-                        ((EditText)mtItems.GetCellSpecific("U_LineTotalAfterF", i)).Value = Math.Round((lineTotalNumber + freight), 2).ToString();
+                        ((EditText)mtItems.GetCellSpecific("23", i)).Value = Math.Round((lineorgTotalNumber + freight), 2).ToString();
+                        ((EditText)mtItems.GetCellSpecific("U_LineTotalAfterF", i)).Value = Math.Round((lineorgTotalNumber + freight), 2).ToString();
                     }
 
                     
