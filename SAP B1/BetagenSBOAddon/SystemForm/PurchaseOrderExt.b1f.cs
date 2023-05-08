@@ -33,10 +33,12 @@ namespace BetagenSBOAddon.SystemForm
             this.btnAllBa.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAllBa_ClickBefore);
             this.btnAllFr = ((SAPbouiCOM.Button)(this.GetItem("btnAllFr").Specific));
             this.btnAllFr.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnAllFr_ClickBefore);
-            //   var no = ((SAPbouiCOM.EditText)(this.GetItem("8").Specific));
-            //   PoNo = no.Value;
-           // this.btnCopyGRPO = ((SAPbouiCOM.Button)(this.GetItem("btnCTo").Specific));
-            //this.btnCopyGRPO.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCopyGRPO_ClickBefore);
+            //    var no = ((SAPbouiCOM.EditText)(this.GetItem("8").Specific));
+            //    PoNo = no.Value;
+            //  this.btnCopyGRPO = ((SAPbouiCOM.Button)(this.GetItem("btnCTo").Specific));
+            
+            //this.btnCopyGRPO = ((SAPbouiCOM.Button)(this.GetItem("btnCTo").Specific));
+            
             this.OnCustomInitialize();
 
         }
@@ -53,6 +55,11 @@ namespace BetagenSBOAddon.SystemForm
 
         private void OnCustomInitialize()
         {
+            this.UIAPIRawForm.Items.Add("btnCop", SAPbouiCOM.BoFormItemTypes.it_BUTTON);
+            this.btnCopyGRPO = ((SAPbouiCOM.Button)(this.GetItem("btnCop").Specific));
+            this.btnCopyGRPO.Caption = "Copy to GRPO";
+            this.btnCopyGRPO.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCopyGRPO_ClickBefore);
+
             SAPbouiCOM.StaticText ownerText = ((SAPbouiCOM.StaticText)(this.GetItem("230").Specific));
             var finalHeight = ownerText.Item.Top;
             SAPbouiCOM.StaticText remartText = ((SAPbouiCOM.StaticText)(this.GetItem("17").Specific));
@@ -75,6 +82,7 @@ namespace BetagenSBOAddon.SystemForm
             _2349990001Button.Item.Top = this.btnAllBa.Item.Top + 30;
             _2349990001Button.Item.Width = 100;
             _2349990001Button.Item.Left = _1Button.Item.Left + 100;
+            this.btnAllBa.Item.Top = this.btnAllFr.Item.Top;
             this.btnAllBa.Item.Left = _2349990001Button.Item.Left;
             this.btnAllBa.Item.Width = _2349990001Button.Item.Width;
             this.btnAllBa.Item.Height = _2349990001Button.Item.Height;
@@ -83,9 +91,11 @@ namespace BetagenSBOAddon.SystemForm
             _2Button.Item.Top = this.btnAllBa.Item.Top + 30;
             _2Button.Item.Width = 110;
             _2Button.Item.Left = _2349990001Button.Item.Left + 110;
-            //this.btnCopyGRPO.Item.Left = _2Button.Item.Left;
-            //this.btnCopyGRPO.Item.Width = _2Button.Item.Width;
-            //this.btnCopyGRPO.Item.Height = _2Button.Item.Height;
+            this.btnCopyGRPO.Item.Top = this.btnAllFr.Item.Top;
+            this.btnCopyGRPO.Item.Left = _2Button.Item.Left;
+            this.btnCopyGRPO.Item.Width = _2Button.Item.Width;
+            this.btnCopyGRPO.Item.Height = _2Button.Item.Height;
+            this.btnCopyGRPO.Item.Enabled = true;
 
             SAPbouiCOM.ComboBox _CopyFromButton = ((SAPbouiCOM.ComboBox)(this.GetItem("10000330").Specific));
             _CopyFromButton.Item.Top = _1Button.Item.Top;
@@ -308,5 +318,6 @@ namespace BetagenSBOAddon.SystemForm
             }
             this.Freeze(false);
         }
+        
     }
 }
