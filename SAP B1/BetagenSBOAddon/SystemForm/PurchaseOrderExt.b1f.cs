@@ -95,8 +95,12 @@ namespace BetagenSBOAddon.SystemForm
             this.btnCopyGRPO.Item.Left = _2Button.Item.Left;
             this.btnCopyGRPO.Item.Width = _2Button.Item.Width;
             this.btnCopyGRPO.Item.Height = _2Button.Item.Height;
+            var GRPOStandard = ConfigurationManager.AppSettings["GRPOStandard"].ToString();
             this.btnCopyGRPO.Item.Enabled = true;
-
+            if (GRPOStandard == "1")
+                this.btnCopyGRPO.Item.Visible = false;
+            else
+                this.btnCopyGRPO.Item.Visible = true;
             SAPbouiCOM.ComboBox _CopyFromButton = ((SAPbouiCOM.ComboBox)(this.GetItem("10000330").Specific));
             _CopyFromButton.Item.Top = _1Button.Item.Top;
 
