@@ -13,6 +13,7 @@ namespace BetagenSBOAddon
         // functions
         // UF_BS_GETQUANTITYSTOCKOUTREQUEST
         // UF_BS_SETCOLOR_ITEMCODE
+        // uv_Empoyee_Salary_Accounting
 
         // UDF Item U_Volumn decimal
         // UDF Line U_OrgTotal
