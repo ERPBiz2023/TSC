@@ -97,10 +97,10 @@ namespace BetagenSBOAddon.SystemForm
             this.btnCopyGRPO.Item.Height = _2Button.Item.Height;
             var GRPOStandard = ConfigurationManager.AppSettings["GRPOStandard"].ToString();
             this.btnCopyGRPO.Item.Enabled = true;
-            if (GRPOStandard == "1")
-                this.btnCopyGRPO.Item.Visible = false;
-            else
-                this.btnCopyGRPO.Item.Visible = true;
+            //if (GRPOStandard == "1")
+            //    this.btnCopyGRPO.Item.Visible = false;
+            //else
+            this.btnCopyGRPO.Item.Visible = true;
             SAPbouiCOM.ComboBox _CopyFromButton = ((SAPbouiCOM.ComboBox)(this.GetItem("10000330").Specific));
             _CopyFromButton.Item.Top = _1Button.Item.Top;
 
@@ -226,7 +226,7 @@ namespace BetagenSBOAddon.SystemForm
 
                     var rateField = docHeaderDS.GetValue("DocRate", 0);
                     var docRate = double.Parse(rateField);
-
+                    var newTotal = 0.0;
                     for (int i = 1; i < mtItems.RowCount; i++)
                     {
                         var freight = 0.0;
@@ -255,14 +255,16 @@ namespace BetagenSBOAddon.SystemForm
                             freight /= rate;
                             lineorgTotalNumber /= rate;
                         }
-                        ((EditText)mtItems.GetCellSpecific("23", i)).Value = Math.Round((lineorgTotalNumber + freight), 2).ToString();
-                        ((EditText)mtItems.GetCellSpecific("U_LineTotalAfterF", i)).Value = Math.Round((lineorgTotalNumber + freight), 2).ToString();
+                        var lineValue = lineorgTotalNumber + freight;
+                        newTotal += lineValue;
+                        ((EditText)mtItems.GetCellSpecific("23", i)).Value = lineValue.ToString();
+                        ((EditText)mtItems.GetCellSpecific("U_LineTotalAfterF", i)).Value = lineValue.ToString();
                     }
 
                     
-                    var totalField = ((totalOrg + freightcostNumber) / docRate).ToString();
+                    var totalField = ((double)(totalOrg + freightcostNumber) / docRate).ToString();
 
-                    ((EditText)this.GetItem("29").Specific).Value = totalField;
+                    ((EditText)this.GetItem("29").Specific).Value = newTotal.ToString() ;
                     ((EditText)this.GetItem("24").Specific).Value = "0";
                     this.UIAPIRawForm.Refresh();
                 }
