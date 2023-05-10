@@ -16,8 +16,8 @@ namespace BetagenSBOAddon
         public Menu()
         {
             AddMenuItem(GlobalFormsInformations.GLPostingInformation);
-            AddMenuItem(GlobalFormsInformations.SalesTargetInformation);
-            AddMenuItem(GlobalFormsInformations.SalesTargetActualInformation);
+            //AddMenuItem(GlobalFormsInformations.SalesTargetInformation);
+            //AddMenuItem(GlobalFormsInformations.SalesTargetActualInformation);
         }
 
         private void AddMenuItem(AddonUserForm infor)
