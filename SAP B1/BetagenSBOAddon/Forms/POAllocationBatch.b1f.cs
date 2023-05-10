@@ -338,28 +338,29 @@ namespace BetagenSBOAddon.Forms
                         connection.Dispose();
                     }
 
-                    Hashtable data;
-                    query = string.Format(Querystring.sp_POAllocateImportInfo_LotNoAdd, this.POEntry, this.PONo);
-                    using (var connection = Globals.DataConnection)
-                    {
-                        data = connection.ExecQueryToHashtable(query);
-                        connection.Dispose();
-                    }
-                    var result = string.Empty;
-                    if (data != null)
-                    {
-                        result = data["Result"].ToString();
-                    }
-                    if (string.IsNullOrEmpty(result))
-                    {
-                        UIHelper.LogMessage(string.Format("Saved Successfully"), UIHelper.MsgType.StatusBar, false);
-                    }
-                    else
-                    {
-                        UIHelper.LogMessage(string.Format("Please check {0}", result), UIHelper.MsgType.Msgbox);
-                    }
                 }
 
+                Hashtable data;
+                query = string.Format(Querystring.sp_POAllocateImportInfo_LotNoAdd, this.POEntry, this.PONo);
+                using (var connection = Globals.DataConnection)
+                {
+                    data = connection.ExecQueryToHashtable(query);
+                    connection.Dispose();
+                }
+                var result = string.Empty;
+                if (data != null)
+                {
+                    result = data["Result"].ToString();
+                }
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    UIHelper.LogMessage(string.Format("Saved Successfully"), UIHelper.MsgType.StatusBar, false);
+                }
+                else
+                {
+                    UIHelper.LogMessage(string.Format("Please check {0}", result), UIHelper.MsgType.Msgbox);
+                }
             }
             catch (Exception ex)
             {

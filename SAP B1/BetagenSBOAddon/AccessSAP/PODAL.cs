@@ -44,7 +44,7 @@ namespace BetagenSBOAddon.AccessSAP
                     {
                         oGRPO.Lines.BaseEntry = int.Parse(item["DocEntry"].ToString());
                         oGRPO.Lines.BaseLine = int.Parse(item["LineNum"].ToString());
-                        if(item["DocEntry"].ToString() != PONo.ToString())
+                        if (item["DocNum"].ToString() != PONo.ToString())
                         {
                             oGRPO.Lines.BaseType = 18;
                         }
