@@ -21,7 +21,8 @@ namespace BetagenSBOAddon
         /// <summary>
         /// Call Query by system SAP HANA or SQL
         /// Syntax SQL : EXEC [query] param1, param1;
-        /// </summary>: CALL "[schema]"."[query]" (param1, param1);
+        /// Syntax HANA: CALL "[schema]"."[query]" (param1, param1);
+        /// </summary>: 
         /// <param name="query">Store name</param>
         /// <param name="param">Parameter of store</param>
         /// <returns></returns>
@@ -40,6 +41,15 @@ namespace BetagenSBOAddon
 
         /// <summary>
         /// USP_BS_STOCKOUTREQUEST  "'{0}','{1}','{2}', {3}"
+        /*
+          "USP_BS_STOCKOUTREQUEST"
+             ( IN StockType char,
+              IN FromDate DATE,
+              IN ToDate DATE,
+              IN User INTEGER
+            )
+            CALL "USP_BS_STOCKOUTREQUEST" (1,'2022-4-17','2023-4-18',1)
+         */
         /// </summary>
         public static string sp_LoadOutStockRequest
         {

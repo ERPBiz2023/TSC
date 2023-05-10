@@ -10,9 +10,16 @@ using System.Threading.Tasks;
 
 namespace GTCore.SAP.DIAPI
 {
+    /// <summary>
+    /// This class to help connect SAP b1 via DI API 
+    /// </summary>
     public class DIConnection
     {
         private static DIConnection instance;
+
+        /// <summary>
+        /// Singleton pattern to control creation one Instance to connect DI API
+        /// </summary>
         public static DIConnection Instance
         {
             get
@@ -35,6 +42,11 @@ namespace GTCore.SAP.DIAPI
         public Company Company { get; set; }
         public SAPbouiCOM.Application SBO_Application;
        
+        /// <summary>
+        /// Connect to DI API 
+        /// </summary>
+        /// <param name="message">out message to raise when error or exception</param>
+        /// <returns></returns>
         private int ConnectDI(ref string message)
         {
             int ret, lErrCode;
@@ -60,6 +72,11 @@ namespace GTCore.SAP.DIAPI
             return ret;
         }
 
+        /// <summary>
+        /// Connect to Company 
+        /// </summary>
+        /// <param name="message">out message to raise when error or exception</param>
+        /// <returns></returns>
         private int ConnectToCompany(ref string message)
         {
             int ret, lErrCode;
@@ -76,6 +93,12 @@ namespace GTCore.SAP.DIAPI
             }
             return ret;
         }
+
+        /// <summary>
+        /// Task execute 2 step, Connect DI and Connect Company
+        /// </summary>
+        /// <param name="message">out message to raise when error or exception</param>
+        /// <returns></returns>
         public bool Connect(ref string message)
         {
             if(ConnectDI(ref message) != 0)
@@ -154,42 +177,7 @@ namespace GTCore.SAP.DIAPI
 
             }
         }
-
-        //public bool DIConnect(ref string message)
-        //{
-        //    var ret = ConnectDI(ref message);
-        //    //message = "";
-        //    return ret != -1;
-        //    int lRetCode = -1, lErrCode;
-        //    try
-        //    {
-        //        lRetCode = Company.Connect();
-        //        //// Check for errors
-        //        if (lRetCode != 0)
-        //        {
-        //            Company.GetLastError(out lErrCode, out message);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        message = string.Format("Connect fail - {0}", ex.Message);
-        //        return false;
-        //    }
-        //    return (lRetCode == 0);
-        //}
-        //public bool DIDisconnect(ref string message)
-        //{
-        //    try
-        //    {
-        //        Company.Disconnect();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        message = string.Format("Disconnect fail - {0}", ex.Message);
-        //        return false;
-        //    }
-        //    return true;
-        //}
+        
         public bool DIDisconnect()
         {
             try
