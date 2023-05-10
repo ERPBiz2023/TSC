@@ -88,7 +88,7 @@ namespace BetagenSBOAddon.AccessSAP
                     {
                         return int.Parse(DIConnection.Instance.Company.GetNewObjectKey());
                     }
-                    
+                    DIConnection.Instance.DIDisconnect();
                 }
                 else
                 {

@@ -12,6 +12,11 @@ namespace GTCore.Helper
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Get Description for enum
+        /// </summary>
+        /// <param name="enumdata">value of enum</param>
+        /// <returns></returns>
         public static string GetDescription(this Enum enumdata)
         {
             return (enumdata.GetType().GetTypeInfo().GetMember(enumdata.ToString())
@@ -19,7 +24,12 @@ namespace GTCore.Helper
                 .SingleOrDefault() as DescriptionAttribute)?.Description ?? enumdata.ToString();
         }
 
-
+        /// <summary>
+        /// Get enum from discripiton
+        /// </summary>
+        /// <typeparam name="T">Type of enum to convert</typeparam>
+        /// <param name="description">The Description of enum</param>
+        /// <returns></returns>
         public static T GetEnumValueByDescription<T>(this string description) where T : Enum
         {
             foreach (Enum enumItem in Enum.GetValues(typeof(T)))
@@ -32,6 +42,11 @@ namespace GTCore.Helper
             throw new ArgumentException("Not found.", nameof(description));
         }
 
+        /// <summary>
+        /// Read data from datarow to hash table
+        /// </summary>
+        /// <param name="raw"></param>
+        /// <returns></returns>
         public static Hashtable ToHashtable(this DataRowView raw)
         {
             var hashtable = new Hashtable();
@@ -43,6 +58,11 @@ namespace GTCore.Helper
             return hashtable;
         }
 
+        /// <summary>
+        /// /Read datas from data view to hash tables
+        /// </summary>
+        /// <param name="dataView"></param>
+        /// <returns></returns>
         public static Hashtable[] ToHashtableArray(this DataView dataView)
         {
             return (from DataRowView row in dataView

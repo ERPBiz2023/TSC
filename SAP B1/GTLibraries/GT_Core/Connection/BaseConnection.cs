@@ -9,11 +9,18 @@ using System.Threading.Tasks;
 
 namespace GTCore.Connection
 {
+    /// <summary>
+    /// This class subcribe the ADO.Net working for any database type
+    /// </summary>
     public abstract class BaseConnection : IDisposable
     {
         protected string ConnectionString = string.Empty;
         protected IDbConnection Connection = null;
         protected IDbTransaction Transaction = null;
+
+        /// <summary>
+        /// Check Connected Status 
+        /// </summary>
         protected bool IsConnected => Connection != null && Connection.State == ConnectionState.Open;
        
         public abstract void OpenConnection();

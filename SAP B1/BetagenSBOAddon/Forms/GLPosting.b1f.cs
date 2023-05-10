@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BetagenSBOAddon.AccessSAP;
 using GTCore;
 using GTCore.Forms;
 using SAPbouiCOM.Framework;
@@ -12,8 +13,10 @@ namespace BetagenSBOAddon.Forms
     [FormAttribute("BetagenSBOAddon.Forms.GLPosting", "Forms/GLPosting.b1f")]
     class GLPosting : UserFormBase
     {
+        private GLPostingDAL GLPostingAccess;
         public GLPosting()
         {
+            GLPostingAccess = new GLPostingDAL();
         }
         //private static AddonUserForm information;
         //public static AddonUserForm Information
@@ -141,7 +144,26 @@ namespace BetagenSBOAddon.Forms
                 }
                 else
                 {
+                    query = string.Format(Querystring.sp_GetAllocateApplySAP, month, year, grp);
+                    Hashtable[] data1s;
+                    using (var connection = Globals.DataConnection)
+                    {
+                        data1s = connection.ExecQueryToArrayHashtable(query);
+                        connection.Dispose();
+                    }
+                    if(data1s.Count() > 0)
+                    {
+                        var message = string.Empty;
+                        if (GLPostingAccess.AddJounalEntry_PostEndMonth(data1s, ref message) == 1)
+                        {
+                            UIHelper.LogMessage(string.Format("Posted all transaction from this selection successfully"), UIHelper.MsgType.StatusBar, false);
+                        }
+                        else
+                        {
 
+                            UIHelper.LogMessage(string.Format("Posted all transaction from this selection error {0}", message), UIHelper.MsgType.StatusBar, true);
+                        }
+                    }
                 }
             }
             catch (Exception ex)
