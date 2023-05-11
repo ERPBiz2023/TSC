@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace GTCore.Config
 {
+    /// <summary>
+    /// Enum: Define System type; HANA or SQL with each version
+    /// </summary>
     public enum SystemType
     {
         [Description("SAP_SQL_2014")]

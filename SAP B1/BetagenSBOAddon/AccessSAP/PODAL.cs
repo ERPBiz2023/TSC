@@ -81,14 +81,15 @@ namespace BetagenSBOAddon.AccessSAP
                     {
                         int error;
                         DIConnection.Instance.Company.GetLastError(out error, out message);
+                        DIConnection.Instance.DIDisconnect();
                         //this.oCommon.ShowMessage("Không thêm được Goods Receipt PO. Thông tin lỗi: " + Conversions.ToString(this.ErrCode) + ": " + this.ErrMsg, (short)3);
                         return -1;
                     }
                     else
                     {
+                        DIConnection.Instance.DIDisconnect();
                         return int.Parse(DIConnection.Instance.Company.GetNewObjectKey());
                     }
-                    DIConnection.Instance.DIDisconnect();
                 }
                 else
                 {

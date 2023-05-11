@@ -23,8 +23,22 @@ namespace GTCore.Connection
         /// </summary>
         protected bool IsConnected => Connection != null && Connection.State == ConnectionState.Open;
        
+        /// <summary>
+        /// Open connection to database
+        /// </summary>
         public abstract void OpenConnection();
+
+        /// <summary>
+        /// Close connectionm to database
+        /// </summary>
         public abstract void CloseConnection();
+
+        /// <summary>
+        /// Set command to execute
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public abstract IDbCommand SetCommand(string query, IDataParameter[] parameters = null);
         public abstract void FillDataSet(string query, IDataParameter[] parameters, DataSet dataSet);
         public void Dispose()
