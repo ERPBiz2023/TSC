@@ -42,7 +42,6 @@ namespace GTCore
                     //    MessageBox.Show(msg);
                     //    return 1;
                 }
-                return 1;
             }
             catch (Exception)
             {
@@ -61,6 +60,15 @@ namespace GTCore
 
             return state.result;
         }
+        
+        public static void Freeze(IForm from)
+        {
+            from.Freeze(true);
+        }
 
+        public static void UnFreeze(IForm from)
+        {
+            from.Freeze(false);
+        }
     }
 }

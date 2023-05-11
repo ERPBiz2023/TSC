@@ -11,6 +11,9 @@ namespace GVTBetagen.Forms
     {
         private string UserName;
 
+        /// <summary>
+        /// Current selected Sales Manager
+        /// </summary>
         private string SalesManagerSelected
         {
             get
@@ -18,6 +21,10 @@ namespace GVTBetagen.Forms
                 return cbbSalesManager.Selected?.Value;
             }
         }
+
+        /// <summary>
+        /// Current selected KA/ASM
+        /// </summary>
         private string KASelected
         {
             get
@@ -26,6 +33,10 @@ namespace GVTBetagen.Forms
             }
         }
 
+
+        /// <summary>
+        /// Current selected Sales Supervizer
+        /// </summary>
         private string SalesSupSelected
         {
             get
@@ -34,6 +45,9 @@ namespace GVTBetagen.Forms
             }
         }
 
+        /// <summary>
+        /// Current selected Team Leader
+        /// </summary>
         private string TeamleaderSelected
         {
             get
@@ -41,6 +55,11 @@ namespace GVTBetagen.Forms
                 return cbbTeamLeader.Selected?.Value;
             }
         }
+
+        /// <summary>
+        /// Load data source to combox Sales Managers
+        /// Call store from Database 
+        /// </summary>
         public void LoadComboboxSalesManagers()
         {
             var query = string.Format(Querystring.sp_GetSaleManagerByUser, UserName);
@@ -66,6 +85,10 @@ namespace GVTBetagen.Forms
             }
             cbbSalesManager.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
         }
+
+        /// <summary>
+        /// Load data source for KA/ASM combobox
+        /// </summary>
         public void LoadComboboxKAASM()
         {
             var query = string.Format(Querystring.sp_GetKA_ASMByUser, UserName, this.SalesManagerSelected);
@@ -92,6 +115,9 @@ namespace GVTBetagen.Forms
             cbbKA_ASM.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
         }
 
+        /// <summary>
+        /// Load data source for Sales sup combobox
+        /// </summary>
         public void LoadComboboxSalesSups()
         {
             var query = string.Format(Querystring.sp_GetSalesSupByUser, UserName, this.SalesManagerSelected, this.KASelected);
@@ -117,6 +143,10 @@ namespace GVTBetagen.Forms
             }
             cbbSalesSup.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
         }
+
+        /// <summary>
+        /// Load data source for Team leader combobox
+        /// </summary>
         public void LoadComboboxTeamLeaders()
         {
             var query = string.Format(Querystring.sp_GetTeamLeaderByUser, UserName, this.SalesManagerSelected, this.KASelected, this.SalesSupSelected);

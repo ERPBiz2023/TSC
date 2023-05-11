@@ -81,61 +81,55 @@
     <Compile Include="AccessSAP\OutStockRequestDAL.cs" />
     <Compile Include="AccessSAP\PODAL.cs" />
     <Compile Include="Forms\GlobalFormsInformations.cs" />
-    <Compile Include="Forms\GLPosting.b1f.cs">
+    <Compile Include="Forms\GLPosting\GLPosting.b1f.cs">
       <DependentUpon>GLPosting.b1f</DependentUpon>
     </Compile>
-    <Compile Include="Forms\POAllocationBatch.b1f.cs">
+    <Compile Include="Forms\POAllocatePatch\POAllocationBatch.b1f.cs">
       <DependentUpon>POAllocationBatch.b1f</DependentUpon>
     </Compile>
     <Compile Include="Forms\SalesTarget\SalesTarget.b1f.cs">
       <DependentUpon>SalesTarget.b1f</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SalesTargetActual.b1f.cs">
+    <Compile Include="Forms\SalesTargetActual\SalesTargetActual.b1f.cs">
       <DependentUpon>SalesTargetActual.b1f</DependentUpon>
     </Compile>
     <Compile Include="Forms\SalesTarget\SalesTargetExt.cs" />
     <Compile Include="Querystring.cs" />
     <Compile Include="Settings\InitConfig.cs" />
-    <Compile Include="SystemForm\PurchaseOrderExt.b1f.cs">
+    <Compile Include="SystemForm\PO\PurchaseOrderExt.b1f.cs">
       <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
     </Compile>
-    <Compile Include="SystemForm\SalesQuotationExt.b1f.cs" />
+    <Compile Include="SystemForm\SQ\SalesQuotationExt.b1f.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Forms\GLPosting.b1f">
+    <None Include="Forms\GLPosting\GLPosting.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
-    <None Include="Forms\OutStockRequest.b1f">
-      <FormCategory>UserForm</FormCategory>
-    </None>
-    <Compile Include="Forms\OutStockRequest.b1f.cs">
-      <DependentUpon>OutStockRequest.b1f</DependentUpon>
-    </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Forms\POAllocationBatch.b1f">
+    <None Include="Forms\POAllocatePatch\POAllocationBatch.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="Forms\SalesTarget\SalesTarget.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
-    <None Include="Forms\SalesTargetActual.b1f">
+    <None Include="Forms\SalesTargetActual\SalesTargetActual.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="packages.config" />
-    <None Include="SystemForm\PurchaseOrderExt.b1f">
+    <None Include="SystemForm\PO\PurchaseOrderExt.b1f">
       <FormCategory>SystemForm</FormCategory>
     </None>
-    <None Include="SystemForm\PurchaseOrderExt.b1f__orig_srf">
+    <None Include="SystemForm\PO\PurchaseOrderExt.b1f__orig_srf">
       <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
     </None>
-    <None Include="SystemForm\SalesQuotationExt.b1f">
+    <None Include="SystemForm\SQ\SalesQuotationExt.b1f">
       <FormCategory>SystemForm</FormCategory>
     </None>
-    <None Include="SystemForm\SalesQuotationExt.b1f__orig_srf" />
+    <None Include="SystemForm\SQ\SalesQuotationExt.b1f__orig_srf" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\GT_Core\GTCore.csproj">
@@ -155,6 +149,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

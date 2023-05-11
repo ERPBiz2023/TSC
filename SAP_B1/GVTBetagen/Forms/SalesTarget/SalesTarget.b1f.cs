@@ -17,9 +17,16 @@ namespace GVTBetagen.Forms
             UserName = Application.SBO_Application.Company.UserName;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private static SalesTarget instance;
 
         public static bool IsFormOpen = false;
+
+        /// <summary>
+        /// Show form, only instance to be created and user for system
+        /// </summary>
         public static void ShowForm()
         {
             if (instance == null)
@@ -31,6 +38,9 @@ namespace GVTBetagen.Forms
             }
         }
 
+        /// <summary>
+        /// Init control and bind data source to control when open form
+        /// </summary>
         private void InitControl()
         {
             this.cbbYear.Select(DateTime.Now.Year.ToString(), SAPbouiCOM.BoSearchKey.psk_ByValue);
@@ -146,10 +156,18 @@ namespace GVTBetagen.Forms
             IsFormOpen = false;
 
         }
-
+        
+        /// <summary>
+        ///  Freeze and Unfreeze from while execute processing
+        ///  Avoid the form to be lag
+        /// </summary>
+        /// <param name="freeze"></param>
         private void Freeze(bool freeze)
         {
-            this.UIAPIRawForm.Freeze(freeze);
+            if(freeze)
+                UIHelper.Freeze(this.UIAPIRawForm);
+            else
+                UIHelper.UnFreeze(this.UIAPIRawForm);
         }
 
         private void cbbSalesManager_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
