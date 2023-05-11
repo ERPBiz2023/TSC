@@ -9,43 +9,12 @@ using SAPbouiCOM.Framework;
 
 namespace BetagenSBOAddon.Forms
 {
-    [FormAttribute("BetagenSBOAddon.Forms.SalesTarget", "Forms/SalesTarget.b1f")]
-    class SalesTarget : UserFormBase
+    [FormAttribute("BetagenSBOAddon.Forms.SalesTarget", "Forms/SalesTarget/SalesTarget.b1f")]
+    public partial class SalesTarget : UserFormBase
     {
-        private string UserName;
         private SalesTarget()
         {
             UserName = Application.SBO_Application.Company.UserName;
-        }
-        private string SalesManagerSelected
-        {
-            get
-            {
-                return cbbSalesManager.Selected?.Value;
-            }
-        }
-        private string KASelected
-        {
-            get
-            {
-                return cbbKA_ASM.Selected?.Value;
-            }
-        }
-
-        private string SalesSupSelected
-        {
-            get
-            {
-                return cbbSalesSup.Selected?.Value;
-            }
-        }
-
-        private string TeamleaderSelected
-        {
-            get
-            {
-                return cbbTeamLeader.Selected?.Value;
-            }
         }
 
         private static SalesTarget instance;
@@ -72,126 +41,21 @@ namespace BetagenSBOAddon.Forms
 
             this.cbbWeek.Select("1", SAPbouiCOM.BoSearchKey.psk_ByValue);
             this.cbbWeek.ExpandType = SAPbouiCOM.BoExpandType.et_ValueOnly;
-            // this.cbbWeek.Item.DisplayDesc = true;
 
             this.LoadComboboxSalesManagers();
             this.cbbSalesManager.Item.DisplayDesc = true;
-           // this.cbbSalesManager.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
 
             this.LoadComboboxKAASM();
             this.cbbKA_ASM.Item.DisplayDesc = true;
-            //this.cbbKA_ASM.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
 
             this.LoadComboboxSalesSups();
             this.cbbSalesSup.Item.DisplayDesc = true;
-            //this.cbbSalesSup.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
 
             this.LoadComboboxTeamLeaders();
             this.cbbTeamLeader.Item.DisplayDesc = true;
-           // this.cbbTeamLeader.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
         }
 
-        public void LoadComboboxSalesManagers()
-        {
-            var query = string.Format(Querystring.sp_GetSaleManagerByUser, UserName);
-            Hashtable[] datas;
-            using (var connection = Globals.DataConnection)
-            {
-                datas = connection.ExecQueryToArrayHashtable(query);
-                connection.Dispose();
-            }
-            if (datas == null || datas.Count() <= 0)
-            {
-                return;
-            }
-
-            for (int i = cbbSalesManager.ValidValues.Count - 1; i >= 0; i--)
-            {
-                cbbSalesManager.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
-            }
-            foreach (var data in datas)
-            {
-                cbbSalesManager.ValidValues.Add(data["ExtEmpNo"].ToString(), data["FullName"].ToString());
-                cbbSalesManager.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
-            }
-            cbbSalesManager.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
-        }
-        public void LoadComboboxKAASM()
-        {
-            var query = string.Format(Querystring.sp_GetKA_ASMByUser, UserName, this.SalesManagerSelected);
-            Hashtable[] datas;
-            using (var connection = Globals.DataConnection)
-            {
-                datas = connection.ExecQueryToArrayHashtable(query);
-                connection.Dispose();
-            }
-            if (datas == null || datas.Count() <= 0)
-            {
-                return;
-            }
-
-            for (int i = cbbKA_ASM.ValidValues.Count - 1; i >= 0; i--)
-            {
-                cbbKA_ASM.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
-            }
-            foreach (var data in datas)
-            {
-                cbbKA_ASM.ValidValues.Add(data["ExtEmpNo"].ToString(), data["FullName"].ToString());
-                cbbKA_ASM.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
-            }
-            cbbKA_ASM.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
-        }
-
-        public void LoadComboboxSalesSups()
-        {
-            var query = string.Format(Querystring.sp_GetSalesSupByUser, UserName, this.SalesManagerSelected, this.KASelected);
-            Hashtable[] datas;
-            using (var connection = Globals.DataConnection)
-            {
-                datas = connection.ExecQueryToArrayHashtable(query);
-                connection.Dispose();
-            }
-            if (datas == null || datas.Count() <= 0)
-            {
-                return;
-            }
-
-            for (int i = cbbSalesSup.ValidValues.Count - 1; i >= 0; i--)
-            {
-                cbbSalesSup.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
-            }
-            foreach (var data in datas)
-            {
-                cbbSalesSup.ValidValues.Add(data["ExtEmpNo"].ToString(), data["FullName"].ToString());
-                cbbSalesSup.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
-            }
-            cbbSalesSup.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
-        }
-        public void LoadComboboxTeamLeaders()
-        {
-            var query = string.Format(Querystring.sp_GetTeamLeaderByUser, UserName, this.SalesManagerSelected, this.KASelected, this.SalesSupSelected);
-            Hashtable[] datas;
-            using (var connection = Globals.DataConnection)
-            {
-                datas = connection.ExecQueryToArrayHashtable(query);
-                connection.Dispose();
-            }
-            if (datas == null || datas.Count() <= 0)
-            {
-                return;
-            }
-
-            for (int i = cbbTeamLeader.ValidValues.Count - 1; i >= 0; i--)
-            {
-                cbbTeamLeader.ValidValues.Remove(i, SAPbouiCOM.BoSearchKey.psk_Index);
-            }
-            foreach (var data in datas)
-            {
-                cbbTeamLeader.ValidValues.Add(data["ExtEmpNo"].ToString(), data["FullName"].ToString());
-                cbbTeamLeader.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
-            }
-            cbbTeamLeader.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
-        }
+        
 
         /// <summary>
         /// Initialize components. Called by framework after form created.

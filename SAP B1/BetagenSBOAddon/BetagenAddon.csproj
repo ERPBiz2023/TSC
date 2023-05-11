@@ -87,12 +87,13 @@
     <Compile Include="Forms\POAllocationBatch.b1f.cs">
       <DependentUpon>POAllocationBatch.b1f</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SalesTarget.b1f.cs">
+    <Compile Include="Forms\SalesTarget\SalesTarget.b1f.cs">
       <DependentUpon>SalesTarget.b1f</DependentUpon>
     </Compile>
     <Compile Include="Forms\SalesTargetActual.b1f.cs">
       <DependentUpon>SalesTargetActual.b1f</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SalesTarget\SalesTargetExt.cs" />
     <Compile Include="Querystring.cs" />
     <Compile Include="Settings\InitConfig.cs" />
     <Compile Include="SystemForm\PurchaseOrderExt.b1f.cs">
@@ -118,7 +119,7 @@
     <None Include="Forms\POAllocationBatch.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
-    <None Include="Forms\SalesTarget.b1f">
+    <None Include="Forms\SalesTarget\SalesTarget.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>
     <None Include="Forms\SalesTargetActual.b1f">
