@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3ED05DA6-6EA7-41FC-AAAF-D7B79B9700CB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GVTBetagen</RootNamespace>
+    <AssemblyName>GVTBetagen</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>GVTBetagen.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Sap.Data.Hana.v4.5, Version=2.7.26.0, Culture=neutral, PublicKeyToken=0326b8ea63db4bc4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files\sap\hdbclient\ado.net\v4.5\Sap.Data.Hana.v4.5.dll</HintPath>
+    </Reference>
+    <Reference Include="SAPBusinessOneSDK, Version=1.0.0.1, Culture=neutral, PublicKeyToken=c7c3cb60e45d119f, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccessSAP\GLPostingDAL.cs" />
+    <Compile Include="AccessSAP\OutStockRequestDAL.cs" />
+    <Compile Include="AccessSAP\PODAL.cs" />
+    <Compile Include="Forms\GlobalFormsInformations.cs" />
+    <Compile Include="Forms\GLPosting.b1f.cs">
+      <DependentUpon>GLPosting.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\POAllocationBatch.b1f.cs">
+      <DependentUpon>POAllocationBatch.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SalesTarget\SalesTarget.b1f.cs">
+      <DependentUpon>SalesTarget.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SalesTargetActual.b1f.cs">
+      <DependentUpon>SalesTargetActual.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SalesTarget\SalesTargetExt.cs" />
+    <Compile Include="Querystring.cs" />
+    <Compile Include="Settings\InitConfig.cs" />
+    <Compile Include="SystemForm\PurchaseOrderExt.b1f.cs">
+      <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="SystemForm\SalesQuotationExt.b1f.cs" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Forms\GLPosting.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\OutStockRequest.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <Compile Include="Forms\OutStockRequest.b1f.cs">
+      <DependentUpon>OutStockRequest.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="Globals.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Menu.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Forms\POAllocationBatch.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\SalesTarget\SalesTarget.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\SalesTargetActual.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="SystemForm\PurchaseOrderExt.b1f">
+      <FormCategory>SystemForm</FormCategory>
+    </None>
+    <None Include="SystemForm\PurchaseOrderExt.b1f__orig_srf">
+      <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
+    </None>
+    <None Include="SystemForm\SalesQuotationExt.b1f">
+      <FormCategory>SystemForm</FormCategory>
+    </None>
+    <None Include="SystemForm\SalesQuotationExt.b1f__orig_srf" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\GT_Core\GTCore.csproj">
+      <Project>{14870de4-1cbb-4a71-9b41-3429e7806b29}</Project>
+      <Name>GTCore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
