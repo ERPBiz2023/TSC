@@ -94,7 +94,9 @@
       <DependentUpon>SalesTargetActual.b1f</DependentUpon>
     </Compile>
     <Compile Include="Forms\SalesTarget\SalesTargetExt.cs" />
-    <Compile Include="Querystring.cs" />
+    <Compile Include="QueryString\QuerystringSalesTarget.cs" />
+    <Compile Include="QueryString\QuerystringPOForm.cs" />
+    <Compile Include="QueryString\Querystring.cs" />
     <Compile Include="Settings\InitConfig.cs" />
     <Compile Include="SystemForm\PO\PurchaseOrderExt.b1f.cs">
       <DependentUpon>PurchaseOrderExt.b1f</DependentUpon>
