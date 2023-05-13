@@ -84,6 +84,12 @@
     <Compile Include="Forms\GLPosting\GLPosting.b1f.cs">
       <DependentUpon>GLPosting.b1f</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ImportExportExcel\ImportExport.b1f.cs">
+      <DependentUpon>ImportExport.b1f</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ImportExportExcel\ImportResult.b1f.cs">
+      <DependentUpon>ImportResult.b1f</DependentUpon>
+    </Compile>
     <Compile Include="Forms\POAllocatePatch\POAllocationBatch.b1f.cs">
       <DependentUpon>POAllocationBatch.b1f</DependentUpon>
     </Compile>
@@ -94,6 +100,7 @@
       <DependentUpon>SalesTargetActual.b1f</DependentUpon>
     </Compile>
     <Compile Include="Forms\SalesTarget\SalesTargetExt.cs" />
+    <Compile Include="QueryString\QuerystringGLPosting.cs" />
     <Compile Include="QueryString\QuerystringSalesTarget.cs" />
     <Compile Include="QueryString\QuerystringPOForm.cs" />
     <Compile Include="QueryString\Querystring.cs" />
@@ -112,6 +119,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Forms\ImportExportExcel\ImportExport.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
+    <None Include="Forms\ImportExportExcel\ImportResult.b1f">
+      <FormCategory>UserForm</FormCategory>
+    </None>
     <None Include="Forms\POAllocatePatch\POAllocationBatch.b1f">
       <FormCategory>UserForm</FormCategory>
     </None>

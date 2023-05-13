@@ -223,6 +223,58 @@ namespace GVTBetagen.Forms
                 {
                     year = DateTime.Now.Year;
                 }
+
+                var query = string.Format(Querystring.sp_SaleTarget_LoadbyUserId, 
+                            UserName,
+                            SalesManagerSelected,
+                            KASelected,
+                            SalesSupSelected,
+                            TeamleaderSelected,
+                            month, year, week);
+                this.grData.DataTable.ExecuteQuery(query);
+                //Hashtable[] datas;
+                //using (var connection = Globals.DataConnection)
+                //{
+                //    datas = connection.ExecQueryToArrayHashtable(query);
+                //    connection.Dispose();
+                //}
+                //if (datas == null || datas.Count() <= 0)
+                //{
+                //    return;
+                //}
+
+
+
+                query = string.Format(Querystring.sp_SaleTarget_TargetID_Approved, month, year, SalesManagerSelected);
+                Hashtable data;
+                using (var connection = Globals.DataConnection)
+                {
+                    data = connection.ExecQueryToHashtable(query);
+                    connection.Dispose();
+                }
+                var result = "-1";
+                if (data != null)
+                {
+                    result = data["Result"].ToString();                   
+                }
+                if (result != "-1")
+                {
+                    UIHelper.LogMessage("This target is approved.", UIHelper.MsgType.StatusBar, false);
+
+                    this.grData.Columns.Item("SSAmount").Editable = false;
+                    this.grData.Columns.Item("KAAmount").Editable = false;
+                    this.grData.Columns.Item("SMAmount").Editable = false;
+                    this.grData.Columns.Item("GMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSSAmount").Editable = false;
+                    this.grData.Columns.Item("KSUKAAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUGMAmount").Editable = false;
+                }
+                else
+                {
+                    this.EnableGridCol_byGroupPolicy();
+                }
+           
             }
             catch (Exception ex)
             {

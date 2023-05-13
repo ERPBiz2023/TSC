@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GVTBetagen.Settings;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,9 @@ namespace GVTBetagen.Forms
         {
             get
             {
-                return cbbSalesManager.Selected?.Value;
+                if (cbbSalesManager.Selected != null && cbbSalesManager.Selected?.Value != "All")
+                    return cbbSalesManager.Selected?.Value;
+                return "";
             }
         }
 
@@ -29,7 +32,9 @@ namespace GVTBetagen.Forms
         {
             get
             {
-                return cbbKA_ASM.Selected?.Value;
+                if (cbbKA_ASM.Selected != null && cbbKA_ASM.Selected?.Value != "All")
+                    return cbbKA_ASM.Selected?.Value;
+                return "";
             }
         }
 
@@ -41,7 +46,9 @@ namespace GVTBetagen.Forms
         {
             get
             {
-                return cbbSalesSup.Selected?.Value;
+                if (cbbSalesSup.Selected != null && cbbSalesSup.Selected?.Value != "All")
+                    return cbbSalesSup.Selected?.Value;
+                return "";
             }
         }
 
@@ -52,7 +59,9 @@ namespace GVTBetagen.Forms
         {
             get
             {
-                return cbbTeamLeader.Selected?.Value;
+                if (cbbTeamLeader.Selected != null && cbbTeamLeader.Selected?.Value != "All")
+                    return cbbTeamLeader.Selected?.Value;
+                return "";
             }
         }
 
@@ -171,6 +180,108 @@ namespace GVTBetagen.Forms
                 cbbTeamLeader.ExpandType = SAPbouiCOM.BoExpandType.et_ValueDescription;
             }
             cbbTeamLeader.Select(datas[0]["ExtEmpNo"], SAPbouiCOM.BoSearchKey.psk_ByValue);
+        }
+
+        /// <summary>
+        /// Enable policygroup
+        /// </summary>
+        private void EnableGridCol_byGroupPolicy()
+        {
+            var query = string.Format(Querystring.sp_GetIncentiveUser, InitConfig.UserId_Pub);
+            Hashtable data;
+            using (var connection = Globals.DataConnection)
+            {
+                data = connection.ExecQueryToHashtable(query);
+                connection.Dispose();
+            }
+            short userApproved = -1;
+            if (data != null)
+            {
+                short.TryParse(data["Result"].ToString(), out userApproved);
+            }
+            this.btnApprove.Item.Enabled = false;
+            this.btnSave.Item.Enabled = true;
+            this.btnImportExcel.Item.Enabled = true;
+
+            switch (InitConfig.GroupPolicy)
+            {
+                case 0:
+                    this.grData.Columns.Item("SSAmount").Editable = false;
+                    this.grData.Columns.Item("KAAmount").Editable = false;
+                    this.grData.Columns.Item("SMAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;
+                    this.grData.Columns.Item("GMAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;//this.GridCustomer.RootTable.Columns["GMAmount"].EditType = EditType.TextBox;
+                    this.grData.Columns.Item("KSUSSAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;//this.GridCustomer.RootTable.Columns["KSUSSAmount"].EditType = EditType.TextBox;
+                    this.grData.Columns.Item("KSUKAAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;//this.GridCustomer.RootTable.Columns["KSUKAAmount"].EditType = EditType.TextBox;
+                    this.grData.Columns.Item("KSUSMAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;//this.GridCustomer.RootTable.Columns["KSUSMAmount"].EditType = EditType.TextBox;
+                    this.grData.Columns.Item("KSUGMAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText; //this.GridCustomer.RootTable.Columns["KSUGMAmount"].EditType = EditType.TextBox;
+                    this.btnCopy.Item.Visible = true;
+                    this.btnCopy.Item.Description = "Copy Target from Sale Manager";
+                    if (userApproved != (short)1)
+                        break;
+                    this.btnApprove.Item.Enabled = true;
+                    break;
+                case 1:
+                    this.grData.Columns.Item("SSAmount").Editable = false;
+                    this.grData.Columns.Item("KAAmount").Editable = false;
+                    this.grData.Columns.Item("SMAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;
+                    this.grData.Columns.Item("GMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSSAmount").Editable = false;
+                    this.grData.Columns.Item("KSUKAAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSMAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;
+                    this.grData.Columns.Item("KSUGMAmount").Editable = false;
+                    this.btnCopy.Item.Visible = true;
+                    this.btnCopy.Item.Description = "Copy Target from  KA/ASM";
+                    break;
+                case 2:
+                    this.grData.Columns.Item("SSAmount").Editable = false;
+                    this.grData.Columns.Item("KAAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;
+                    this.grData.Columns.Item("SMAmount").Editable = false;
+                    this.grData.Columns.Item("GMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSSAmount").Editable = false;
+                    this.grData.Columns.Item("KSUKAAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;//this.GridCustomer.RootTable.Columns["KSUKAAmount"].EditType = EditType.TextBox;
+                    this.grData.Columns.Item("KSUSMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUGMAmount").Editable = false;
+                    this.btnCopy.Item.Visible = true;
+                    this.btnCopy.Item.Description = "Copy Target from  Sales sup";
+                    break;
+                case 3:
+                    this.grData.Columns.Item("SSAmount").Editable = false;
+                    this.grData.Columns.Item("KAAmount").Editable = false;
+                    this.grData.Columns.Item("SMAmount").Editable = false;
+                    this.grData.Columns.Item("GMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSSAmount").Editable = false;
+                    this.grData.Columns.Item("KSUKAAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUGMAmount").Editable = false;
+                    this.btnCopy.Item.Visible = false;
+                    this.btnSave.Item.Enabled = false;
+                    this.btnImportExcel.Item.Enabled = false;
+                    break;
+                case 4:
+                    this.grData.Columns.Item("SSAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;
+                    this.grData.Columns.Item("KAAmount").Editable = false;
+                    this.grData.Columns.Item("SMAmount").Editable = false;
+                    this.grData.Columns.Item("GMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSSAmount").Type = SAPbouiCOM.BoGridColumnType.gct_EditText;
+                    this.grData.Columns.Item("KSUKAAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUGMAmount").Editable = false;
+                    this.btnCopy.Item.Visible = false;
+                    break;
+                case 5:
+                    this.grData.Columns.Item("SSAmount").Editable = false;
+                    this.grData.Columns.Item("KAAmount").Editable = false;
+                    this.grData.Columns.Item("SMAmount").Editable = false;
+                    this.grData.Columns.Item("GMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSSAmount").Editable = false;
+                    this.grData.Columns.Item("KSUKAAmount").Editable = false;
+                    this.grData.Columns.Item("KSUSMAmount").Editable = false;
+                    this.grData.Columns.Item("KSUGMAmount").Editable = false;
+                    this.btnCopy.Item.Visible = false;
+                    this.btnSave.Item.Enabled = false;
+                    this.btnImportExcel.Item.Enabled = false;
+                    break;
+            }
         }
     }
 }

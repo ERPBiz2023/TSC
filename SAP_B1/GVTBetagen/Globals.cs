@@ -24,6 +24,7 @@ namespace GVTBetagen
        // public static ILog LogInstance = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public static Application MainApplication;
         public static SAPbouiCOM.Application Application;
+        public static string UserName = SAPbouiCOM.Framework.Application.SBO_Application.Company.UserName;
 
         public static DateTime NullDate = new DateTime(2099, 01, 01);
         public static string DateShowFormat = "dd.MM.yyyy";
@@ -32,7 +33,7 @@ namespace GVTBetagen
 
         public static string WarehouseNull = "Select warehouse";
         public static string BinNull = "Select team code";
-        public static string UserName;
+        //public static string UserName;
         public static BaseConnection DataConnection
         {
             get

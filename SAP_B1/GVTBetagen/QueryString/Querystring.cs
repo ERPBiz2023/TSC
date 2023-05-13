@@ -14,9 +14,12 @@ namespace GVTBetagen
         // UF_BS_GETQUANTITYSTOCKOUTREQUEST
         // UF_BS_SETCOLOR_ITEMCODE
         // uv_Empoyee_Salary_Accounting
+        //uv_SaleDetail_ByInvoice_SaleIncentive_SalesTarget
 
         // UDF Item U_Volumn decimal
         // UDF Line U_OrgTotal
+
+        // FUNCTION: UF_BS_Customer_Incharge_DocDate
 
         /// <summary>
         /// Call Query by system SAP HANA or SQL
@@ -191,49 +194,7 @@ namespace GVTBetagen
                 return CallStoreBySystem("usp_BS_Discount_SaleQuotation", "{0}, '{1}'");
             }
         }
-
-        /// <summary>
-        /// usp_BS_GL_Allocate_CancelSAP "{0}, {1}, {2}"
-        /// </summary>
-        public static string sp_GetAllocateCancelSAP
-        {
-            get
-            {
-                return CallStoreBySystem("usp_BS_GL_Allocate_CancelSAP", "{0}, {1}, {2}");
-            }
-        }
-
-        /// <summary>
-        /// usp_BS_GL_Allocate_ApplySAP "{0}, {1}, {2}"
-        /// </summary>
-        public static string sp_GetAllocateApplySAP
-        {
-            get
-            {
-                return CallStoreBySystem("usp_BS_GL_Allocate_ApplySAP", "{0}, {1}, {2}");
-            }
-        }
-
-        /// <summary>
-        /// usp_BS_GL_Allocate_GroupBY_AccSKUChanBra "{0}, {1}"
-        /// </summary>
-        public static string sp_GetAllocateApplySAPAccSKUChanBra
-        {
-            get
-            {
-                return CallStoreBySystem("usp_BS_GL_Allocate_GroupBY_AccSKUChanBra", "{0}, {1}");
-            }
-        }
-        /// <summary>
-        ///  usp_BS_SalaryActual_Account  "{0}, {1}, '{2}'"
-        /// </summary>
-        public static string sp_GetAllocateSalaryActual_Account
-        {
-            get
-            {
-                return CallStoreBySystem("usp_BS_SalaryActual_Account", "{0}, {1}, '{2}'");
-            }
-        }
+        
         /// <summary>
         /// USP_BS_PurchaseOrder_LoadbyEntry "{0}"
         /// </summary>
@@ -264,6 +225,20 @@ namespace GVTBetagen
             get
             {
                 return CallStoreBySystem("USP_BS_PO_LotNo_LoadbyEntry", "{0}, '{1}'");
+            }
+        }
+        public static string sp_GetUserFromUserCode
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_GETUSERID_FROMUSERCODE", "'{0}'");
+            }
+        }
+        public static string sp_GetIncentiveUser
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_Incentive_User", "{0}");
             }
         }
     }
