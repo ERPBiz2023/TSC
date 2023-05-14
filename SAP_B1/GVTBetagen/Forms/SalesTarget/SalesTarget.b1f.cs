@@ -112,7 +112,8 @@ namespace GVTBetagen.Forms
         /// </summary>
         public override void OnInitializeFormEvents()
         {
-            this.CloseAfter += new CloseAfterHandler(this.Form_CloseAfter);
+            this.CloseAfter += new SAPbouiCOM.Framework.FormBase.CloseAfterHandler(this.Form_CloseAfter);
+            this.ResizeAfter += new ResizeAfterHandler(this.Form_ResizeAfter);
 
         }
 
@@ -120,7 +121,7 @@ namespace GVTBetagen.Forms
 
         private void OnCustomInitialize()
         {
-
+            SetControlLocation();
         }
 
         private SAPbouiCOM.ComboBox cbbMon;
@@ -281,6 +282,54 @@ namespace GVTBetagen.Forms
                 UIHelper.LogMessage(string.Format("Load data error {0}", ex.Message), UIHelper.MsgType.StatusBar, true);
             }
             this.Freeze(false);
+        }
+
+        private void Form_ResizeAfter(SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            SetControlLocation();
+        }
+
+        private void SetControlLocation()
+        {
+            //var max = ischange && !isFirst ? this.UIAPIRawForm.Height : this.UIAPIRawForm.MaxHeight;// : this.UIAPIRawForm.Height;
+            var max = this.UIAPIRawForm.ClientHeight;
+            var maxw = this.UIAPIRawForm.ClientWidth;
+
+            this.btnSave.Item.Top = max - 30;
+            this.btnCancel.Item.Top = this.btnSave.Item.Top;
+            this.StaticText10.Item.Top = this.btnSave.Item.Top + 6;
+            this.edFile.Item.Top = this.btnSave.Item.Top + 6;
+            this.btnFindFile.Item.Top = this.btnSave.Item.Top;
+            this.cbkAllSKU.Item.Top = this.btnSave.Item.Top + 6;
+            this.cbkFocusSKU.Item.Top = this.btnSave.Item.Top + 6;
+            this.cbkFocusSKU.Item.Left = this.cbkAllSKU.Item.Left + this.cbkAllSKU.Item.Width + 10;
+
+            this.btnImportExcel.Item.Top = this.btnSave.Item.Top;
+            this.btnExportExcel.Item.Top = this.btnSave.Item.Top;
+            this.btnApprove.Item.Top = this.btnSave.Item.Top;
+            this.btnCopy.Item.Top = this.btnSave.Item.Top;
+
+            this.btnCopy.Item.Left = maxw - 20 - this.btnCopy.Item.Width;
+            this.btnApprove.Item.Left = this.btnCopy.Item.Left - 10 - this.btnApprove.Item.Width;
+            this.btnExportExcel.Item.Left = this.btnApprove.Item.Left - 10 - this.btnExportExcel.Item.Width;
+            this.btnImportExcel.Item.Left = this.btnExportExcel.Item.Left - 10 - this.btnImportExcel.Item.Width;
+
+            this.btnSearch.Item.Left = maxw - 20 - this.btnSearch.Item.Width;
+            this.cbbTeamLeader.Item.Left = this.btnSearch.Item.Left - this.cbbTeamLeader.Item.Width - 10;
+            this.cbbSalesSup.Item.Left = this.btnSearch.Item.Left - this.cbbSalesSup.Item.Width - 10;
+            this.StaticText8.Item.Left = this.cbbSalesSup.Item.Left - this.StaticText8.Item.Width - 10;
+            this.StaticText9.Item.Left = this.cbbTeamLeader.Item.Left - this.StaticText9.Item.Width - 10;
+
+            this.cbbSalesManager.Item.Left = this.StaticText8.Item.Left - this.cbbSalesManager.Item.Width - 20;
+            this.cbbKA_ASM.Item.Left = this.StaticText9.Item.Left - this.cbbKA_ASM.Item.Width - 20;
+            this.StaticText4.Item.Left = this.cbbSalesManager.Item.Left - this.StaticText4.Item.Width - 10;
+            this.StaticText5.Item.Left = this.cbbKA_ASM.Item.Left - this.StaticText5.Item.Width - 10;
+
+
+            this.grData.Item.Top = 65;
+            this.grData.Item.Left = 20;
+            this.grData.Item.Height = this.btnSave.Item.Top - this.grData.Item.Top - 20;// this.btnSave.Item.Top - 20 - this.grData.Item.Top;
+            this.grData.Item.Width = maxw - this.grData.Item.Left - 20;
         }
     }
 }

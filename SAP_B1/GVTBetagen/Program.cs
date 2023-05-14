@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GTCore;
 using GVTBetagen.Forms;
 using GVTBetagen.Settings;
 using SAPbouiCOM.Framework;
@@ -31,11 +32,11 @@ namespace GVTBetagen
                 
                 MainApplication.RegisterMenuEventHandler(MyMenu.SBO_Application_MenuEvent);
                 Application.SBO_Application.AppEvent += new SAPbouiCOM._IApplicationEvents_AppEventEventHandler(SBO_Application_AppEvent);
-
                 var message = string.Empty;
-                if(!SystemInformation.CurrentAccountConnectionInfo(ref message))
+                if (!SystemInformation.CurrentAccountConnectionInfo(ref message))
                 {
-                    System.Windows.Forms.MessageBox.Show(message);
+                    UIHelper.LogMessage(message, UIHelper.MsgType.StatusBar, true);
+                    // System.Windows.Forms.MessageBox.Show(message);
                 }
 
                 MainApplication.Run();

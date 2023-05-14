@@ -15,7 +15,7 @@ namespace GVTBetagen.Settings
         public static string Pub_DBName = "";
         public static string Pub_UserName = "";
         public static string Pub_Password = "";
-        public static int UserId_Pub = 1;
+        public static int UserId_Pub = -1;
         public static string UserCode_Pub = "";
         public static string User_HRCode = "";
         public static short UserLocation_Pub = -1;
@@ -62,7 +62,7 @@ namespace GVTBetagen.Settings
         {
             try
             {
-                var query = string.Format(Querystring.sp_GetUserFromUserCode, Globals.UserName);
+                var query = string.Format(Querystring.sp_GetUserFromUserCode, SAPbouiCOM.Framework.Application.SBO_Application.Company.UserName);
                 Hashtable data;
                 using (var connection = Globals.DataConnection)
                 {
