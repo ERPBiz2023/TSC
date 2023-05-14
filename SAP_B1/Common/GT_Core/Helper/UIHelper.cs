@@ -60,6 +60,23 @@ namespace GTCore
 
             return state.result;
         }
+
+        public static string BrowserExcelDiglog()
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            openFileDialog1.InitialDirectory = System.Windows.Forms.Application.StartupPath;
+            openFileDialog1.Title = "Select a Excel file to open";
+            openFileDialog1.FilterIndex = 0;
+            openFileDialog1.RestoreDirectory = true;
+
+            DialogResult ret = ShowGTDialog(openFileDialog1);
+            if (ret == DialogResult.OK)
+            {
+                return openFileDialog1.FileName;
+            }
+            return string.Empty;
+        }
         
         public static void Freeze(IForm from)
         {

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using GTCore;
 using GTCore.Forms;
+using GVTBetagen.Settings;
 using SAPbouiCOM.Framework;
 
 namespace GVTBetagen.Forms
@@ -65,7 +66,7 @@ namespace GVTBetagen.Forms
             this.cbbTeamLeader.Item.DisplayDesc = true;
         }
 
-        
+
 
         /// <summary>
         /// Initialize components. Called by framework after form created.
@@ -93,16 +94,23 @@ namespace GVTBetagen.Forms
             this.btnSearch.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSearch_ClickBefore);
             this.grData = ((SAPbouiCOM.Grid)(this.GetItem("grData").Specific));
             this.btnSave = ((SAPbouiCOM.Button)(this.GetItem("btnSave").Specific));
+            this.btnSave.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSave_ClickBefore);
             this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCan").Specific));
+            this.btnCancel.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCancel_ClickBefore);
             this.StaticText10 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_24").Specific));
             this.edFile = ((SAPbouiCOM.EditText)(this.GetItem("edFil").Specific));
             this.btnFindFile = ((SAPbouiCOM.Button)(this.GetItem("btnFind").Specific));
+            this.btnFindFile.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnFindFile_ClickBefore);
             this.cbkAllSKU = ((SAPbouiCOM.CheckBox)(this.GetItem("cbkAll").Specific));
             this.cbkFocusSKU = ((SAPbouiCOM.CheckBox)(this.GetItem("cbkFoc").Specific));
             this.btnImportExcel = ((SAPbouiCOM.Button)(this.GetItem("btnIEx").Specific));
+            this.btnImportExcel.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnImportExcel_ClickBefore);
             this.btnExportExcel = ((SAPbouiCOM.Button)(this.GetItem("btnEEx").Specific));
+            this.btnExportExcel.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnExportExcel_ClickBefore);
             this.btnApprove = ((SAPbouiCOM.Button)(this.GetItem("btnApr").Specific));
+            this.btnApprove.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnApprove_ClickBefore);
             this.btnCopy = ((SAPbouiCOM.Button)(this.GetItem("btnCop").Specific));
+            this.btnCopy.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnCopy_ClickBefore);
             this.OnCustomInitialize();
 
         }
@@ -157,7 +165,7 @@ namespace GVTBetagen.Forms
             IsFormOpen = false;
 
         }
-        
+
         /// <summary>
         ///  Freeze and Unfreeze from while execute processing
         ///  Avoid the form to be lag
@@ -165,7 +173,7 @@ namespace GVTBetagen.Forms
         /// <param name="freeze"></param>
         private void Freeze(bool freeze)
         {
-            if(freeze)
+            if (freeze)
                 UIHelper.Freeze(this.UIAPIRawForm);
             else
                 UIHelper.UnFreeze(this.UIAPIRawForm);
@@ -198,40 +206,23 @@ namespace GVTBetagen.Forms
             this.Freeze(true);
             try
             {
-                if(string.IsNullOrEmpty(this.SalesManagerSelected) || this.SalesManagerSelected == "All")
+                if (string.IsNullOrEmpty(this.SalesManagerSelected) || this.SalesManagerSelected == "All")
                 {
                     UIHelper.LogMessage(string.Format("Please select sale manager."), UIHelper.MsgType.StatusBar, true);
                     this.Freeze(false);
                     return;
                 }
-                int week;
 
-                if(string.IsNullOrEmpty(cbbWeek.Selected.Value ) 
-                    || cbbWeek.Selected.Value == "All"
-                    || !int.TryParse(cbbWeek.Selected.Value, out week))
-                {
-                    week = -1;
-                }
 
-                int month;
-                if(!int.TryParse(cbbMon.Selected.Value, out month))
-                {
-                    month = DateTime.Now.Month;
-                }
-
-                int year;
-                if (!int.TryParse(cbbYear.Selected.Value, out year))
-                {
-                    year = DateTime.Now.Year;
-                }
-
-                var query = string.Format(Querystring.sp_SaleTarget_LoadbyUserId, 
+                var query = string.Format(Querystring.sp_SaleTarget_LoadbyUserId,
                             UserName,
                             SalesManagerSelected,
                             KASelected,
                             SalesSupSelected,
                             TeamleaderSelected,
-                            month, year, week);
+                            MonthSelected,
+                            YearSelected,
+                            WeekSelected);
                 this.grData.DataTable.ExecuteQuery(query);
                 //Hashtable[] datas;
                 //using (var connection = Globals.DataConnection)
@@ -246,7 +237,7 @@ namespace GVTBetagen.Forms
 
 
 
-                query = string.Format(Querystring.sp_SaleTarget_TargetID_Approved, month, year, SalesManagerSelected);
+                query = string.Format(Querystring.sp_SaleTarget_TargetID_Approved, MonthSelected, YearSelected, SalesManagerSelected);
                 Hashtable data;
                 using (var connection = Globals.DataConnection)
                 {
@@ -256,7 +247,7 @@ namespace GVTBetagen.Forms
                 var result = "-1";
                 if (data != null)
                 {
-                    result = data["Result"].ToString();                   
+                    result = data["Result"].ToString();
                 }
                 if (result != "-1")
                 {
@@ -275,7 +266,7 @@ namespace GVTBetagen.Forms
                 {
                     this.EnableGridCol_byGroupPolicy();
                 }
-           
+
             }
             catch (Exception ex)
             {
@@ -330,6 +321,222 @@ namespace GVTBetagen.Forms
             this.grData.Item.Left = 20;
             this.grData.Item.Height = this.btnSave.Item.Top - this.grData.Item.Top - 20;// this.btnSave.Item.Top - 20 - this.grData.Item.Top;
             this.grData.Item.Width = maxw - this.grData.Item.Left - 20;
+        }
+
+        private void btnSave_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true; this.Freeze(true);
+            try
+            {
+                if (string.IsNullOrEmpty(this.SalesManagerSelected) || this.SalesManagerSelected == "All")
+                {
+                    UIHelper.LogMessage(string.Format("Please select sale manager."), UIHelper.MsgType.StatusBar, true);
+                    this.Freeze(false);
+                    return;
+                }
+
+                var query = string.Format(Querystring.usp_SalesTarget_Add, YearSelected, MonthSelected, SalesSupSelected, SalesSupSelected, cbbSalesSup.Selected.Description);
+                Hashtable data;
+                using (var connection = Globals.DataConnection)
+                {
+                    data = connection.ExecQueryToHashtable(query);
+                    connection.Dispose();
+                }
+                var result = "-1";
+                if (data != null)
+                {
+                    result = data["Result"].ToString();
+                }
+                int targetId = -1;
+                int.TryParse(result, out targetId);
+
+                for (var index = 0; index < this.grData.DataTable.Rows.Count; index++)
+                {
+                    long targetDID = -1;
+                    long.TryParse(this.grData.DataTable.GetValue("TargetDID", index).ToString(), out targetDID);
+                    if (targetDID != 54961L)
+                    {
+                        if (targetDID > 0L)
+                        {
+                            query = string.Format(Querystring.SalesTarget_Detail_Update,
+                                                  targetDID,
+                                                  targetId,
+                                                  this.grData.DataTable.GetValue("SSAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KAAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("SMAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("GMAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KSUSSAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KSUKAAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KSUSMAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KSUGMAmount", index).ToString());
+                            using (var connection = Globals.DataConnection)
+                            {
+                                connection.ExecuteWithOpenClose(query);
+                                connection.Dispose();
+                            }
+                        }
+                        else
+                        {
+
+                            query = string.Format(Querystring.usp_SalesTarget_Add_V1,
+                                                  targetId,
+                                                  this.grData.DataTable.GetValue("CustCode", index).ToString(),
+                                                  this.grData.DataTable.GetValue("CustName", index).ToString(),
+                                                  this.grData.DataTable.GetValue("SaleRepEmpid", index).ToString(),
+                                                  this.grData.DataTable.GetValue("SaleRepfullName", index).ToString(),
+                                                  this.grData.DataTable.GetValue("TeamleadId", index).ToString(),
+                                                  this.grData.DataTable.GetValue("SSEmpId", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KAEmpId", index).ToString(),
+                                                  this.grData.DataTable.GetValue("SMEmpId", index).ToString(),
+                                                  this.grData.DataTable.GetValue("SSAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KAAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("SMAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("GMAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KSUSSAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KSUKAAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KSUSMAmount", index).ToString(),
+                                                  this.grData.DataTable.GetValue("KSUGMAmount", index).ToString());
+                            using (var connection = Globals.DataConnection)
+                            {
+                                connection.ExecuteWithOpenClose(query);
+                                connection.Dispose();
+                            }
+
+                        }
+                    }
+                }
+
+                UIHelper.LogMessage(string.Format("Updated Successfully"), UIHelper.MsgType.StatusBar, false);
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(string.Format("Save data error {0}", ex.Message), UIHelper.MsgType.StatusBar, true);
+            }
+            this.Freeze(false);
+        }
+
+        private void btnCancel_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            this.UIAPIRawForm.Close();
+        }
+
+        private void btnFindFile_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            this.Freeze(true);
+            try
+            {
+                var path = UIHelper.BrowserExcelDiglog();
+                if (!string.IsNullOrEmpty(path))
+                {
+                    this.edFile.Value = path;
+                }
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(ex.Message, UIHelper.MsgType.StatusBar, true);
+            }
+            this.Freeze(false);
+        }
+
+        private void btnExportExcel_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+        }
+
+        private void btnImportExcel_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+        }
+
+        private void btnApprove_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true;
+            this.Freeze(true);
+            try
+            {
+                var query = string.Format(Querystring.sp_SaleTarget_TargetID, YearSelected, MonthSelected, SalesManagerSelected);
+                Hashtable data;
+                using (var connection = Globals.DataConnection)
+                {
+                    data = connection.ExecQueryToHashtable(query);
+                    connection.Dispose();
+                }
+
+                if (data != null)
+                {
+                    var id = 0;
+                    int.TryParse(data["Result"].ToString(), out id);
+                    query = string.Format(Querystring.BS_SalesTarget_Approve, id);
+                    using (var connection = Globals.DataConnection)
+                    {
+                        connection.ExecuteWithOpenClose(query);
+                        connection.Dispose();
+                    }
+                }
+                UIHelper.LogMessage(string.Format("Approve Successfully"), UIHelper.MsgType.StatusBar, false);
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(ex.Message, UIHelper.MsgType.StatusBar, true);
+            }
+            this.Freeze(false);
+        }
+        private void btnCopy_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        {
+            BubbleEvent = true; this.Freeze(true);
+            try
+            {
+                if (this.grData.DataTable.Rows.Count <= 0)
+                {
+                    UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, true);
+                }
+                for (int index = 0; index <= this.grData.DataTable.Rows.Count; index++)
+                {
+                    switch (InitConfig.GroupPolicy)
+                    {
+                        case 0:
+                            int num1 = checked(this.Myds_SaleTargetDetail.Tables[0].Rows.Count - 1);
+                            int index1 = 0;
+                            while (index1 <= num1)
+                            {
+                                this.Myds_SaleTargetDetail.Tables[0].Rows[index1]["GMAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index1]["SMAmount"]);
+                                this.Myds_SaleTargetDetail.Tables[0].Rows[index1]["KSUGMAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index1]["KSUSMAmount"]);
+                                this.Myds_SaleTargetDetail.HasChanges();
+                                checked { ++index1; }
+                            }
+                            break;
+                        case 1:
+                            int num2 = checked(this.Myds_SaleTargetDetail.Tables[0].Rows.Count - 1);
+                            int index2 = 0;
+                            while (index2 <= num2)
+                            {
+                                this.Myds_SaleTargetDetail.HasChanges();
+                                this.Myds_SaleTargetDetail.Tables[0].Rows[index2]["SMAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index2]["KAAmount"]);
+                                this.Myds_SaleTargetDetail.Tables[0].Rows[index2]["KSUSMAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index2]["KSUKAAmount"]);
+                                checked { ++index2; }
+                            }
+                            break;
+                        case 2:
+                            int num3 = checked(this.Myds_SaleTargetDetail.Tables[0].Rows.Count - 1);
+                            int index3 = 0;
+                            while (index3 <= num3)
+                            {
+                                this.Myds_SaleTargetDetail.Tables[0].Rows[index3]["KAAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index3]["SSAmount"]);
+                                this.Myds_SaleTargetDetail.Tables[0].Rows[index3]["KSUKAAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index3]["KSUSSAmount"]);
+                                this.Myds_SaleTargetDetail.HasChanges();
+                                checked { ++index3; }
+                            }
+                            break;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(ex.Message, UIHelper.MsgType.StatusBar, true);
+            }
+            this.Freeze(false);
         }
     }
 }

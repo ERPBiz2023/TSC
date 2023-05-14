@@ -67,6 +67,56 @@ namespace GVTBetagen.Forms
         }
 
         /// <summary>
+        /// Get Week selected in form
+        /// </summary>
+        private int WeekSelected
+        {
+            get
+            {
+                int week;
+
+                if (string.IsNullOrEmpty(cbbWeek.Selected.Value)
+                    || cbbWeek.Selected.Value == "All"
+                    || !int.TryParse(cbbWeek.Selected.Value, out week))
+                {
+                    week = -1;
+                }
+                return week;
+            }
+        }
+
+        /// <summary>
+        ///  Get month selected in form
+        /// </summary>
+        private int MonthSelected
+        {
+            get
+            {
+                int month;
+                if (!int.TryParse(cbbMon.Selected.Value, out month))
+                {
+                    month = DateTime.Now.Month;
+                }
+                return month;
+            }
+        }
+
+        /// <summary>
+        ///  get year selected in form
+        /// </summary>
+        private int YearSelected
+        {
+            get
+            {
+                int year;
+                if (!int.TryParse(cbbYear.Selected.Value, out year))
+                {
+                    year = DateTime.Now.Year;
+                }
+                return year;
+            }
+        }
+        /// <summary>
         /// Load data source to combox Sales Managers
         /// Call store from Database 
         /// </summary>

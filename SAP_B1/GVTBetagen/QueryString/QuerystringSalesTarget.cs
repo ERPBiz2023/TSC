@@ -76,5 +76,87 @@ namespace GVTBetagen
                 return CallStoreBySystem("usp_BS_SalesTarget_GetTargetID_Approved", "{0}, {1}, '{2}'");
             }
         }
+
+        /// <summary>
+        /// Load Target ID to approve
+        /// </summary>
+        public static string sp_SaleTarget_TargetID
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_SalesTarget_GetTargetID", "{0}, {1}, '{2}'");
+            }
+        }
+
+        /// <summary>
+        /// usp_BS_SalesTarget_Add "{0}, {1}, '{2}', '{3}', '{4}'"
+        /// </summary>
+        public static string usp_SalesTarget_Add
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_SalesTarget_Add", "{0}, {1}, '{2}', '{3}', '{4}'");
+            }
+        }
+
+        public static string usp_SalesTarget_Add_V1
+        {
+            get
+            {
+                return CallStoreBySystem(@"usp_BS_SalesTarget_Detail_Add_V2", "{0}, '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}'," +
+                                        "'{8}', {9}, {10}, {11}, {12}, {13}, {14}, {15}, {16}, {17}");
+            }
+        }
+
+        /// <summary>
+        /// Approve sales target
+        /// </summary>
+        public static string BS_SalesTarget_Approve
+        {
+            get
+            {
+                return CallStoreBySystem("usp_BS_SalesTarget_Approve", "{0}");
+            }
+        }
+        /// <summary>
+        /// Sales tagrget update
+        /// </summary>
+        public static string SalesTarget_Detail_Update
+        {
+            get
+            {
+                if (CoreSetting.System == SystemType.SAP_HANA)
+                {
+                    var schema = ConfigurationManager.AppSettings["Schema"];
+                    // return "CALL \"" + schema + "\".\"" + query + "\" (" + param + ")";
+
+                    return "UPDATE \"" + schema + "\".\"BS_SalesTarget_Detail\"" +
+                              "SET \"SSAmount\" = '{0}', " +
+                                    "\"KAAmount\" = '{1}', " +
+                                    "\"SMAmount\" = '{2}', " +
+                                    "\"GMAmount\" = '{3}',  " +
+                                    "\"KSUSSAmount\" = '{4}', " +
+                                    "\"KSUKAAmount\" = '{5}', " +
+                                    "\"KSUSMAmount\" = '{6}', " +
+                                    "\"KSUGMAmount\" = '{7}' " +
+                            " WHERE \"TargetDID\" = '{8}' " +
+                              "AND \"TargetId\" = '{9}' ";
+                }
+                else
+                {
+                    return @"update BS_SalesTarget_Detail
+		                        set SSAmount = '{0}',
+			                        KAAmount = '{1}',
+			                        SMAmount = '{2}',
+			                        GMAmount = '{3}',
+			                        KSUSSAmount = '{4}',
+			                        KSUKAAmount = '{5}',
+			                        KSUSMAmount = '{6}',
+			                        KSUGMAmount = '{7}'
+		                    where TargetDID = '{8}' and TargetId = '{9}'
+                        ";
+                }                
+            }
+        }
     }
 }
