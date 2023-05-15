@@ -104,12 +104,6 @@ namespace GTCore.Helper
                     workSheet.Cells[1, index + 1] = col.Title;
                     index++;
                 }
-                //for (var i = 0; i < tbl.Columns.Count; i++)
-                //{
-                //    workSheet.Cells[1, i + 1] = tbl.Columns[i].ColumnName;
-                //}
-
-                // rows
 
                 for (var i = 0; i < tbl.Rows.Count; i++)
                 {
