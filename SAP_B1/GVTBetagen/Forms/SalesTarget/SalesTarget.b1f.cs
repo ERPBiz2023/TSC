@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using GTCore;
 using GTCore.Forms;
+using GTCore.Helper;
 using GVTBetagen.Settings;
 using SAPbouiCOM.Framework;
 
@@ -427,7 +429,7 @@ namespace GVTBetagen.Forms
             this.Freeze(true);
             try
             {
-                var path = UIHelper.BrowserExcelDiglog();
+                var path = UIHelper.BrowserExcelDiaglog();
                 if (!string.IsNullOrEmpty(path))
                 {
                     this.edFile.Value = path;
@@ -443,11 +445,124 @@ namespace GVTBetagen.Forms
         private void btnExportExcel_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
+            this.Freeze(true);
+            try
+            {
+                if (this.grData.DataTable.Rows.Count <= 0)
+                {
+                    UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, true);
+                    this.Freeze(false);
+                    return;
+                }
+
+                var message = string.Empty;
+                this.grData.DataTable.ExportToExcel(string.Format("{0}_SalesTarget_{1}", UserName,DateTime.Now.ToString("yyyyMMdd")), ref message);
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(ex.Message, UIHelper.MsgType.StatusBar, true);
+            }
+            this.Freeze(false);
         }
 
         private void btnImportExcel_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
+            this.Freeze(true);
+            if (string.IsNullOrEmpty(this.edFile.Value) || !this.edFile.Value.Contains(".xls")) 
+            {
+                UIHelper.LogMessage("Please choose file excel to upload");
+                return;
+            }
+
+            if (this.grData.DataTable.Rows.Count <= 0)
+            {
+                UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, true);
+                this.Freeze(false);
+                return;
+            }
+            if((this.cbkAllSKU.Checked && this.cbkFocusSKU.Checked)
+                || (!this.cbkAllSKU.Checked && !this.cbkFocusSKU.Checked))
+            {
+                UIHelper.LogMessage(string.Format("Please. Only choice All Sku Or Focus Sku!"), UIHelper.MsgType.StatusBar, true);
+                this.Freeze(false);
+                return;
+            }
+
+            try
+            {
+                var message = string.Empty;
+
+                DataSet dataFromExcel = ExcelHandler.GetDataFromExcel(this.edFile.Value.Trim(), ref message);
+                if (dataFromExcel == null)
+                {
+                    UIHelper.LogMessage(message);
+                    this.Freeze(false);
+                    return;
+                }
+                DataRow[] dataRowArray = dataFromExcel.Tables[0].Select();
+
+                //var pass = "109287";
+                var count = 0;
+
+                for(var index = 0; index < this.grData.DataTable.Rows.Count; index ++)
+                {
+                    var customercode = this.grData.DataTable.GetValue("CustCode", index).ToString();
+                    var num = checked(dataRowArray.Length - 1);
+                    int index2= 0;
+                    while (index2 < num)
+                    {                       
+                        if (customercode == dataRowArray[index][0].ToString())
+                        {
+                            //if (Microsoft.VisualBasic.CompilerServices.Operators.CompareString(Left, "109287", false) == 0)
+                            //    ;
+                            var data = dataRowArray[index][2].ToString();
+                            var amount = 0.0;
+                            if(!string.IsNullOrEmpty(data) && double.TryParse(data, out amount))
+                            {
+                                if (this.cbkAllSKU.Checked)
+                                {
+                                    if (InitConfig.GroupPolicy == 0)
+                                        this.grData.DataTable.SetValue("GMAmount", index, amount);
+                                    if (InitConfig.GroupPolicy == 1)
+                                        this.grData.DataTable.SetValue("SMAmount", index, amount);
+                                    if (InitConfig.GroupPolicy == 2)
+                                        this.grData.DataTable.SetValue("KAAmount", index, amount);
+                                    if (InitConfig.GroupPolicy == 4)
+                                        this.grData.DataTable.SetValue("SSAmount", index, amount);
+                                }
+                                else if (this.cbkFocusSKU.Checked)
+                                {
+                                    if (InitConfig.GroupPolicy == 0)
+                                        this.grData.DataTable.SetValue("KSUGMAmount", index, amount);
+                                    if (InitConfig.GroupPolicy == 1)
+                                        this.grData.DataTable.SetValue("KSUSMAmount", index, amount);
+                                    if (InitConfig.GroupPolicy == 2)
+                                        this.grData.DataTable.SetValue("KSUKAAmount", index, amount);
+                                    if (InitConfig.GroupPolicy == 4)
+                                        this.grData.DataTable.SetValue("KSUSSAmount", index, amount);
+                                }
+                            }
+                            count++;
+                        }
+                        index2++;
+                    }
+                }
+                if(count > 0)
+                {
+                    UIHelper.LogMessage(string.Format("Have {0} row import Sucessfully", count), UIHelper.MsgType.StatusBar, false);
+                }
+                else
+                {
+                    UIHelper.LogMessage(string.Format("No row import"), UIHelper.MsgType.StatusBar, true);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                UIHelper.LogMessage(ex.Message, UIHelper.MsgType.StatusBar, true);
+            }
+            this.Freeze(false);
         }
 
         private void btnApprove_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
@@ -491,43 +606,25 @@ namespace GVTBetagen.Forms
                 if (this.grData.DataTable.Rows.Count <= 0)
                 {
                     UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, true);
+                    this.Freeze(false);
+                    return;
                 }
                 for (int index = 0; index <= this.grData.DataTable.Rows.Count; index++)
                 {
                     switch (InitConfig.GroupPolicy)
                     {
                         case 0:
-                            int num1 = checked(this.Myds_SaleTargetDetail.Tables[0].Rows.Count - 1);
-                            int index1 = 0;
-                            while (index1 <= num1)
-                            {
-                                this.Myds_SaleTargetDetail.Tables[0].Rows[index1]["GMAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index1]["SMAmount"]);
-                                this.Myds_SaleTargetDetail.Tables[0].Rows[index1]["KSUGMAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index1]["KSUSMAmount"]);
-                                this.Myds_SaleTargetDetail.HasChanges();
-                                checked { ++index1; }
-                            }
+                            this.grData.DataTable.SetValue("GMAmount", index, this.grData.DataTable.GetValue("SMAmount", index));
+                            this.grData.DataTable.SetValue("KSUGMAmount", index, this.grData.DataTable.GetValue("KSUSMAmount", index));
+
                             break;
                         case 1:
-                            int num2 = checked(this.Myds_SaleTargetDetail.Tables[0].Rows.Count - 1);
-                            int index2 = 0;
-                            while (index2 <= num2)
-                            {
-                                this.Myds_SaleTargetDetail.HasChanges();
-                                this.Myds_SaleTargetDetail.Tables[0].Rows[index2]["SMAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index2]["KAAmount"]);
-                                this.Myds_SaleTargetDetail.Tables[0].Rows[index2]["KSUSMAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index2]["KSUKAAmount"]);
-                                checked { ++index2; }
-                            }
+                            this.grData.DataTable.SetValue("SMAmount", index, this.grData.DataTable.GetValue("KAAmount", index));
+                            this.grData.DataTable.SetValue("KSUSMAmount", index, this.grData.DataTable.GetValue("KSUKAAmount", index));
                             break;
                         case 2:
-                            int num3 = checked(this.Myds_SaleTargetDetail.Tables[0].Rows.Count - 1);
-                            int index3 = 0;
-                            while (index3 <= num3)
-                            {
-                                this.Myds_SaleTargetDetail.Tables[0].Rows[index3]["KAAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index3]["SSAmount"]);
-                                this.Myds_SaleTargetDetail.Tables[0].Rows[index3]["KSUKAAmount"] = RuntimeHelpers.GetObjectValue(this.Myds_SaleTargetDetail.Tables[0].Rows[index3]["KSUSSAmount"]);
-                                this.Myds_SaleTargetDetail.HasChanges();
-                                checked { ++index3; }
-                            }
+                            this.grData.DataTable.SetValue("KAAmount", index, this.grData.DataTable.GetValue("SSAmount", index));
+                            this.grData.DataTable.SetValue("KSUKAAmount", index, this.grData.DataTable.GetValue("KSUSSAmount", index));
                             break;
                     }
                 }

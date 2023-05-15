@@ -1,4 +1,5 @@
-﻿using SAPbouiCOM;
+﻿using Microsoft.Office.Interop.Excel;
+using SAPbouiCOM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +62,25 @@ namespace GTCore
             return state.result;
         }
 
-        public static string BrowserExcelDiglog()
+        public static string SaveExcelDiaglog(string fileName)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.FileName = fileName;
+            saveFileDialog.InitialDirectory = System.Windows.Forms.Application.StartupPath;
+            saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx";
+            saveFileDialog.FilterIndex = 0;
+            saveFileDialog.RestoreDirectory = true;
+            saveFileDialog.Title = "Export Excel File To";
+
+            DialogResult ret = ShowGTDialog(saveFileDialog);
+            if (ret == DialogResult.OK)
+            {
+                return saveFileDialog.FileName;
+            }
+            return string.Empty;
+        }
+
+        public static string BrowserExcelDiaglog()
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace GTCore.Helper
 {
@@ -77,6 +78,77 @@ namespace GTCore.Helper
             }
 
             return value.ToString();
+        }
+
+        public static bool ExportToExcel(this SAPbouiCOM.DataTable tbl, string filename, ref string message)
+        {
+            try
+            {
+                if (tbl == null || tbl.Columns.Count == 0)
+                {
+                    message = string.Format("ExportToExcel: Null or empty input table!\n");
+                    return false;
+                }
+
+                // load excel, and create a new workbook
+                var excelApp = new Excel.Application();
+                excelApp.Workbooks.Add();
+
+                // single worksheet
+                Excel._Worksheet workSheet = excelApp.ActiveSheet;
+
+                // column headings
+                var index = 0;
+                foreach (SAPbouiCOM.Column col in tbl.Columns)
+                {
+                    workSheet.Cells[1, index + 1] = col.Title;
+                    index++;
+                }
+                //for (var i = 0; i < tbl.Columns.Count; i++)
+                //{
+                //    workSheet.Cells[1, i + 1] = tbl.Columns[i].ColumnName;
+                //}
+
+                // rows
+
+                for (var i = 0; i < tbl.Rows.Count; i++)
+                {
+                    var j = 0;
+                    foreach (SAPbouiCOM.Column col in tbl.Columns)
+                    {
+                        workSheet.Cells[i + 2, j + 1] = tbl.GetValue(col.UniqueID, j).ToString();
+                        j++;
+                    }
+                }
+
+                var excelFilePath = UIHelper.SaveExcelDiaglog(filename);
+                // check file path
+                if (!string.IsNullOrEmpty(excelFilePath))
+                {
+                    try
+                    {
+                        workSheet.SaveAs(excelFilePath);
+                        excelApp.Quit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        message = ex.Message;
+                        return false;
+                    }
+                }
+                else
+                { // no file path is given
+                    excelApp.Visible = true;
+                    message = "no file path is given";
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                message = string.Format("ExportToExcel: \n" + ex.Message);
+                return false;
+            }
         }
     }
 }
