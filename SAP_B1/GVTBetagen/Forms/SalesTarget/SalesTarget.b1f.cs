@@ -512,11 +512,11 @@ namespace GVTBetagen.Forms
                     int index2= 0;
                     while (index2 < num)
                     {                       
-                        if (customercode == dataRowArray[index][0].ToString())
+                        if (customercode == dataRowArray[index2][0].ToString())
                         {
                             //if (Microsoft.VisualBasic.CompilerServices.Operators.CompareString(Left, "109287", false) == 0)
                             //    ;
-                            var data = dataRowArray[index][2].ToString();
+                            var data = dataRowArray[index2][2].ToString();
                             var amount = 0.0;
                             if(!string.IsNullOrEmpty(data) && double.TryParse(data, out amount))
                             {
