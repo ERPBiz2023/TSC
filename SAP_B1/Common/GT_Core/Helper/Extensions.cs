@@ -80,11 +80,11 @@ namespace GTCore.Helper
             return value.ToString();
         }
 
-        public static bool ExportToExcel(this SAPbouiCOM.DataTable tbl, string filename, ref string message)
+        public static bool ExportToExcel(this SAPbouiCOM.Grid grid, string filename, ref string message)
         {
             try
             {
-                if (tbl == null || tbl.Columns.Count == 0)
+                if (grid.DataTable == null || grid.DataTable.Columns.Count == 0)
                 {
                     message = string.Format("ExportToExcel: Null or empty input table!\n");
                     return false;
@@ -98,20 +98,23 @@ namespace GTCore.Helper
                 Excel._Worksheet workSheet = excelApp.ActiveSheet;
 
                 // column headings
-                var index = 0;
-                foreach (SAPbouiCOM.Column col in tbl.Columns)
+                //var index = 0;
+                for(var index = 0; index < grid.DataTable.Columns.Count; index ++)
+               
                 {
-                    workSheet.Cells[1, index + 1] = col.Title;
-                    index++;
+                    var id = grid.DataTable.Columns.Item(index).Name;
+                   // var col1 = (SAPbouiCOM.GridColumn) grid.Columns.Item(id);
+                    workSheet.Cells[1, index + 1] = grid.Columns.Item(id).TitleObject.Caption; // tbl.Columns.Item(index).Name;
                 }
 
-                for (var i = 0; i < tbl.Rows.Count; i++)
+                for (var i = 0; i < grid.DataTable.Rows.Count; i++)
                 {
-                    var j = 0;
-                    foreach (SAPbouiCOM.Column col in tbl.Columns)
+                   // var j = 0;
+                    for (var index = 0; index < grid.DataTable.Columns.Count; index++)
                     {
-                        workSheet.Cells[i + 2, j + 1] = tbl.GetValue(col.UniqueID, j).ToString();
-                        j++;
+                        var id = grid.DataTable.Columns.Item(index).Name;
+                        workSheet.Cells[i + 2, index + 1] = grid.DataTable.GetValue(id, i).ToString();
+                      
                     }
                 }
 

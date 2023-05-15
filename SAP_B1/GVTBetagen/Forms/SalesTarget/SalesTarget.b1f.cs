@@ -471,7 +471,7 @@ namespace GVTBetagen.Forms
                 }
 
                 var message = string.Empty;
-                this.grData.DataTable.ExportToExcel(string.Format("{0}_SalesTarget_{1}", UserName,DateTime.Now.ToString("yyyyMMdd")), ref message);
+                this.grData.ExportToExcel(string.Format("{0}_SalesTarget_{1}", UserName,DateTime.Now.ToString("yyyyMMdd")), ref message);
             }
             catch (Exception ex)
             {
