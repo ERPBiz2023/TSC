@@ -150,6 +150,7 @@ namespace GVTBetagen.Forms
 
             this.btnEEX.Item.Top = max - 30;
             this.btnCancel.Item.Left = maxw - 20 - this.btnCancel.Item.Width;
+            this.btnCancel.Item.Top = this.btnEEX.Item.Top;
 
             this.btnSearch.Item.Left = maxw - 20 - this.btnSearch.Item.Width;
             this.cbbTeamLeader.Item.Left = this.btnSearch.Item.Left - this.cbbTeamLeader.Item.Width - 10;
@@ -177,6 +178,7 @@ namespace GVTBetagen.Forms
         private void btnSearch_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
+            this.Freeze(true);
             try
             {
                 var query = string.Format(Querystring.sp_SaleTarget_Actual_LoadbyUserId,
@@ -256,7 +258,9 @@ namespace GVTBetagen.Forms
             catch (Exception ex)
             {
                 UIHelper.LogMessage(ex.Message, UIHelper.MsgType.StatusBar, true);
+                this.Freeze(false);
             }
+            this.Freeze(false);
         }
 
         private void btnCancel_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
