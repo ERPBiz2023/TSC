@@ -114,6 +114,29 @@ namespace GTCore.Connection
 
             return result;
         }
+
+        public DataTable ExecQueryToDatatable(string query, IDataParameter[] parameters = null)
+        {
+            DataTable result = null;
+            try
+            {
+                OpenConnection();
+                DataSet dataSet = new DataSet();
+                FillDataSet(query, parameters, dataSet);
+              //  DataView defaultView = dataSet.Tables[0].DefaultView;
+                result = dataSet.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                result = null;
+            }
+            finally
+            {
+                Dispose();
+            }
+
+            return result;
+        }
         public Hashtable[] ExecQueryToArrayHashtable(string query, out string errorMessage, IDataParameter[] parameters = null)
         {
             Hashtable[] result = new Hashtable[0];

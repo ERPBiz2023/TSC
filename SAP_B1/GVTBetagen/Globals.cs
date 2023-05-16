@@ -25,6 +25,7 @@ namespace GVTBetagen
         public static Application MainApplication;
         public static SAPbouiCOM.Application Application;
         public static string UserName = SAPbouiCOM.Framework.Application.SBO_Application.Company.UserName;
+        public static string StartPath = System.Windows.Forms.Application.StartupPath;
 
         public static DateTime NullDate = new DateTime(2099, 01, 01);
         public static string DateShowFormat = "dd.MM.yyyy";

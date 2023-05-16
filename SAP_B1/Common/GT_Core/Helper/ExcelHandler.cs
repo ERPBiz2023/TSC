@@ -1,8 +1,11 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -76,15 +79,43 @@ namespace GTCore.Helper
             return dataFromExcel;
         }
 
-        public bool ExportToExcel(
-          string a_sFilename,
-          DataTable dtData,
-          string a_sSheetName,
-          string a_sFileTitle,
-          ref string a_sErrorMessage)
+        public static bool ExportToExcel(string template,  string filename, DataTable dtData, string sheetName, ref string message)
         {
-            a_sErrorMessage = string.Empty;
-            return false;
+            try
+            {
+                var excelFilePath = UIHelper.SaveExcelDiaglog(filename);
+                // check file path
+                if (!string.IsNullOrEmpty(excelFilePath))
+                {
+                    byte[] bytes = null;
+                    //string spath = Globals.Dashboard + "/Content/Files/Templates/Selling Category.xlsx";
+                    using (WebClient client = new WebClient())
+                    {
+                        bytes = client.DownloadData(template);
+                    }
+
+                    using (Stream stream = new MemoryStream(bytes))
+                    {
+                        XLWorkbook wb = new XLWorkbook(stream);
+                        IXLWorksheet ws = wb.Worksheet(sheetName);                      
+                        ws.Cell(3, 1).InsertData(dtData.AsEnumerable());
+                        wb.SaveAs(excelFilePath);
+                    }
+                    message = excelFilePath;
+                }
+                else
+                { 
+                    message = "no file path is given";
+                    return false;
+                }
+            }
+            catch(Exception ex)
+            {
+                message = ex.Message;
+                return false;
+            }
+           // message = string.Empty;
+            return true;
         }
 
         //public string GetExcelColumn(int index)

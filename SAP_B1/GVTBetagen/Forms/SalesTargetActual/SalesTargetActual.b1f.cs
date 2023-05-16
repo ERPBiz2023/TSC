@@ -16,6 +16,7 @@ namespace GVTBetagen.Forms
         private SalesTargetActual()
         {
             UserName = Application.SBO_Application.Company.UserName;
+            DataLoad = null;
         }
         private static SalesTargetActual instance;
 
@@ -228,6 +229,11 @@ namespace GVTBetagen.Forms
                 this.grData.Columns.Item("SKUDesc").Visible = false;
 
                 this.grData.AutoResizeColumns();
+                //using (var connection = Globals.DataConnection)
+                //{
+                //    DataLoad = connection.ExecQueryToDatatable(query);
+                //    connection.Dispose();
+                //}
 
                 query = string.Format(Querystring.Update_SalesManager_Division, this.SalesManagerSelected);
                 Hashtable data;
@@ -263,9 +269,28 @@ namespace GVTBetagen.Forms
         {
             BubbleEvent = true;
             this.Freeze(true);
+
+            if (DataLoad != null)
+            {
+                DataLoad.Clear();
+                DataLoad = null;
+            }
             try
             {
-                if (this.grData.DataTable.Rows.Count <= 0)
+                var query = string.Format(Querystring.sp_SaleTarget_Actual_LoadExportExcel,
+                          UserName,
+                          SalesManagerSelected,
+                          KASelected,
+                          SalesSupSelected,
+                          TeamleaderSelected,
+                          MonthSelected,
+                          YearSelected);
+                using (var connection = Globals.DataConnection)
+                {
+                    DataLoad = connection.ExecQueryToDatatable(query);
+                    connection.Dispose();
+                }
+                if (DataLoad  == null || DataLoad.Rows.Count <= 0)
                 {
                     UIHelper.LogMessage(string.Format("Data is empty"), UIHelper.MsgType.StatusBar, true);
                     this.Freeze(false);
@@ -273,7 +298,17 @@ namespace GVTBetagen.Forms
                 }
 
                 var message = string.Empty;
-                this.grData.ExportToExcel(string.Format("SalesTargetActual_{0}_{1}", UserName, DateTime.Now.ToString("yyyyMMdd")), ref message);
+                var template = Globals.StartPath + "/Templates/SalesTargetActual_Template.xlsx";
+                var fileName = string.Format("SalesTargetActual_{0}_{1}", UserName, DateTime.Now.ToString("yyyyMMdd"));
+                if (ExcelHandler.ExportToExcel(template, fileName, DataLoad, "Data", ref message))
+                {
+                    UIHelper.LogMessage(string.Format("Export to {0} success", message), UIHelper.MsgType.StatusBar, false);
+                }
+                else
+                {
+                    UIHelper.LogMessage(string.Format("Export to {0} faild", message), UIHelper.MsgType.StatusBar, true);
+                }
+               //this.grData.ExportToExcel(string.Format("SalesTargetActual_{0}_{1}", UserName, DateTime.Now.ToString("yyyyMMdd")), ref message);
             }
             catch (Exception ex)
             {

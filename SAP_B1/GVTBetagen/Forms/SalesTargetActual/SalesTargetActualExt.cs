@@ -9,6 +9,7 @@ namespace GVTBetagen.Forms
     public partial class SalesTargetActual
     {
         private string UserName;
+        private System.Data.DataTable DataLoad;
 
         /// <summary>
         /// Current selected Sales Manager

@@ -58,6 +58,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClosedXML">
+      <HintPath>..\Common\Libs\ClosedXML.dll</HintPath>
+    </Reference>
     <Reference Include="Sap.Data.Hana.v4.5, Version=2.7.26.0, Culture=neutral, PublicKeyToken=0326b8ea63db4bc4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Program Files\sap\hdbclient\ado.net\v4.5\Sap.Data.Hana.v4.5.dll</HintPath>
@@ -147,6 +150,9 @@
       <FormCategory>SystemForm</FormCategory>
     </None>
     <None Include="SystemForm\SQ\SalesQuotationExt.b1f__orig_srf" />
+    <None Include="Templates\SalesTargetActual_Template.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\GT_Core\GTCore.csproj">
