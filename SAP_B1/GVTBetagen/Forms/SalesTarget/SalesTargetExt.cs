@@ -238,15 +238,6 @@ namespace GVTBetagen.Forms
         /// </summary>
         private void EnableGridCol_byGroupPolicy()
         {
-        //    if(InitConfig.UserId_Pub == -1)
-        //    {
-        //        var message = string.Empty;
-        //        if (!SystemInformation.CurrentAccountConnectionInfo(ref message))
-        //        {
-        //            UIHelper.LogMessage(message, UIHelper.MsgType.StatusBar, true);
-        //           // System.Windows.Forms.MessageBox.Show(message);
-        //        }
-        //    }
             var query = string.Format(Querystring.sp_GetIncentiveUser, InitConfig.UserId_Pub);
             Hashtable data;
             using (var connection = Globals.DataConnection)

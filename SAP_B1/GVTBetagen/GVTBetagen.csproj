@@ -93,6 +93,7 @@
     <Compile Include="Forms\POAllocatePatch\POAllocationBatch.b1f.cs">
       <DependentUpon>POAllocationBatch.b1f</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SalesTargetActual\SalesTargetActualExt.cs" />
     <Compile Include="Forms\SalesTarget\SalesTarget.b1f.cs">
       <DependentUpon>SalesTarget.b1f</DependentUpon>
     </Compile>
@@ -100,6 +101,7 @@
       <DependentUpon>SalesTargetActual.b1f</DependentUpon>
     </Compile>
     <Compile Include="Forms\SalesTarget\SalesTargetExt.cs" />
+    <Compile Include="Forms\UIHandler.cs" />
     <Compile Include="QueryString\QuerystringGLPosting.cs" />
     <Compile Include="QueryString\QuerystringSalesTarget.cs" />
     <Compile Include="QueryString\QuerystringPOForm.cs" />

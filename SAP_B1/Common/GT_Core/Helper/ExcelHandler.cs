@@ -10,6 +10,12 @@ namespace GTCore.Helper
 {
     public class ExcelHandler
     {
+        /// <summary>
+        /// Get data from excel file
+        /// </summary>
+        /// <param name="path">path for file excel</param>
+        /// <param name="message">Message when has error</param>
+        /// <returns></returns>
         public static DataSet GetDataFromExcel(string path, ref string message)
         {
             DataSet dataFromExcel = null;

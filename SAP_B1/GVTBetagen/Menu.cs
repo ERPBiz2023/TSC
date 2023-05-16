@@ -17,7 +17,7 @@ namespace GVTBetagen
         {
             AddMenuItem(GlobalFormsInformations.GLPostingInformation);
             AddMenuItem(GlobalFormsInformations.SalesTargetInformation);
-            //AddMenuItem(GlobalFormsInformations.SalesTargetActualInformation);
+            AddMenuItem(GlobalFormsInformations.SalesTargetActualInformation);
         }
 
         private void AddMenuItem(AddonUserForm infor)

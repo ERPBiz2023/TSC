@@ -55,16 +55,20 @@ namespace GVTBetagen.Forms
             this.cbbWeek.Select("1", SAPbouiCOM.BoSearchKey.psk_ByValue);
             this.cbbWeek.ExpandType = SAPbouiCOM.BoExpandType.et_ValueOnly;
 
-            this.LoadComboboxSalesManagers();
+            UIHandler.LoadComboboxSalesManagers(this.cbbSalesManager, UserName);
+            //this.LoadComboboxSalesManagers();
             this.cbbSalesManager.Item.DisplayDesc = true;
 
-            this.LoadComboboxKAASM();
+            UIHandler.LoadComboboxKAASM(this.cbbKA_ASM, UserName, this.SalesManagerSelected);
+           // this.LoadComboboxKAASM();
             this.cbbKA_ASM.Item.DisplayDesc = true;
 
-            this.LoadComboboxSalesSups();
+            UIHandler.LoadComboboxSalesSups(this.cbbSalesSup, UserName, this.SalesManagerSelected, this.KASelected);
+           // this.LoadComboboxSalesSups();
             this.cbbSalesSup.Item.DisplayDesc = true;
 
-            this.LoadComboboxTeamLeaders();
+            UIHandler.LoadComboboxTeamLeaders(this.cbbTeamLeader, UserName, this.SalesManagerSelected, this.KASelected, this.SalesSupSelected);
+            //this.LoadComboboxTeamLeaders();
             this.cbbTeamLeader.Item.DisplayDesc = true;
         }
 
@@ -214,8 +218,7 @@ namespace GVTBetagen.Forms
                     this.Freeze(false);
                     return;
                 }
-
-
+                
                 var query = string.Format(Querystring.sp_SaleTarget_LoadbyUserId,
                             UserName,
                             SalesManagerSelected,
@@ -225,6 +228,7 @@ namespace GVTBetagen.Forms
                             MonthSelected,
                             YearSelected,
                             WeekSelected);
+
                 this.grData.DataTable.ExecuteQuery(query);
                 this.grData.Columns.Item("TargetDID").Visible = false;
                 this.grData.Columns.Item("TargetId").Visible = false;
@@ -232,14 +236,14 @@ namespace GVTBetagen.Forms
                 this.grData.Columns.Item("CustName").TitleObject.Caption = "Name";
                 this.grData.Columns.Item("Channel").Visible = false;
                 this.grData.Columns.Item("GroupName").TitleObject.Caption = "Group";
+                this.grData.Columns.Item("SaleRepfullName").TitleObject.Caption = "PG/ Sale Rep";
                 this.grData.Columns.Item("SaleRepEmpId").TitleObject.Caption = "Sale Rep Employee Id";
-                this.grData.Columns.Item("SaleRepfullName").Visible = false;
-                this.grData.Columns.Item("SMEmpId").TitleObject.Caption = "Sales Manager";
-                this.grData.Columns.Item("SMEmpFullName").Visible = false;
-                this.grData.Columns.Item("KAEmpId").TitleObject.Caption = "KA/ASM";
-                this.grData.Columns.Item("KAEmpFullName").Visible = false;
-                this.grData.Columns.Item("SSEmpId").TitleObject.Caption = "Sales sup";
-                this.grData.Columns.Item("SSEmpFullName").Visible = false;
+                this.grData.Columns.Item("SMEmpFullName").TitleObject.Caption = "Sales Manager";
+                this.grData.Columns.Item("SMEmpId").Visible = false;
+                this.grData.Columns.Item("KAEmpFullName").TitleObject.Caption = "KA/ASM";
+                this.grData.Columns.Item("KAEmpId").Visible = false;
+                this.grData.Columns.Item("SSEmpFullName").TitleObject.Caption = "Sales sup";
+                this.grData.Columns.Item("SSEmpId").Visible = false;
 
                 this.grData.Columns.Item("SSAmount").TitleObject.Caption = "Target Sales sup";
                 this.grData.Columns.Item("KAAmount").TitleObject.Caption = "Target KA/ASM";

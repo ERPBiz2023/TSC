@@ -27,6 +27,18 @@ namespace GTCore
             Msgbox,
             Windowbox
         }
+
+        /// <summary>
+        /// Show message in UI by type: Message box or Status bar
+        /// </summary>
+        /// <param name="msg">Message</param>
+        /// <param name="msgboxType"> Message box or Status bar</param>
+        /// <param name="isError">this param is mean this message is error or notice</param>
+        /// <param name="btnDefault">button default: only apply for message box type</param>
+        /// <param name="btnCaption1"></param>
+        /// <param name="btnCaption2"></param>
+        /// <param name="btnCaption3"></param>
+        /// <returns></returns>
         public static int LogMessage(string msg, MsgType msgboxType = MsgType.StatusBar, bool isError = false, int btnDefault = 1, string btnCaption1 = "Ok", string btnCaption2 = "", string btnCaption3 = "")
         {
             //IL_0061: Unknown result type (might be due to invalid IL or missing references)
@@ -49,6 +61,12 @@ namespace GTCore
                 return -1;
             }
         }
+
+        /// <summary>
+        /// Show Diaglog with new thread to make sure un frezee system
+        /// </summary>
+        /// <param name="dialog"></param>
+        /// <returns></returns>
         public static DialogResult ShowGTDialog(FileDialog dialog)
         {
             GTDialog state = new GTDialog();
@@ -62,6 +80,11 @@ namespace GTCore
             return state.result;
         }
 
+        /// <summary>
+        ///  Show Save diaglog excel
+        /// </summary>
+        /// <param name="fileName">default name for file to save</param>
+        /// <returns>full path for file to save</returns>
         public static string SaveExcelDiaglog(string fileName)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
@@ -80,6 +103,10 @@ namespace GTCore
             return string.Empty;
         }
 
+        /// <summary>
+        /// Browser diaglog to find file
+        /// </summary>
+        /// <returns>full path for file to open</returns>
         public static string BrowserExcelDiaglog()
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();

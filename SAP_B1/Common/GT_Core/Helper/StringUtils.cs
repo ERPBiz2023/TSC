@@ -11,6 +11,12 @@ namespace GTCore.Helper
     public class StringUtils
     {
         private static string Key = "2s5u8x/A?D(G+KbPeShVmYq3t6w9y$B&";
+
+        /// <summary>
+        ///  Encode password
+        /// </summary>
+        /// <param name="plainText">pass or string to encode</param>
+        /// <returns></returns>
         public static string EncryptString(string plainText)
         {
             try
@@ -47,6 +53,11 @@ namespace GTCore.Helper
             }
         }
 
+        /// <summary>
+        /// Decode password
+        /// </summary>
+        /// <param name="cipherText">hash string to decode</param>
+        /// <returns></returns>
         public static string DecryptString(string cipherText)
         {
             try

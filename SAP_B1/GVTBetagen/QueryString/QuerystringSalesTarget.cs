@@ -64,7 +64,13 @@ namespace GVTBetagen
                 return CallStoreBySystem("USP_BS_Customer_SaleTarget_LoadbyUserId", "'{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, {7}");
             }
         }
-
+        public static string sp_SaleTarget_Actual_LoadbyUserId
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_Customer_SaleTarget_Actual_LoadbyUserId", "'{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}");
+            }
+        }
         /// <summary>
         /// Load approve targetid
         /// usp_BS_SalesTarget_GetTargetID_Approved "{0}, {1}, '{2}'"
@@ -116,6 +122,17 @@ namespace GVTBetagen
             get
             {
                 return CallStoreBySystem("usp_BS_SalesTarget_Approve", "{0}");
+            }
+        }
+
+        /// <summary>
+        /// "SP_BS_SalesManager_Division "'{0}'"
+        /// </summary>
+        public static string Update_SalesManager_Division
+        {
+            get
+            {
+                return CallStoreBySystem("SP_BS_SalesManager_Division", "'{0}'");
             }
         }
         /// <summary>

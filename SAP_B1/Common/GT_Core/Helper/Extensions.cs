@@ -17,7 +17,7 @@ namespace GTCore.Helper
         /// Get Description for enum
         /// </summary>
         /// <param name="enumdata">value of enum</param>
-        /// <returns></returns>
+        /// <returns>desciption of enum value</returns>
         public static string GetDescription(this Enum enumdata)
         {
             return (enumdata.GetType().GetTypeInfo().GetMember(enumdata.ToString())
@@ -30,7 +30,7 @@ namespace GTCore.Helper
         /// </summary>
         /// <typeparam name="T">Type of enum to convert</typeparam>
         /// <param name="description">The Description of enum</param>
-        /// <returns></returns>
+        /// <returns>The enum value</returns>
         public static T GetEnumValueByDescription<T>(this string description) where T : Enum
         {
             foreach (Enum enumItem in Enum.GetValues(typeof(T)))
@@ -46,8 +46,8 @@ namespace GTCore.Helper
         /// <summary>
         /// Read data from datarow to hash table
         /// </summary>
-        /// <param name="raw"></param>
-        /// <returns></returns>
+        /// <param name="raw">data row form reader</param>
+        /// <returns>hash table with data</returns>
         public static Hashtable ToHashtable(this DataRowView raw)
         {
             var hashtable = new Hashtable();
@@ -62,14 +62,20 @@ namespace GTCore.Helper
         /// <summary>
         /// /Read datas from data view to hash tables
         /// </summary>
-        /// <param name="dataView"></param>
-        /// <returns></returns>
+        /// <param name="dataView">data view form reader</param>
+        /// <returns>list hash table with data</returns>
         public static Hashtable[] ToHashtableArray(this DataView dataView)
         {
             return (from DataRowView row in dataView
                     select row.ToHashtable()).ToArray();
         }
 
+        /// <summary>
+        /// To string for object
+        /// return null or empty object
+        /// </summary>
+        /// <param name="value">string of object</param>
+        /// <returns></returns>
         public static string ToString(object value)
         {
             if (value == null || value == DBNull.Value)
@@ -80,6 +86,13 @@ namespace GTCore.Helper
             return value.ToString();
         }
 
+        /// <summary>
+        /// Export to excel for SAP Grid
+        /// </summary>
+        /// <param name="grid"></param>
+        /// <param name="filename"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public static bool ExportToExcel(this SAPbouiCOM.Grid grid, string filename, ref string message)
         {
             try

@@ -15,6 +15,7 @@ namespace GVTBetagen
         // UF_BS_SETCOLOR_ITEMCODE
         // uv_Empoyee_Salary_Accounting
         //uv_SaleDetail_ByInvoice_SaleIncentive_SalesTarget
+        //uv_SaleDetail_ByInvoice_SaleIncentive_Item
 
         // UDF Item U_Volumn decimal
         // UDF Line U_OrgTotal
