@@ -254,6 +254,8 @@ namespace GVTBetagen.Forms
                 this.grData.Columns.Item("ActualAmt_LastMONTH").TitleObject.Caption = "Prev. Month";
                 this.grData.Columns.Item("ActualAmt_CurrentMONTH").TitleObject.Caption = "Current Month";
 
+                this.grData.AutoResizeColumns();
+
                 query = string.Format(Querystring.sp_SaleTarget_TargetID_Approved, MonthSelected, YearSelected, SalesManagerSelected);
                 Hashtable data;
                 using (var connection = Globals.DataConnection)
@@ -471,7 +473,7 @@ namespace GVTBetagen.Forms
                 }
 
                 var message = string.Empty;
-                this.grData.ExportToExcel(string.Format("{0}_SalesTarget_{1}", UserName,DateTime.Now.ToString("yyyyMMdd")), ref message);
+                this.grData.ExportToExcel(string.Format("SalesTarget_{0}_{1}", UserName,DateTime.Now.ToString("yyyyMMdd")), ref message);
             }
             catch (Exception ex)
             {
@@ -555,43 +557,7 @@ namespace GVTBetagen.Forms
                         }
                         count++;
                     }
-                    //var num = checked(dataRowArray.Length - 1);
-                    //int index2= 0;
-                    //while (index2 < num)
-                    //{                       
-                    //    if (customercode == dataRowArray[index2][0].ToString())
-                    //    {
-                    //        var data = dataRowArray[index2][2].ToString();
-                    //        var amount = 0.0;
-                    //        if(!string.IsNullOrEmpty(data) && double.TryParse(data, out amount))
-                    //        {
-                    //            if (this.cbkAllSKU.Checked)
-                    //            {
-                    //                if (InitConfig.GroupPolicy == 0)
-                    //                    this.grData.DataTable.SetValue("GMAmount", index, amount);
-                    //                if (InitConfig.GroupPolicy == 1)
-                    //                    this.grData.DataTable.SetValue("SMAmount", index, amount);
-                    //                if (InitConfig.GroupPolicy == 2)
-                    //                    this.grData.DataTable.SetValue("KAAmount", index, amount);
-                    //                if (InitConfig.GroupPolicy == 4)
-                    //                    this.grData.DataTable.SetValue("SSAmount", index, amount);
-                    //            }
-                    //            else if (this.cbkFocusSKU.Checked)
-                    //            {
-                    //                if (InitConfig.GroupPolicy == 0)
-                    //                    this.grData.DataTable.SetValue("KSUGMAmount", index, amount);
-                    //                if (InitConfig.GroupPolicy == 1)
-                    //                    this.grData.DataTable.SetValue("KSUSMAmount", index, amount);
-                    //                if (InitConfig.GroupPolicy == 2)
-                    //                    this.grData.DataTable.SetValue("KSUKAAmount", index, amount);
-                    //                if (InitConfig.GroupPolicy == 4)
-                    //                    this.grData.DataTable.SetValue("KSUSSAmount", index, amount);
-                    //            }
-                    //        }
-                    //        count++;
-                    //    }
-                    //    index2++;
-                    //}
+                    
                 }
                 if(count > 0)
                 {

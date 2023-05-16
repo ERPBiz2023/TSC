@@ -98,24 +98,23 @@ namespace GTCore.Helper
                 Excel._Worksheet workSheet = excelApp.ActiveSheet;
 
                 // column headings
-                //var index = 0;
+                var dataIndex = 0;
                 for(var index = 0; index < grid.DataTable.Columns.Count; index ++)
-               
                 {
                     var id = grid.DataTable.Columns.Item(index).Name;
-                   // var col1 = (SAPbouiCOM.GridColumn) grid.Columns.Item(id);
-                    workSheet.Cells[1, index + 1] = grid.Columns.Item(id).TitleObject.Caption; // tbl.Columns.Item(index).Name;
-                }
-
-                for (var i = 0; i < grid.DataTable.Rows.Count; i++)
-                {
-                   // var j = 0;
-                    for (var index = 0; index < grid.DataTable.Columns.Count; index++)
+                    var visible = grid.Columns.Item(id).Visible;
+                    if (!visible)
                     {
-                        var id = grid.DataTable.Columns.Item(index).Name;
-                        workSheet.Cells[i + 2, index + 1] = grid.DataTable.GetValue(id, i).ToString();
-                      
+                        continue;
                     }
+                    workSheet.Cells[1, dataIndex + 1] = grid.Columns.Item(id).TitleObject.Caption;
+                    workSheet.Cells[1, dataIndex + 1].Font.Bold = true;
+
+                    for (var i = 0; i < grid.DataTable.Rows.Count; i++)
+                    {
+                        workSheet.Cells[i + 2, dataIndex + 1] = grid.DataTable.GetValue(id, i).ToString();
+                    }
+                    dataIndex++;
                 }
 
                 var excelFilePath = UIHelper.SaveExcelDiaglog(filename);

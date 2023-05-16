@@ -66,7 +66,7 @@ namespace GTCore
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.FileName = fileName;
-            saveFileDialog.InitialDirectory = System.Windows.Forms.Application.StartupPath;
+            saveFileDialog.InitialDirectory = @"C:\"; //System.Windows.Forms.Application.StartupPath;
             saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx";
             saveFileDialog.FilterIndex = 0;
             saveFileDialog.RestoreDirectory = true;
@@ -84,7 +84,7 @@ namespace GTCore
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
-            openFileDialog1.InitialDirectory = System.Windows.Forms.Application.StartupPath;
+            openFileDialog1.InitialDirectory = @"C:\"; //System.Windows.Forms.Application.StartupPath;
             openFileDialog1.Title = "Select a Excel file to open";
             openFileDialog1.FilterIndex = 0;
             openFileDialog1.RestoreDirectory = true;
