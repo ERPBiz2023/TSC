@@ -158,7 +158,10 @@
     </None>
     <None Include="SystemForm\SQ\SalesQuotationExt.b1f__orig_srf" />
     <None Include="Templates\SalesTargetActual_Template.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\SalesTarget_Template.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
