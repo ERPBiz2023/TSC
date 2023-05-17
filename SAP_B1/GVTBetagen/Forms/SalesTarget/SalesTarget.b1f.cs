@@ -444,7 +444,7 @@ namespace GVTBetagen.Forms
                 //          TeamleaderSelected,
                 //          MonthSelected,
                 //          YearSelected);
-                var query = string.Format(Querystring.sp_SaleTarget_Actual_LoadExportExcel,
+                var query = string.Format(Querystring.sp_SaleTarget_LoadExportExcel,
                        UserName,
                        SalesManagerSelected,
                        KASelected,
