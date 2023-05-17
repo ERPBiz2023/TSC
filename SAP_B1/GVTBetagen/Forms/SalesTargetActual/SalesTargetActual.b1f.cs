@@ -43,10 +43,13 @@ namespace GVTBetagen.Forms
             this.cbbYear = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbYea").Specific));
             this.stSaM = ((SAPbouiCOM.StaticText)(this.GetItem("stSaM").Specific));
             this.cbbSalesManager = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbSMa").Specific));
+            this.cbbSalesManager.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbSalesManager_ComboSelectAfter);
             this.stKA = ((SAPbouiCOM.StaticText)(this.GetItem("stKA").Specific));
             this.cbbKA_ASM = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbKA").Specific));
+            this.cbbKA_ASM.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbKA_ASM_ComboSelectAfter);
             this.stSS = ((SAPbouiCOM.StaticText)(this.GetItem("stSS").Specific));
             this.cbbSalesSup = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbSSu").Specific));
+            this.cbbSalesSup.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbSalesSup_ComboSelectAfter);
             this.stTL = ((SAPbouiCOM.StaticText)(this.GetItem("stTL").Specific));
             this.cbbTeamLeader = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbTLe").Specific));
             this.btnSearch = ((SAPbouiCOM.Button)(this.GetItem("btnSearch").Specific));
@@ -271,6 +274,30 @@ namespace GVTBetagen.Forms
             }
             this.Freeze(false);
 
+        }
+
+        private void cbbSalesManager_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            this.Freeze(true);
+            //this.LoadComboboxKAASM();
+            UIHandler.LoadComboboxKAASM(this.cbbKA_ASM, UserName, this.SalesManagerSelected);
+            this.Freeze(false);
+        }
+
+        private void cbbKA_ASM_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            this.Freeze(true);
+            // this.LoadComboboxSalesSups();
+            UIHandler.LoadComboboxSalesSups(this.cbbSalesSup, UserName, this.SalesManagerSelected, this.KASelected);
+            this.Freeze(false);
+        }
+
+        private void cbbSalesSup_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            this.Freeze(true);
+            // this.LoadComboboxTeamLeaders();
+            UIHandler.LoadComboboxTeamLeaders(this.cbbTeamLeader, UserName, this.SalesManagerSelected, this.KASelected, this.SalesSupSelected);
+            this.Freeze(false);
         }
     }
 }

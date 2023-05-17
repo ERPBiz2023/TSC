@@ -56,15 +56,12 @@ namespace GVTBetagen.Forms
             this.cbbWeek.ExpandType = SAPbouiCOM.BoExpandType.et_ValueOnly;
 
             UIHandler.LoadComboboxSalesManagers(this.cbbSalesManager, UserName);
-            //this.LoadComboboxSalesManagers();
             this.cbbSalesManager.Item.DisplayDesc = true;
 
             UIHandler.LoadComboboxKAASM(this.cbbKA_ASM, UserName, this.SalesManagerSelected);
-           // this.LoadComboboxKAASM();
             this.cbbKA_ASM.Item.DisplayDesc = true;
 
             UIHandler.LoadComboboxSalesSups(this.cbbSalesSup, UserName, this.SalesManagerSelected, this.KASelected);
-           // this.LoadComboboxSalesSups();
             this.cbbSalesSup.Item.DisplayDesc = true;
 
             UIHandler.LoadComboboxTeamLeaders(this.cbbTeamLeader, UserName, this.SalesManagerSelected, this.KASelected, this.SalesSupSelected);
@@ -188,21 +185,24 @@ namespace GVTBetagen.Forms
         private void cbbSalesManager_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
             this.Freeze(true);
-            this.LoadComboboxKAASM();
+            //this.LoadComboboxKAASM();
+            UIHandler.LoadComboboxKAASM(this.cbbKA_ASM, UserName, this.SalesManagerSelected);
             this.Freeze(false);
         }
 
         private void cbbKA_ASM_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
             this.Freeze(true);
-            this.LoadComboboxSalesSups();
+           // this.LoadComboboxSalesSups();
+            UIHandler.LoadComboboxSalesSups(this.cbbSalesSup, UserName, this.SalesManagerSelected, this.KASelected);
             this.Freeze(false);
         }
 
         private void cbbSalesSup_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
             this.Freeze(true);
-            this.LoadComboboxTeamLeaders();
+           // this.LoadComboboxTeamLeaders();
+            UIHandler.LoadComboboxTeamLeaders(this.cbbTeamLeader, UserName, this.SalesManagerSelected, this.KASelected, this.SalesSupSelected);
             this.Freeze(false);
         }
 

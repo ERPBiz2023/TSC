@@ -18,6 +18,8 @@ namespace GVTBetagen
             AddMenuItem(GlobalFormsInformations.GLPostingInformation);
             AddMenuItem(GlobalFormsInformations.SalesTargetInformation);
             AddMenuItem(GlobalFormsInformations.SalesTargetActualInformation);
+            AddMenuFolder("GTV_Addon", "GVT Functionals");
+            AddMenuItem(GlobalFormsInformations.ImportExportInformation);
         }
 
         private void AddMenuItem(AddonUserForm infor)
@@ -149,6 +151,13 @@ namespace GVTBetagen
                     if (pVal.BeforeAction)
                     {
                         SalesTargetActual.ShowForm();
+                    }
+                }
+                if (pVal.MenuUID == GlobalFormsInformations.ImportExportMenuID)
+                {
+                    if (pVal.BeforeAction)
+                    {
+                        ImportExport.ShowForm();
                     }
                 }
             }

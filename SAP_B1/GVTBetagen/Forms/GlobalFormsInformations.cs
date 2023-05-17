@@ -110,5 +110,39 @@ namespace GVTBetagen.Forms
             }
         }
         #endregion
+
+        #region Import && Export
+        private static void InitImExpInformation()
+        {
+            importExportInformation = new AddonUserForm();
+            importExportInformation.FormID = "Import_Export_F";
+            importExportInformation.MenuID = "Import_Export_M";
+            importExportInformation.MenuName = "Import & Export Excel";
+            importExportInformation.ParentID = "GTV_Addon"; // Inventory Transactions
+        }
+        private static AddonUserForm importExportInformation;
+        public static AddonUserForm ImportExportInformation
+        {
+            get
+            {
+                if (importExportInformation == null)
+                {
+                    InitImExpInformation();
+                }
+                return importExportInformation;
+            }
+        }
+        public static string ImportExportMenuID
+        {
+            get
+            {
+                if (importExportInformation == null)
+                {
+                    InitImExpInformation();
+                }
+                return importExportInformation.MenuID;
+            }
+        }
+        #endregion
     }
 }
