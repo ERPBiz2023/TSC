@@ -64,6 +64,24 @@ namespace GVTBetagen
                 return CallStoreBySystem("USP_BS_Customer_SaleTarget_LoadbyUserId", "'{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, {7}");
             }
         }
+
+        /// <summary>
+        /// Load sales target to excel
+        /// 
+        /// USP_BS_Customer_SaleTarget_LoadExportExcel "'{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, {7}"
+        /// </summary>
+        public static string sp_SaleTarget_LoadExportExcel
+        {
+            get
+            {
+                return CallStoreBySystem("USP_BS_Customer_SaleTarget_LoadExportExcel", "'{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}, {7}");
+            }
+        }
+
+        /// <summary>
+        /// Load sales target actual 
+        /// USP_BS_Customer_SaleTarget_Actual_LoadbyUserId "'{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}"
+        /// </summary>
         public static string sp_SaleTarget_Actual_LoadbyUserId
         {
             get
@@ -72,6 +90,10 @@ namespace GVTBetagen
             }
         }
 
+        /// <summary>
+        /// Load sales target actual to excel file
+        /// USP_BS_Customer_SaleTarget_Actual_LoadExportExcel "'{0}', '{1}', '{2}', '{3}', '{4}', {5}, {6}"
+        /// </summary>
         public static string sp_SaleTarget_Actual_LoadExportExcel
         {
             get

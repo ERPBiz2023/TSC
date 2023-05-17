@@ -250,6 +250,7 @@ namespace GVTBetagen.Forms
                 var message = string.Empty;
                 var template = Globals.StartPath + "/Templates/SalesTargetActual_Template.xlsx";
                 var fileName = string.Format("SalesTargetActual_{0}_{1}", UserName, DateTime.Now.ToString("yyyyMMdd"));
+
                 if (ExcelHandler.ExportToExcel(template, fileName, DataLoad, "Data", ref message))
                 {
                     UIHelper.LogMessage(string.Format("Export to {0} success", message), UIHelper.MsgType.StatusBar, false);

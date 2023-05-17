@@ -12,6 +12,7 @@ namespace GVTBetagen.Forms
     public partial class SalesTarget
     {
         private string UserName;
+        private System.Data.DataTable DataLoad;
 
         /// <summary>
         /// Current selected Sales Manager
