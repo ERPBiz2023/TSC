@@ -453,6 +453,11 @@ namespace GVTBetagen.Forms
                        MonthSelected,
                        YearSelected,
                        WeekSelected);
+                var fileName = string.Format("SalesTarget_{0}_{1}_{2}_{3}", 
+                                             UserName,
+                                             MonthSelected,
+                                             YearSelected,
+                                             DateTime.Now.ToString("yyyyMMdd"));
                 using (var connection = Globals.DataConnection)
                 {
                     DataLoad = connection.ExecQueryToDatatable(query);
@@ -467,7 +472,7 @@ namespace GVTBetagen.Forms
                 }
                 var message = string.Empty;
                 var template = Globals.StartPath + "/Templates/SalesTarget_Template.xlsx";
-                var fileName = string.Format("SalesTarget_{0}_{1}", UserName, DateTime.Now.ToString("yyyyMMdd"));
+                ///var fileName = string.Format("SalesTarget_{0}_{1}", UserName, DateTime.Now.ToString("yyyyMMdd"));
 
                 if (ExcelHandler.ExportToExcel(template, fileName, DataLoad, "Data", ref message))
                 {
