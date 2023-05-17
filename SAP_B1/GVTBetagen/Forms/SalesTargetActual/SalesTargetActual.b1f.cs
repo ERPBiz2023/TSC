@@ -181,63 +181,9 @@ namespace GVTBetagen.Forms
             this.Freeze(true);
             try
             {
-                var query = string.Format(Querystring.sp_SaleTarget_Actual_LoadbyUserId,
-                            UserName,
-                            SalesManagerSelected,
-                            KASelected,
-                            SalesSupSelected,
-                            TeamleaderSelected,
-                            MonthSelected,
-                            YearSelected);
+                LoadDataGrid();
 
-                this.grData.DataTable.ExecuteQuery(query);
-                this.grData.Columns.Item("TargetDID").Visible = false;
-                this.grData.Columns.Item("TargetId").Visible = false;
-                this.grData.Columns.Item("CustCode").TitleObject.Caption = "Code";
-                this.grData.Columns.Item("CustName").TitleObject.Caption = "Name";
-                this.grData.Columns.Item("Channel").Visible = false;
-                this.grData.Columns.Item("GroupName").TitleObject.Caption = "Group";
-                this.grData.Columns.Item("SaleRepEmpid").TitleObject.Caption = "PG/SR ID";
-                this.grData.Columns.Item("SaleRepfullName").TitleObject.Caption = "PG/Sale Rep";
-                this.grData.Columns.Item("SMEmpId").TitleObject.Caption = "Sales Manager";
-                this.grData.Columns.Item("SMEmpFullName").Visible = false;
-                this.grData.Columns.Item("KAEmpId").TitleObject.Caption = "KA/ASM";
-                this.grData.Columns.Item("KAEmpFullName").Visible = false;
-                this.grData.Columns.Item("SSEmpId").TitleObject.Caption = "Sales sup";
-                this.grData.Columns.Item("SSEmpFullName").Visible = false;
-                this.grData.Columns.Item("TeamLeadID").TitleObject.Caption = "Team Leader";
-                this.grData.Columns.Item("TeamLeadFullName").Visible = false;
-
-                this.grData.Columns.Item("SSAmount").Visible = false;
-                this.grData.Columns.Item("KAAmount").Visible = false;
-                this.grData.Columns.Item("SMAmount").Visible = false;
-                this.grData.Columns.Item("DocTotal").TitleObject.Caption = "Actual";
-                this.grData.Columns.Item("GMAmount").TitleObject.Caption = "Target";
-                this.grData.Columns.Item("TotalPercent").TitleObject.Caption = "% Target - Actual";
-                this.grData.Columns.Item("OP").Visible = false;
-                this.grData.Columns.Item("SaleActual").Visible = false;
-
-                this.grData.Columns.Item("Descriptions").Visible = false;
-                this.grData.Columns.Item("SS_SKUAmt").Visible = false;
-                this.grData.Columns.Item("KA_SKUAmt").Visible = false;
-                this.grData.Columns.Item("GM_SKUAmt").Visible = false;
-                this.grData.Columns.Item("GM_SKUAmt").TitleObject.Caption = "SKU Target";
-                this.grData.Columns.Item("SKU_DocTotal").TitleObject.Caption = "SKU Actual";
-                this.grData.Columns.Item("SKU_TotalPercent").TitleObject.Caption = "SKU Percent";
-
-                this.grData.Columns.Item("SKU_SaleActual").Visible = false;
-                this.grData.Columns.Item("SKU_OB").Visible = false;
-                this.grData.Columns.Item("SKUSaleActual").Visible = false;
-                this.grData.Columns.Item("SKUDesc").Visible = false;
-
-                this.grData.AutoResizeColumns();
-                //using (var connection = Globals.DataConnection)
-                //{
-                //    DataLoad = connection.ExecQueryToDatatable(query);
-                //    connection.Dispose();
-                //}
-
-                query = string.Format(Querystring.Update_SalesManager_Division, this.SalesManagerSelected);
+                var query = string.Format(Querystring.Update_SalesManager_Division, this.SalesManagerSelected);
                 Hashtable data;
                 using (var connection = Globals.DataConnection)
                 {
@@ -252,7 +198,7 @@ namespace GVTBetagen.Forms
 
                 if(result == "GT")
                 {
-
+                    /// do-ing
                 }
             }
             catch (Exception ex)

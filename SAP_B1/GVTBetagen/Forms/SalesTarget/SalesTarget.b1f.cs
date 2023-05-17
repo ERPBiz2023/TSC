@@ -218,49 +218,10 @@ namespace GVTBetagen.Forms
                     this.Freeze(false);
                     return;
                 }
-                
-                var query = string.Format(Querystring.sp_SaleTarget_LoadbyUserId,
-                            UserName,
-                            SalesManagerSelected,
-                            KASelected,
-                            SalesSupSelected,
-                            TeamleaderSelected,
-                            MonthSelected,
-                            YearSelected,
-                            WeekSelected);
 
-                this.grData.DataTable.ExecuteQuery(query);
-                this.grData.Columns.Item("TargetDID").Visible = false;
-                this.grData.Columns.Item("TargetId").Visible = false;
-                this.grData.Columns.Item("CustCode").TitleObject.Caption = "Code";
-                this.grData.Columns.Item("CustName").TitleObject.Caption = "Name";
-                this.grData.Columns.Item("Channel").Visible = false;
-                this.grData.Columns.Item("GroupName").TitleObject.Caption = "Group";
-                this.grData.Columns.Item("SaleRepfullName").TitleObject.Caption = "PG/ Sale Rep";
-                this.grData.Columns.Item("SaleRepEmpId").TitleObject.Caption = "Sale Rep Employee Id";
-                this.grData.Columns.Item("SMEmpFullName").TitleObject.Caption = "Sales Manager";
-                this.grData.Columns.Item("SMEmpId").Visible = false;
-                this.grData.Columns.Item("KAEmpFullName").TitleObject.Caption = "KA/ASM";
-                this.grData.Columns.Item("KAEmpId").Visible = false;
-                this.grData.Columns.Item("SSEmpFullName").TitleObject.Caption = "Sales sup";
-                this.grData.Columns.Item("SSEmpId").Visible = false;
+                LoadDataGrid();
 
-                this.grData.Columns.Item("SSAmount").TitleObject.Caption = "Target Sales sup";
-                this.grData.Columns.Item("KAAmount").TitleObject.Caption = "Target KA/ASM";
-                this.grData.Columns.Item("SMAmount").TitleObject.Caption = "Target Sales Manager";
-                this.grData.Columns.Item("GMAmount").TitleObject.Caption = "Target General Manager";
-
-                this.grData.Columns.Item("KSUSSAmount").TitleObject.Caption = "Target SKU Sales sup";
-                this.grData.Columns.Item("KSUKAAmount").TitleObject.Caption = "Target SKU KA/ASM";
-                this.grData.Columns.Item("KSUSMAmount").TitleObject.Caption = "Target SKU Sales Manager";
-                this.grData.Columns.Item("KSUGMAmount").TitleObject.Caption = "Target SKU General Manager";
-
-                this.grData.Columns.Item("ActualAmt_LastMONTH").TitleObject.Caption = "Prev. Month";
-                this.grData.Columns.Item("ActualAmt_CurrentMONTH").TitleObject.Caption = "Current Month";
-
-                this.grData.AutoResizeColumns();
-
-                query = string.Format(Querystring.sp_SaleTarget_TargetID_Approved, MonthSelected, YearSelected, SalesManagerSelected);
+                var query = string.Format(Querystring.sp_SaleTarget_TargetID_Approved, MonthSelected, YearSelected, SalesManagerSelected);
                 Hashtable data;
                 using (var connection = Globals.DataConnection)
                 {
@@ -298,6 +259,7 @@ namespace GVTBetagen.Forms
             this.Freeze(false);
         }
 
+        
         private void Form_ResizeAfter(SAPbouiCOM.SBOItemEventArg pVal)
         {
             SetControlLocation();
