@@ -412,7 +412,7 @@ namespace GVTBetagen.Forms
             this.Freeze(true);
             try
             {
-                var path = UIHelper.BrowserExcelDiaglog();
+                var path = UIHelper.BrowserExcelDiaglog(this.UIAPIRawForm);
                 if (!string.IsNullOrEmpty(path))
                 {
                     this.edFile.Value = path;

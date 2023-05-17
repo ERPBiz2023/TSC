@@ -3,21 +3,52 @@ using SAPbouiCOM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace GTCore
 {
+    public class WindowWrapper : System.Windows.Forms.IWin32Window
+    {
+
+        private IntPtr _hwnd;
+        // Property
+
+        public virtual IntPtr Handle
+        {
+            get { return _hwnd; }
+        }
+
+        // Constructor
+
+        public WindowWrapper(IntPtr handle)
+        {
+            _hwnd = handle;
+        }
+
+    }
     public class GTDialog
     {
         public DialogResult result;
         public FileDialog dialog;
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        IntPtr ptr = GetForegroundWindow();
         public void ShowDialog()
         {
-            result = dialog.ShowDialog();
+            //System.Windows.Forms.Form form = new System.Windows.Forms.Form();
+            //form.TopMost = true;
+            WindowWrapper oWindow = new WindowWrapper(ptr);
+            result = dialog.ShowDialog(oWindow);
         }
+
+        public GTDialog()
+        { }
     }
     public class UIHelper
     {
@@ -51,9 +82,9 @@ namespace GTCore
                         return 1;
                     default:// case MsgType.Msgbox:
                         return SAPbouiCOM.Framework.Application.SBO_Application.MessageBox(msg, btnDefault, btnCaption1, btnCaption2, btnCaption3);
-                    //default:
-                    //    MessageBox.Show(msg);
-                    //    return 1;
+                        //default:
+                        //    MessageBox.Show(msg);
+                        //    return 1;
                 }
             }
             catch (Exception)
@@ -94,7 +125,6 @@ namespace GTCore
             saveFileDialog.FilterIndex = 0;
             saveFileDialog.RestoreDirectory = true;
             saveFileDialog.Title = "Export Excel File To";
-
             DialogResult ret = ShowGTDialog(saveFileDialog);
             if (ret == DialogResult.OK)
             {
@@ -107,7 +137,7 @@ namespace GTCore
         /// Browser diaglog to find file
         /// </summary>
         /// <returns>full path for file to open</returns>
-        public static string BrowserExcelDiaglog()
+        public static string BrowserExcelDiaglog(SAPbouiCOM.IForm form)
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
@@ -115,7 +145,6 @@ namespace GTCore
             openFileDialog1.Title = "Select a Excel file to open";
             openFileDialog1.FilterIndex = 0;
             openFileDialog1.RestoreDirectory = true;
-
             DialogResult ret = ShowGTDialog(openFileDialog1);
             if (ret == DialogResult.OK)
             {
@@ -123,7 +152,7 @@ namespace GTCore
             }
             return string.Empty;
         }
-        
+
         public static void Freeze(IForm from)
         {
             from.Freeze(true);
