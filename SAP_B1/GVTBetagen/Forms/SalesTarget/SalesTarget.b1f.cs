@@ -320,7 +320,7 @@ namespace GVTBetagen.Forms
                     return;
                 }
 
-                var query = string.Format(Querystring.usp_SalesTarget_Add, YearSelected, MonthSelected, SalesSupSelected, SalesSupSelected, cbbSalesSup.Selected.Description);
+                var query = string.Format(Querystring.usp_SalesTarget_Add, YearSelected, MonthSelected, SalesManagerSelected, SalesManagerSelected, cbbSalesManager.Selected.Description);
                 Hashtable data;
                 using (var connection = Globals.DataConnection)
                 {
@@ -341,7 +341,7 @@ namespace GVTBetagen.Forms
                 {
                     if (this.grData.DataTable.GetValue("Change", index).ToString() == "Y")
                     {
-                        UIHelper.LogMessage(string.Format("Waiting update for customer {0}", this.grData.DataTable.GetValue("CustCode", index).ToString()), UIHelper.MsgType.StatusBar, false);
+                       //UIHelper.LogMessage(string.Format("Waiting update for customer {0}", this.grData.DataTable.GetValue("CustCode", index).ToString()), UIHelper.MsgType.StatusBar, false);
                         long targetDID = -1;
                         long.TryParse(this.grData.DataTable.GetValue("TargetDID", index).ToString(), out targetDID);
                         if (targetDID != 54961L)
@@ -601,7 +601,7 @@ namespace GVTBetagen.Forms
 
                 for(var index = 0; index < this.grData.DataTable.Rows.Count; index ++)
                 {
-                    //if(index > 100)
+                    //if (index > 100)
                     //{
                     //    break;
                     //}

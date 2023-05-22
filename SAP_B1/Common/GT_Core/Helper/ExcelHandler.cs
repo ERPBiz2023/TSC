@@ -101,7 +101,7 @@ namespace GTCore.Helper
                         wb.SaveAs(excelFilePath);
 
                         Marshal.ReleaseComObject(ws);
-                        Marshal.ReleaseComObject(ws);
+                        Marshal.ReleaseComObject(wb);
                     }
                     message = excelFilePath;
                 }
