@@ -97,6 +97,7 @@
     <Compile Include="Forms\ImportExportExcel\ImportExport.b1f.cs">
       <DependentUpon>ImportExport.b1f</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ImportExportExcel\ImportExportExt.cs" />
     <Compile Include="Forms\ImportExportExcel\ImportResult.b1f.cs">
       <DependentUpon>ImportResult.b1f</DependentUpon>
     </Compile>

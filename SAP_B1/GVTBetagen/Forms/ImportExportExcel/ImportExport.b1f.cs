@@ -4,32 +4,54 @@ using System.Linq;
 using System.Text;
 using SAPbouiCOM.Framework;
 
-namespace GVTBetagen.Forms.ImportExportExcel
+namespace GVTBetagen.Forms
 {
-    [FormAttribute("GVTBetagen.Forms.ImportExportExcel.ImportExport", "Forms/ImportExportExcel/ImportExport.b1f")]
-    class ImportExport : UserFormBase
+    [FormAttribute("GVTBetagen.Forms.ImportExport", "Forms/ImportExportExcel/ImportExport.b1f")]
+    public partial class ImportExport : UserFormBase
     {
-        public ImportExport()
+        private ImportExport()
         {
+            UserName = Application.SBO_Application.Company.UserName;
+        }
+        private static ImportExport instance;
+
+        public static bool IsFormOpen = false;
+        public static void ShowForm()
+        {
+            if (instance == null)
+            {
+                instance = new ImportExport();
+                instance.InitControl();
+                instance.Show();
+                IsFormOpen = true;
+            }
         }
 
+        private void InitControl()
+        { }
+
+      
         /// <summary>
         /// Initialize components. Called by framework after form created.
         /// </summary>
         public override void OnInitializeComponent()
         {
-            this.Button0 = ((SAPbouiCOM.Button)(this.GetItem("btnImp").Specific));
-            this.Button1 = ((SAPbouiCOM.Button)(this.GetItem("btnExp").Specific));
-            this.Button2 = ((SAPbouiCOM.Button)(this.GetItem("btnCan").Specific));
-            this.StaticText0 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_8").Specific));
-            this.ComboBox0 = ((SAPbouiCOM.ComboBox)(this.GetItem("Item_10").Specific));
-            this.StaticText1 = ((SAPbouiCOM.StaticText)(this.GetItem("Item_11").Specific));
-            this.EditText1 = ((SAPbouiCOM.EditText)(this.GetItem("Item_12").Specific));
-            this.Button5 = ((SAPbouiCOM.Button)(this.GetItem("Item_13").Specific));
-            this.Grid0 = ((SAPbouiCOM.Grid)(this.GetItem("Item_14").Specific));
-            this.Button6 = ((SAPbouiCOM.Button)(this.GetItem("Item_15").Specific));
-            this.Button7 = ((SAPbouiCOM.Button)(this.GetItem("Item_16").Specific));
-            this.Button8 = ((SAPbouiCOM.Button)(this.GetItem("Item_17").Specific));
+            this.btnImport = ((SAPbouiCOM.Button)(this.GetItem("btnImp").Specific));
+            this.btnExpprt = ((SAPbouiCOM.Button)(this.GetItem("btnExp").Specific));
+            this.btnReset = ((SAPbouiCOM.Button)(this.GetItem("btnRes").Specific));
+            this.stModule = ((SAPbouiCOM.StaticText)(this.GetItem("stMol").Specific));
+            this.cbbModule = ((SAPbouiCOM.ComboBox)(this.GetItem("cbbMol").Specific));
+            this.cbbModule.ComboSelectAfter += new SAPbouiCOM._IComboBoxEvents_ComboSelectAfterEventHandler(this.cbbModule_ComboSelectAfter);
+            this.stPath = ((SAPbouiCOM.StaticText)(this.GetItem("stPath").Specific));
+            this.edPath = ((SAPbouiCOM.EditText)(this.GetItem("edPath").Specific));
+            this.btnFind = ((SAPbouiCOM.Button)(this.GetItem("btnFin").Specific));
+            this.grdData = ((SAPbouiCOM.Grid)(this.GetItem("grdData").Specific));
+            this.btnEdit = ((SAPbouiCOM.Button)(this.GetItem("btnEdit").Specific));
+            this.btnApplySap = ((SAPbouiCOM.Button)(this.GetItem("btnASap").Specific));
+            this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCan").Specific));
+            this.grdDetail = ((SAPbouiCOM.Grid)(this.GetItem("grdDet").Specific));
+            this.stHeader = ((SAPbouiCOM.StaticText)(this.GetItem("stHea").Specific));
+            this.stDetail = ((SAPbouiCOM.StaticText)(this.GetItem("stDet").Specific));
             this.OnCustomInitialize();
 
         }
@@ -39,23 +61,69 @@ namespace GVTBetagen.Forms.ImportExportExcel
         /// </summary>
         public override void OnInitializeFormEvents()
         {
+            this.CloseAfter += new SAPbouiCOM.Framework.FormBase.CloseAfterHandler(this.Form_CloseAfter);
+            this.ResizeAfter += new ResizeAfterHandler(this.Form_ResizeAfter);
+
         }
+
+        private void Freeze(bool freeze)
+        {
+            this.UIAPIRawForm.Freeze(freeze);
+        }
+
 
         private void OnCustomInitialize()
         {
-
+            SetControlLocation();
+            if (this.cbbModule.ValidValues.Count > 0)
+                this.cbbModule.Select(0, SAPbouiCOM.BoSearchKey.psk_Index);
+            this.cbbModule.Item.DisplayDesc = true;
         }
-        private SAPbouiCOM.Button Button0;
-        private SAPbouiCOM.Button Button1;
-        private SAPbouiCOM.Button Button2;
-        private SAPbouiCOM.StaticText StaticText0;
-        private SAPbouiCOM.ComboBox ComboBox0;
-        private SAPbouiCOM.StaticText StaticText1;
-        private SAPbouiCOM.EditText EditText1;
-        private SAPbouiCOM.Button Button5;
-        private SAPbouiCOM.Grid Grid0;
-        private SAPbouiCOM.Button Button6;
-        private SAPbouiCOM.Button Button7;
-        private SAPbouiCOM.Button Button8;
+
+        private SAPbouiCOM.Button btnImport;
+        private SAPbouiCOM.Button btnExpprt;
+        private SAPbouiCOM.Button btnReset;
+        private SAPbouiCOM.StaticText stModule;
+        private SAPbouiCOM.ComboBox cbbModule;
+        private SAPbouiCOM.StaticText stPath;
+        private SAPbouiCOM.EditText edPath;
+        private SAPbouiCOM.Button btnFind;
+        private SAPbouiCOM.Grid grdData;
+        private SAPbouiCOM.Button btnEdit;
+        private SAPbouiCOM.Button btnApplySap;
+        private SAPbouiCOM.Button btnCancel;
+        private SAPbouiCOM.Grid grdDetail;
+        private SAPbouiCOM.StaticText stHeader;
+        private SAPbouiCOM.StaticText stDetail;
+
+        private void Form_CloseAfter(SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            instance = null;
+            IsFormOpen = false;
+        }
+
+        private void cbbModule_ComboSelectAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            SetControlLocation(); 
+            //if (this.cbbModule.Selected.Value == "17")
+            //{
+            //    var distance = this.btnEdit.Item.Top - 10 - this.grdData.Item.Top;
+
+            //    this.grdData.Item.Height = distance / 2 - 20;
+
+            //    this.stDetail.Item.Top = this.grdData.Item.Top + this.grdData.Item.Height + 20;
+            //    this.stDetail.Item.Visible = true;
+
+            //    this.grdDetail.Item.Top = this.stDetail.Item.Top + 30;
+            //    this.grdDetail.Item.Visible = true;
+            //    this.grdDetail.Item.Height = this.btnEdit.Item.Top - this.grdDetail.Item.Top - 10;
+            //}
+          
+        }
+
+        private void Form_ResizeAfter(SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            SetControlLocation();
+        }
     }
 }
