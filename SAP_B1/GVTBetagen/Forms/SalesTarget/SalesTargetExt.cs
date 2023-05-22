@@ -337,6 +337,7 @@ namespace GVTBetagen.Forms
         }
         private void LoadDataGrid()
         {
+            this.grData.DataTable.Clear();
             var query = string.Format(Querystring.sp_SaleTarget_LoadbyUserId,
                         UserName,
                         SalesManagerSelected,
@@ -354,6 +355,8 @@ namespace GVTBetagen.Forms
             this.grData.Columns.Item("CustName").TitleObject.Caption = "Name";
             this.grData.Columns.Item("Channel").Visible = false;
             this.grData.Columns.Item("GroupName").TitleObject.Caption = "Group";
+            this.grData.Columns.Item("TeamLeadID").TitleObject.Caption = "Team Lead";
+            this.grData.Columns.Item("TeamLeadFullName").TitleObject.Caption = "Team Lead Name";
             this.grData.Columns.Item("SaleRepfullName").TitleObject.Caption = "PG/ Sale Rep";
             this.grData.Columns.Item("SaleRepEmpId").TitleObject.Caption = "Sale Rep Employee Id";
             this.grData.Columns.Item("SMEmpFullName").TitleObject.Caption = "Sales Manager";
@@ -375,6 +378,8 @@ namespace GVTBetagen.Forms
 
             this.grData.Columns.Item("ActualAmt_LastMONTH").TitleObject.Caption = "Prev. Month";
             this.grData.Columns.Item("ActualAmt_CurrentMONTH").TitleObject.Caption = "Current Month";
+            
+            this.grData.Columns.Item("Change").Visible = false;
 
             this.grData.AutoResizeColumns();
         }

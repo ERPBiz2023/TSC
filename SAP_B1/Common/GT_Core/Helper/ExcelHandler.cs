@@ -6,6 +6,7 @@ using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,7 +41,7 @@ namespace GTCore.Helper
 
                 if (selectConnection != null && selectConnection.State == ConnectionState.Open)
                 {
-                    DataTable dataTable = new DataTable();
+                    //DataTable dataTable = new DataTable();
                     DataTable oleDbSchemaTable = selectConnection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, (object[])null);
                     if (oleDbSchemaTable != null || oleDbSchemaTable.Rows.Count > 0)
                     {
@@ -52,8 +53,6 @@ namespace GTCore.Helper
                             {
                                 string srcTable = oleDbSchemaTable.Rows[index]["table_name"].ToString();
                                 string selectCommandText = "SELECT * FROM [" + srcTable + "]";
-                                //if (_importTimeSheet)
-                                //    selectCommandText += " Where ThoiGianVao<>'' Or ThoiGianRa<>'' ";
                                 new OleDbDataAdapter(selectCommandText, selectConnection).Fill(dataSet, srcTable);
                             }                           
                             catch (Exception ex)
@@ -100,6 +99,9 @@ namespace GTCore.Helper
                         IXLWorksheet ws = wb.Worksheet(sheetName);                      
                         ws.Cell(3, 1).InsertData(dtData.AsEnumerable());
                         wb.SaveAs(excelFilePath);
+
+                        Marshal.ReleaseComObject(ws);
+                        Marshal.ReleaseComObject(ws);
                     }
                     message = excelFilePath;
                 }

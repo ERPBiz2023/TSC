@@ -99,6 +99,7 @@ namespace GVTBetagen.Forms
             this.btnSearch = ((SAPbouiCOM.Button)(this.GetItem("btnSear").Specific));
             this.btnSearch.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSearch_ClickBefore);
             this.grData = ((SAPbouiCOM.Grid)(this.GetItem("grData").Specific));
+            this.grData.ValidateAfter += new SAPbouiCOM._IGridEvents_ValidateAfterEventHandler(this.grData_ValidateAfter);
             this.btnSave = ((SAPbouiCOM.Button)(this.GetItem("btnSave").Specific));
             this.btnSave.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.btnSave_ClickBefore);
             this.btnCancel = ((SAPbouiCOM.Button)(this.GetItem("btnCan").Specific));
@@ -250,7 +251,6 @@ namespace GVTBetagen.Forms
                 {
                     this.EnableGridCol_byGroupPolicy();
                 }
-
             }
             catch (Exception ex)
             {
@@ -335,63 +335,122 @@ namespace GVTBetagen.Forms
                 int targetId = -1;
                 int.TryParse(result, out targetId);
 
+                query = string.Empty;
+               // this.grData.DataTable.
                 for (var index = 0; index < this.grData.DataTable.Rows.Count; index++)
                 {
-                    long targetDID = -1;
-                    long.TryParse(this.grData.DataTable.GetValue("TargetDID", index).ToString(), out targetDID);
-                    if (targetDID != 54961L)
+                    if (this.grData.DataTable.GetValue("Change", index).ToString() == "Y")
                     {
-                        if (targetDID > 0L)
+                        UIHelper.LogMessage(string.Format("Waiting update for customer {0}", this.grData.DataTable.GetValue("CustCode", index).ToString()), UIHelper.MsgType.StatusBar, false);
+                        long targetDID = -1;
+                        long.TryParse(this.grData.DataTable.GetValue("TargetDID", index).ToString(), out targetDID);
+                        if (targetDID != 54961L)
                         {
-                            query = string.Format(Querystring.SalesTarget_Detail_Update,
-                                                  targetDID,
-                                                  targetId,
-                                                  this.grData.DataTable.GetValue("SSAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KAAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("SMAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("GMAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KSUSSAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KSUKAAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KSUSMAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KSUGMAmount", index).ToString());
-                            using (var connection = Globals.DataConnection)
+                            query = string.Empty;
+                            //if (query.Length > 0)
+                            //{
+                            //    query = query + "; \n";
+                            //}
+                            if (targetDID > 0L)
                             {
-                                connection.ExecuteWithOpenClose(query);
-                                connection.Dispose();
+                                query = string.Format(Querystring.SalesTarget_Detail_Update,
+                                                      targetDID,
+                                                      targetId,
+                                                      this.grData.DataTable.GetValue("SSAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KAAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("SMAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("GMAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KSUSSAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KSUKAAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KSUSMAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KSUGMAmount", index).ToString());
+                                var message = string.Empty;
+                                var ret = -1;
+                                if (!string.IsNullOrEmpty(query))
+                                {
+                                    using (var connection = Globals.DataConnection)
+                                    {
+                                        ret = connection.ExecuteWithOpenCloseBase(query, out message);
+                                        connection.Dispose();
+                                    }
+                                    if (ret == -1)
+                                    {
+                                        UIHelper.LogMessage(string.Format("Updated error {0}", message), UIHelper.MsgType.StatusBar, true);
+                                    }
+                                    else
+                                    {
+                                        UIHelper.LogMessage(string.Format("Updated Successfully"), UIHelper.MsgType.StatusBar, false);
+                                    }
+                                }
+                            }
+                            else
+                            {
+
+                                query = string.Format(Querystring.usp_SalesTarget_Add_V1,
+                                                      targetId,
+                                                      this.grData.DataTable.GetValue("CustCode", index).ToString(),
+                                                      this.grData.DataTable.GetValue("CustName", index).ToString(),
+                                                      this.grData.DataTable.GetValue("SaleRepEmpId", index).ToString(),
+                                                      this.grData.DataTable.GetValue("SaleRepfullName", index).ToString(),
+                                                      this.grData.DataTable.GetValue("TeamLeadID", index).ToString(),
+                                                      this.grData.DataTable.GetValue("SSEmpId", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KAEmpId", index).ToString(),
+                                                      this.grData.DataTable.GetValue("SMEmpId", index).ToString(),
+                                                      this.grData.DataTable.GetValue("SSAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KAAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("SMAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("GMAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KSUSSAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KSUKAAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KSUSMAmount", index).ToString(),
+                                                      this.grData.DataTable.GetValue("KSUGMAmount", index).ToString());
+                                var message = string.Empty;
+                                var ret = -1;
+                                if (!string.IsNullOrEmpty(query))
+                                {
+                                    using (var connection = Globals.DataConnection)
+                                    {
+                                        ret = connection.ExecuteWithOpenCloseBase(query, out message);
+                                        connection.Dispose();
+                                    }
+                                    if (ret == -1)
+                                    {
+                                        UIHelper.LogMessage(string.Format("Updated error {0}", message), UIHelper.MsgType.StatusBar, true);
+                                    }
+                                    else
+                                    {
+                                        UIHelper.LogMessage(string.Format("Updated Successfully"), UIHelper.MsgType.StatusBar, false);
+                                    }
+                                }
+
                             }
                         }
-                        else
-                        {
 
-                            query = string.Format(Querystring.usp_SalesTarget_Add_V1,
-                                                  targetId,
-                                                  this.grData.DataTable.GetValue("CustCode", index).ToString(),
-                                                  this.grData.DataTable.GetValue("CustName", index).ToString(),
-                                                  this.grData.DataTable.GetValue("SaleRepEmpid", index).ToString(),
-                                                  this.grData.DataTable.GetValue("SaleRepfullName", index).ToString(),
-                                                  this.grData.DataTable.GetValue("TeamleadId", index).ToString(),
-                                                  this.grData.DataTable.GetValue("SSEmpId", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KAEmpId", index).ToString(),
-                                                  this.grData.DataTable.GetValue("SMEmpId", index).ToString(),
-                                                  this.grData.DataTable.GetValue("SSAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KAAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("SMAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("GMAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KSUSSAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KSUKAAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KSUSMAmount", index).ToString(),
-                                                  this.grData.DataTable.GetValue("KSUGMAmount", index).ToString());
-                            using (var connection = Globals.DataConnection)
-                            {
-                                connection.ExecuteWithOpenClose(query);
-                                connection.Dispose();
-                            }
-
-                        }
+                        this.grData.DataTable.SetValue("Change", index, "N");
                     }
                 }
-
-                UIHelper.LogMessage(string.Format("Updated Successfully"), UIHelper.MsgType.StatusBar, false);
+                //var message = string.Empty;
+                //var ret = -1;
+                //if (!string.IsNullOrEmpty(query))
+                //{
+                //    using (var connection = Globals.DataConnection)
+                //    {
+                //        ret = connection.ExecuteWithOpenCloseBase(query, out message);
+                //        connection.Dispose();
+                //    }
+                //    if (ret == -1)
+                //    {
+                //        UIHelper.LogMessage(string.Format("Updated error {0}", message), UIHelper.MsgType.StatusBar, true);
+                //    }
+                //    else
+                //    {
+                //        UIHelper.LogMessage(string.Format("Updated Successfully"), UIHelper.MsgType.StatusBar, false);
+                //    }
+                //}
+                //else
+                //{
+                //    UIHelper.LogMessage(string.Format("No row change"), UIHelper.MsgType.StatusBar, false);
+                //}
             }
             catch (Exception ex)
             {
@@ -542,38 +601,138 @@ namespace GVTBetagen.Forms
 
                 for(var index = 0; index < this.grData.DataTable.Rows.Count; index ++)
                 {
+                    //if(index > 100)
+                    //{
+                    //    break;
+                    //}
+                    var hasChange = false;
                     var customercode = this.grData.DataTable.GetValue("CustCode", index).ToString();
                     var dataRow = dataRowArray.Where(x => x[0].ToString() == customercode).LastOrDefault();
                     if(dataRow != null)
                     {
                         var data = dataRow[2].ToString();
                         var amount = 0.0;
+                        var rowAmount = 0.0;
+                        this.grData.DataTable.SetValue("Change", index, "N");
                         if (!string.IsNullOrEmpty(data) && double.TryParse(data, out amount))
                         {
                             if (this.cbkAllSKU.Checked)
                             {
                                 if (InitConfig.GroupPolicy == 0)
-                                    this.grData.DataTable.SetValue("GMAmount", index, amount);
+                                {
+                                    rowAmount = 0.0;
+                                    if (!string.IsNullOrEmpty(this.grData.DataTable.GetValue("GMAmount", index).ToString())
+                                        && double.TryParse(this.grData.DataTable.GetValue("GMAmount", index).ToString(), out rowAmount))
+                                    {
+                                        if (rowAmount != amount)
+                                        {
+                                            hasChange = true;
+                                            this.grData.DataTable.SetValue("GMAmount", index, amount);
+                                        }
+                                    } 
+                                }
                                 if (InitConfig.GroupPolicy == 1)
-                                    this.grData.DataTable.SetValue("SMAmount", index, amount);
+                                {
+                                    rowAmount = 0.0;
+                                    if (!string.IsNullOrEmpty(this.grData.DataTable.GetValue("SMAmount", index).ToString())
+                                        && double.TryParse(this.grData.DataTable.GetValue("SMAmount", index).ToString(), out rowAmount))
+                                    {
+                                        if (rowAmount != amount)
+                                        {
+                                            hasChange = true;
+                                            this.grData.DataTable.SetValue("SMAmount", index, amount);
+                                        }
+                                    }
+                                }
                                 if (InitConfig.GroupPolicy == 2)
-                                    this.grData.DataTable.SetValue("KAAmount", index, amount);
+                                {
+                                    rowAmount = 0.0;
+                                    if (!string.IsNullOrEmpty(this.grData.DataTable.GetValue("KAAmount", index).ToString())
+                                        && double.TryParse(this.grData.DataTable.GetValue("KAAmount", index).ToString(), out rowAmount))
+                                    {
+                                        if (rowAmount != amount)
+                                        {
+                                            hasChange = true;
+                                            this.grData.DataTable.SetValue("KAAmount", index, amount);
+                                        }
+                                    }
+                                }                                    
                                 if (InitConfig.GroupPolicy == 4)
-                                    this.grData.DataTable.SetValue("SSAmount", index, amount);
+                                {
+                                    rowAmount = 0.0;
+                                    if (!string.IsNullOrEmpty(this.grData.DataTable.GetValue("SSAmount", index).ToString())
+                                        && double.TryParse(this.grData.DataTable.GetValue("SSAmount", index).ToString(), out rowAmount))
+                                    {
+                                        if (rowAmount != amount)
+                                        {
+                                            hasChange = true;
+                                            this.grData.DataTable.SetValue("SSAmount", index, amount);
+                                        }
+                                    }
+                                }
                             }
                             else if (this.cbkFocusSKU.Checked)
                             {
                                 if (InitConfig.GroupPolicy == 0)
-                                    this.grData.DataTable.SetValue("KSUGMAmount", index, amount);
+                                {
+                                    rowAmount = 0.0;
+                                    if (!string.IsNullOrEmpty(this.grData.DataTable.GetValue("KSUGMAmount", index).ToString())
+                                        && double.TryParse(this.grData.DataTable.GetValue("KSUGMAmount", index).ToString(), out rowAmount))
+                                    {
+                                        if (rowAmount != amount)
+                                        {
+                                            hasChange = true;
+                                            this.grData.DataTable.SetValue("KSUGMAmount", index, amount);
+                                        }
+                                    }
+                                }
                                 if (InitConfig.GroupPolicy == 1)
-                                    this.grData.DataTable.SetValue("KSUSMAmount", index, amount);
+                                {
+                                    rowAmount = 0.0;
+                                    if (!string.IsNullOrEmpty(this.grData.DataTable.GetValue("KSUSMAmount", index).ToString())
+                                        && double.TryParse(this.grData.DataTable.GetValue("KSUSMAmount", index).ToString(), out rowAmount))
+                                    {
+                                        if (rowAmount != amount)
+                                        {
+                                            hasChange = true;
+                                            this.grData.DataTable.SetValue("KSUSMAmount", index, amount);
+                                        }
+                                    }
+                                }
                                 if (InitConfig.GroupPolicy == 2)
-                                    this.grData.DataTable.SetValue("KSUKAAmount", index, amount);
+                                {
+                                    rowAmount = 0.0;
+                                    if (!string.IsNullOrEmpty(this.grData.DataTable.GetValue("KSUKAAmount", index).ToString())
+                                        && double.TryParse(this.grData.DataTable.GetValue("KSUKAAmount", index).ToString(), out rowAmount))
+                                    {
+                                        if (rowAmount != amount)
+                                        {
+                                            hasChange = true;
+                                            this.grData.DataTable.SetValue("KSUKAAmount", index, amount);
+                                        }
+                                    }
+                                }
                                 if (InitConfig.GroupPolicy == 4)
-                                    this.grData.DataTable.SetValue("KSUSSAmount", index, amount);
+                                {
+                                    rowAmount = 0.0;
+                                    if (!string.IsNullOrEmpty(this.grData.DataTable.GetValue("KSUSSAmount", index).ToString())
+                                        && double.TryParse(this.grData.DataTable.GetValue("KSUSSAmount", index).ToString(), out rowAmount))
+                                    {
+                                        if (rowAmount != amount)
+                                        {
+                                            hasChange = true;
+                                            this.grData.DataTable.SetValue("KSUSSAmount", index, amount);
+                                        }
+                                    }
+                                }
+                            }
+                            if (hasChange)
+                            {
+                                this.grData.DataTable.SetValue("Change", index, "Y");
+                                UIHelper.LogMessage(string.Format("Data change from {0} to {1} for customer {2}", rowAmount, amount, this.grData.DataTable.GetValue("CustCode", index).ToString()), UIHelper.MsgType.StatusBar, false);
+                                count++;
                             }
                         }
-                        count++;
                     }
                     
                 }
@@ -663,6 +822,14 @@ namespace GVTBetagen.Forms
                 UIHelper.LogMessage(ex.Message, UIHelper.MsgType.StatusBar, true);
             }
             this.Freeze(false);
+        }
+
+        private void grData_ValidateAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
+        {
+            if(pVal.ItemChanged)
+            {
+                this.grData.DataTable.SetValue("Change", pVal.Row, "Y");
+            }
         }
     }
 }
