@@ -113,6 +113,10 @@
     </Compile>
     <Compile Include="Forms\SalesTarget\SalesTargetExt.cs" />
     <Compile Include="Forms\UIHandler.cs" />
+    <Compile Include="Models\SODetailImport.cs" />
+    <Compile Include="Models\SOHeaderImport.cs" />
+    <Compile Include="Models\SOImport.cs" />
+    <Compile Include="Models\ImportSOProcessing.cs" />
     <Compile Include="QueryString\QuerystringGLPosting.cs" />
     <Compile Include="QueryString\QuerystringSalesTarget.cs" />
     <Compile Include="QueryString\QuerystringPOForm.cs" />
